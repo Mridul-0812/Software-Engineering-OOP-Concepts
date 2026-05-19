@@ -225,17 +225,47 @@ function startGame() {
     // Lock down exactly ONE unique imposter hint corresponding to their source universe
     const chosenImposterHint = imposterSourceMatrix.imposterHint;
 
-    // 4. Assign roles to players securely
+    // 4. Handle Paranoiac Protocol assignment configurations
     const imposterIndex = Math.floor(Math.random() * players.length);
+    const isParanoiacEnabled = document.getElementById('paranoiac-toggle').checked;
+    
+    // Checkbox must be enabled, the 15% roll must succeed, and you need >= 4 players
+    const isParanoiacGame = isParanoiacEnabled && (Math.random() < 0.15) && players.length >= 4;
+    
+    // Isolate a random player to receive the blind signal (cannot be the Imposter)
+    let paranoiacIndex = -1;
+    if (isParanoiacGame) {
+        do {
+            paranoiacIndex = Math.floor(Math.random() * players.length);
+        } while (paranoiacIndex === imposterIndex);
+        
+        console.log(`%c[CHEEKY TWIST]: Paranoiac protocol deployed successfully.`, "color: #ffaa00; font-weight: bold;");
+    }
 
+    // 5. Assign roles and inject dynamic payloads securely
     playerRoles = players.map((player, idx) => {
         const isImposter = (idx === imposterIndex);
+        const isParanoiac = (idx === paranoiacIndex);
+        
+        let assignedWord = "CORE_NODE";
+        let assignedHint = chosenInnocentHint;
+
+        if (isImposter) {
+            assignedWord = chosenImposterWord;
+            assignedHint = chosenImposterHint;
+        } else if (isParanoiac) {
+            assignedWord = "⚠️ SYNAPSE_BLIND_SIGNAL";
+            assignedHint = "Your neural connection is corrupted. You have no data frame. Act natural.";
+        } else {
+            assignedWord = innocentPool.pop() || "CORE_NODE";
+        }
         
         return {
             name: player,
-            word: isImposter ? chosenImposterWord : (innocentPool.pop() || "CORE_NODE"),
-            hint: isImposter ? chosenImposterHint : chosenInnocentHint,
-            isImposter: isImposter
+            word: assignedWord,
+            hint: assignedHint,
+            isImposter: isImposter,
+            isParanoiac: isParanoiac
         };
     });
 
@@ -376,6 +406,9 @@ function registerVote(selectedPlayer) {
     if (selectedPlayer.isImposter) {
         verdictBanner.className = "verdict-banner win";
         verdictBanner.innerText = `PARADOX ISOLATED! You successfully purged ${selectedPlayer.name}. The semantic leak was safely sealed.`;
+    } else if (selectedPlayer.isParanoiac) {
+        verdictBanner.className = "verdict-banner loss";
+        verdictBanner.innerText = `TOTAL SABOTAGE! You purged ${selectedPlayer.name}, who was an Innocent Paranoiac with a blind signal. You fell right into the paradox trap!`;
     } else {
         verdictBanner.className = "verdict-banner loss";
         verdictBanner.innerText = `CRITICAL MALFUNCTION. You purged ${selectedPlayer.name}, who was entirely Innocent. The Paradox entity remains inside the architecture.`;
@@ -392,11 +425,23 @@ function renderFinalReveal() {
 
     playerRoles.forEach(player => {
         const div = document.createElement('div');
-        div.className = `reveal-item ${player.isImposter ? 'is-imposter' : 'is-innocent'}`;
+        
+        let roleClass = 'is-innocent';
+        let roleTitle = '[Innocent Component]';
+        
+        if (player.isImposter) {
+            roleClass = 'is-imposter';
+            roleTitle = '⚡ [THE PARADOX]';
+        } else if (player.isParanoiac) {
+            roleClass = 'is-paranoiac';
+            roleTitle = '👁️ [THE PARANOIAC]';
+        }
+        
+        div.className = `reveal-item ${roleClass}`;
         
         div.innerHTML = `
             <div>
-                <strong>${player.name}</strong> ${player.isImposter ? '⚡ [THE PARADOX]' : '[Innocent Component]'}
+                <strong>${player.name}</strong> ${roleTitle}
                 <br><small>Context Frame: ${player.hint}</small>
             </div>
             <div style="text-align: right; font-weight: bold; align-self: center;">
