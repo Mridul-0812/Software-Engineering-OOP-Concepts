@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Synapse Paradox</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="matrix-background"></div>
+    
+    <main class="game-container">
+            
+        <header class="game-header">
+            <h1 class="ominous-title" data-text="INNOCENT UNTIL PROVEN IMPOSTER">
+                INNOCENT UNTIL PROVEN IMPOSTER
+            </h1>
+            <p class="subtitle">A Game of Semantic Leaks & Shifting Contexts</p>
+        </header>
+
+        <section id="setup-screen" class="game-card active">
+            <h2>Initialise Neural Network</h2>
+            <p class="instruction">Gather 3 to 10 players locally. Enter names to begin alignment.</p>
+
+            <div class="setting-control">
+                <label for="mutation-rate" style="color: #00f2fe; font-weight: bold; letter-spacing: 1px;">CHAOS MUTATION RATE</label>
+                <select id="mutation-rate" style="background: #121826; color: #fff; border: 1px solid #323f5e; padding: 8px; border-radius: 4px; margin-left: 10px; cursor: pointer;">
+                    <option value="0.0">0% (Pure Logic)</option>
+                    <option value="0.10" selected>10% (Standard Matrix)</option>
+                    <option value="0.25">25% (High Paranoia)</option>
+                    <option value="0.50">50% (Absolute Anarchy)</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <input type="text" id="player-name-input" placeholder="Enter player name...">
+                <button id="add-player-btn" class="btn secondary">Add Mind</button>
+            </div>
+
+            <ul id="player-list" class="player-list">
+                </ul>
+
+            <button id="start-game-btn" class="btn primary dynamic-hide" disabled>Synchronise Synapses</button>
+            <button class="btn secondary rules-toggle-btn">VIEW GAME PROTOCOLS</button>
+        </section>
+
+        <section id="reveal-screen" class="game-card">
+            <div class="progress-bar"><div id="reveal-progress" class="progress"></div></div>
+            <h2 id="current-player-turn">Player's Turn</h2>
+            <p class="instruction">Pass the device to the player named above. Nobody else look!</p>
+            
+            <div class="secret-vault">
+                <button id="secure-peek-btn" class="btn warning">Hold to Peek Secret Node</button>
+                
+                <div id="secret-data" class="secret-data hidden">
+                    <div class="data-field">
+                        <span class="label">ASSIGNED NODE:</span>
+                        <span id="secret-word" class="value">????</span>
+                    </div>
+                    <div class="data-field">
+                        <span class="label">MATRIX CONTEXT:</span>
+                        <span id="secret-hint" class="value">????</span>
+                    </div>
+                </div>
+            </div>
+
+            <button id="next-player-btn" class="btn primary hidden">Lock & Pass Device</button>
+        </section>
+
+        <section id="debate-screen" class="game-card">
+            <h2>Neural Transmission Active</h2>
+            <p class="instruction">Discuss your nodes. Find the paradox. Who belongs to a parallel universe?</p>
+            
+            <div class="timer-display">
+                <div class="countdown" id="timer">03:00</div>
+                <div class="timer-controls">
+                    <button id="pause-timer-btn" class="btn mini">Pause</button>
+                </div>
+            </div>
+
+            <div class="reminder-box">
+                <p>⚠️ <strong>Remember:</strong> Everyone has a completely unique word. Listen for the underlying structural logic, not just matching terms.</p>
+            </div>
+
+            <button id="proceed-to-vote-btn" class="btn primary">Initiate Purge Protocol</button>
+        </section>
+
+        <section id="vote-screen" class="game-card">
+            <h2>Isolate the Paradox</h2>
+            <p class="instruction">Cast your votes. Who is operating on a leaked context map?</p>
+            
+            <div id="voting-pool" class="voting-grid">
+                </div>
+        </section>
+
+        <section id="results-screen" class="game-card">
+            <h2>Matrix Evaluation</h2>
+            <div id="verdict-banner" class="verdict-banner">
+                </div>
+
+            <div class="truth-reveal">
+                <h3>The Real Alignments:</h3>
+                <div id="final-reveal-list" class="reveal-list">
+                    </div>
+            </div>
+
+            <button id="play-again-btn" class="btn primary">Realign Synapses (Play Again)</button>
+        </section>
+
+    </main>
+
+    <script src="words.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
