@@ -3,7 +3,7 @@
 // --- Game State Variables ---
 let players = [];
 let currentGameMatrix = null;
-let playerRoles = []; // Array of objects: { name, word, hint, isImposter }
+let playerRoles = []; // Array of objects: { name, word, hint, isImposter, isParanoiac, isMuted }
 let currentRevealIndex = 0;
 let timerInterval = null;
 let timerSecondsRemaining = 180; // 3 Minutes standard
@@ -36,17 +36,16 @@ function setupEventListeners() {
         btn.addEventListener('click', toggleRulesModal);
     });
 
-    // Reveal Screen
+    // Reveal Screen (Standard Fixed Click-Toggle Setup)
     const peekBtn = document.getElementById('secure-peek-btn');
-    peekBtn.addEventListener('mousedown', showSecretData);
-    peekBtn.addEventListener('mouseup', hideSecretData);
-    peekBtn.addEventListener('mouseleave', hideSecretData);
+    if (peekBtn) {
+        peekBtn.addEventListener('click', toggleSecretDataVisibility);
+    }
     
-    // Mobile Touch Support for Peek Button
-    peekBtn.addEventListener('touchstart', (e) => { e.preventDefault(); showSecretData(); });
-    peekBtn.addEventListener('touchend', (e) => { e.preventDefault(); hideSecretData(); });
-
-    document.getElementById('next-player-btn').addEventListener('click', advanceRevealTurn);
+    const nextBtn = document.getElementById('next-player-btn');
+    if (nextBtn) {
+        nextBtn.addEventListener('click', advanceRevealTurn);
+    }
 
     // Debate Screen
     document.getElementById('pause-timer-btn').addEventListener('click', toggleTimer);
@@ -181,8 +180,7 @@ function renderPlayerList() {
     });
 }
 
-// --- Core Engine Allocation Logic ---
-// --- Core Engine Allocation Logic (With User-Defined Chaos Mutation) ---
+// --- Core Engine Allocation Logic (With User-Defined Chaos Mutation & Static Frequency Anomaly) ---
 function startGame() {
     const activePool = window.SYNAPSE_MATRIX_POOL;
     
@@ -225,7 +223,7 @@ function startGame() {
     // Lock down exactly ONE unique imposter hint corresponding to their source universe
     const chosenImposterHint = imposterSourceMatrix.imposterHint;
 
-    // 4. Handle Paranoiac Protocol assignment configurations
+    // 4. Handle Special Protocol configurations
     const imposterIndex = Math.floor(Math.random() * players.length);
     const isParanoiacEnabled = document.getElementById('paranoiac-toggle').checked;
     
@@ -242,10 +240,23 @@ function startGame() {
         console.log(`%c[CHEEKY TWIST]: Paranoiac protocol deployed successfully.`, "color: #ffaa00; font-weight: bold;");
     }
 
+    // Evaluate Static Frequency Anomaly conditions (10% overall chance if element option is active)
+    const staticFrequencyCheckbox = document.getElementById('static-frequency-checkbox');
+    const systemAllowsMuting = staticFrequencyCheckbox ? staticFrequencyCheckbox.checked : false;
+    const isStaticFrequencyActive = systemAllowsMuting && (Math.random() < 0.10);
+    
+    let assignedMuteIndex = -1;
+    if (isStaticFrequencyActive) {
+        // Pick any random player slot to bear the communicative gesture restriction
+        assignedMuteIndex = Math.floor(Math.random() * players.length);
+        console.log(`%c[GLITCH TRAP]: Static Frequency Protocol deployed. Axis assigned to index: ${assignedMuteIndex}`, "color: #ff0055; font-weight: bold;");
+    }
+
     // 5. Assign roles and inject dynamic payloads securely
     playerRoles = players.map((player, idx) => {
         const isImposter = (idx === imposterIndex);
         const isParanoiac = (idx === paranoiacIndex);
+        const isMuted = (idx === assignedMuteIndex);
         
         let assignedWord = "CORE_NODE";
         let assignedHint = chosenInnocentHint;
@@ -265,7 +276,8 @@ function startGame() {
             word: assignedWord,
             hint: assignedHint,
             isImposter: isImposter,
-            isParanoiac: isParanoiac
+            isParanoiac: isParanoiac,
+            isMuted: isMuted
         };
     });
 
@@ -283,21 +295,58 @@ function setupNextPlayerReveal() {
     const currentPlayer = playerRoles[currentRevealIndex];
     document.getElementById('current-player-turn').innerText = `${currentPlayer.name.toUpperCase()}'S ALIGNMENT`;
     
+    // Explicitly reset UI toggle visibility states for the upcoming user node
     document.getElementById('secret-data').classList.add('hidden');
-    document.getElementById('secure-peek-btn').classList.remove('hidden');
+    
+    const peekBtn = document.getElementById('secure-peek-btn');
+    peekBtn.classList.remove('hidden');
+    peekBtn.innerText = "CLICK TO PEEK SECRET NODE";
+    
     document.getElementById('next-player-btn').classList.add('hidden');
 
+    // Build standard configuration text vectors
     document.getElementById('secret-word').innerText = currentPlayer.word;
     document.getElementById('secret-hint').innerText = currentPlayer.hint;
+
+    // Clear and strip out any previously appended static structural error elements
+    const oldWarning = document.getElementById('static-frequency-warning-container');
+    if (oldWarning) oldWarning.remove();
+
+    // Inject a critical crimson banner frame explicitly if the active user node configuration has been muted
+    if (currentPlayer.isMuted) {
+        const warningBox = document.createElement('div');
+        warningBox.id = 'static-frequency-warning-container';
+        warningBox.style.cssText = `
+            background: rgba(255, 0, 85, 0.15); border: 2px solid #ff0055;
+            padding: 1rem; margin: 1rem 0; border-radius: 8px; text-align: center;
+            font-family: monospace; animation: pulse 2s infinite alternate;
+        `;
+        warningBox.innerHTML = `
+            <span style="color: #ff0055; font-weight: bold; font-size: 0.9rem; letter-spacing: 1px;">
+                ⚠️ SIGNAL FAULT: STATIC FREQUENCY DETECTED
+            </span>
+            <p style="color: #fff; margin: 0.5rem 0 0 0; font-size: 0.8rem; line-height: 1.4;">
+                You are strictly forbidden from vocalizing spoken words during this match! You must convey your connection clue using only a <span style="color:#ff0055; font-weight:bold; text-transform:uppercase;">single physical gesture or facial expression</span> to the table.
+            </p>
+        `;
+        const secretDataBox = document.getElementById('secret-data');
+        secretDataBox.insertBefore(warningBox, secretDataBox.firstChild);
+    }
 }
 
-function showSecretData() {
-    document.getElementById('secret-data').classList.remove('hidden');
-    document.getElementById('next-player-btn').classList.remove('hidden');
-}
+function toggleSecretDataVisibility() {
+    const secretData = document.getElementById('secret-data');
+    const peekBtn = document.getElementById('secure-peek-btn');
+    const nextBtn = document.getElementById('next-player-btn');
 
-function hideSecretData() {
-    document.getElementById('secret-data').classList.add('hidden');
+    if (secretData.classList.contains('hidden')) {
+        secretData.classList.remove('hidden');
+        nextBtn.classList.remove('hidden');
+        peekBtn.innerText = "LOCK & CONCEAL SECRET DATA";
+    } else {
+        secretData.classList.add('hidden');
+        peekBtn.innerText = "CLICK TO PEEK SECRET NODE";
+    }
 }
 
 function advanceRevealTurn() {
@@ -331,14 +380,11 @@ function initDebateScreen() {
 }
 
 function generateDebateTurnOrder() {
-    // Clone original player pool list array sequence safely
     let orderPool = [...players];
     shuffleArray(orderPool);
 
-    // Look for or dynamically create order element frame box
     let orderContainer = document.getElementById('debate-turn-order-list');
     if (!orderContainer) {
-        // Fallback programmatic generation if element tag frame layout is missing from DOM
         const targetParent = document.getElementById('debate-screen');
         orderContainer = document.createElement('div');
         orderContainer.id = 'debate-turn-order-list';
@@ -346,11 +392,12 @@ function generateDebateTurnOrder() {
         targetParent.insertBefore(orderContainer, document.getElementById('timer-controls') || targetParent.lastChild);
     }
 
-    // Fill sequence items cleanly
     orderContainer.innerHTML = `<h3 style="color:#00f2fe; margin-top:0; font-size:0.9rem; letter-spacing:1px; text-transform:uppercase;">SYNCHRONIZED SPEECH SEQUENCE</h3>`;
     
     const stringSequence = orderPool.map((name, idx) => {
-        return `<span style="font-weight:bold; color:#fff;">${idx + 1}. ${name.toUpperCase()}</span>`;
+        const playerObj = playerRoles.find(p => p.name === name);
+        const muteBadge = (playerObj && playerObj.isMuted) ? ` <span style="color:#ff0055; font-size:0.8rem;">[🤐 GESTURE ONLY]</span>` : '';
+        return `<span style="font-weight:bold; color:#fff;">${idx + 1}. ${name.toUpperCase()}${muteBadge}</span>`;
     }).join(' <span style="color:#4facfe; margin:0 8px;">➔</span> ');
 
     orderContainer.innerHTML += `<div style="font-size:1.1rem; line-height:1.5; padding: 5px 0;">${stringSequence}</div>`;
@@ -436,12 +483,15 @@ function renderFinalReveal() {
             roleClass = 'is-paranoiac';
             roleTitle = '👁️ [THE PARANOIAC]';
         }
+
+        // Add visual modifier notes to indicate whether a player operated under structural static limits
+        const staticLabel = player.isMuted ? ` <span style="color:#ff0055; font-size:0.75rem; font-weight:bold;">[🤐 MUTED FREQUENCY]</span>` : '';
         
         div.className = `reveal-item ${roleClass}`;
         
         div.innerHTML = `
             <div>
-                <strong>${player.name}</strong> ${roleTitle}
+                <strong>${player.name}</strong> ${roleTitle}${staticLabel}
                 <br><small>Context Frame: ${player.hint}</small>
             </div>
             <div style="text-align: right; font-weight: bold; align-self: center;">
@@ -456,11 +506,6 @@ function resetGameToSetup() {
     currentGameMatrix = null;
     playerRoles = [];
     
-    // REMOVE OR COMMENT OUT THESE TWO LINES:
-    // document.getElementById('player-list').innerHTML = '';
-    // players = []; 
-    
-    // LEAVE THESE ALONE:
     updateStartButtonState();
     switchScreen('setup');
 }
@@ -493,7 +538,6 @@ function initBackgroundParticles() {
         `;
         document.body.appendChild(particle);
         
-        // Animate the individual particle smoothly
         animateParticle(particle);
     }
 }
@@ -506,7 +550,6 @@ function animateParticle(el) {
         let x = parseFloat(el.style.left) + speedX;
         let y = parseFloat(el.style.top) + speedY;
         
-        // Loop around screen boundaries
         if (x < 0) x = 100;
         if (x > 100) x = 0;
         if (y < 0) y = 100;

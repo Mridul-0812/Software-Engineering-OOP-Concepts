@@ -12,13 +12,94 @@
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Permanent+Marker&family=Rubik+Glitch&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght=900&family=Permanent+Marker&family=Rubik+Glitch&display=swap');
+
+/* --- Global Reset & Base Layout --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* CONSOLIDATED BODY: Merged desktop visual structures with animated backgrounds */
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    padding: 20px;
+    background: linear-gradient(-45deg, #0a0f1d, #071426, #0d1b2e, #050b14);
+    background-size: 400% 400%;
+    animation: networkPulse 15s ease infinite;
+    position: relative;
+}
+
+/* Optional Matrix/Grid Overlay for depth */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        linear-gradient(90deg, rgba(0, 242, 254, 0.03) 1px, transparent 1px),
+        linear-gradient(rgba(0, 242, 254, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: -1; 
+    pointer-events: none;
+}
+
+/* Neuro-Matrix Visual Background Background */
+.matrix-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: 
+        radial-gradient(circle at 10% 20%, rgba(0, 240, 255, 0.03) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(255, 0, 85, 0.03) 0%, transparent 40%);
+    z-index: -1;
+}
+
+/* ENGINE ENGINE ACCESSIBILITY: Explicit structural visibility handler */
+.hidden, .dynamic-hide.hidden, .secret-data.hidden {
+    display: none !important;
+}
+
+/* --- Container & Cards --- */
+.game-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 20px;
+}
 
 .game-header {
     background: #050508;
     padding: 40px 20px;
     text-align: center;
     overflow: hidden;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+}
+
+.game-header h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+    margin-bottom: 6px;
 }
 
 /* The Ominous, Imposter-Themed Title */
@@ -33,14 +114,11 @@
     display: inline-block;
     margin: 0 0 10px 0;
     padding: 0 10px;
-    
-    /* Deep multi-layered shadow creating a cold, atmospheric depth */
     text-shadow: 
         0 0 10px rgba(255, 0, 60, 0.6),
         0 0 20px rgba(255, 0, 60, 0.4),
         -3px -3px 0px rgba(0, 180, 216, 0.8), 
          3px  3px 0px rgba(255, 0, 60, 0.8);
-         
     animation: semantic-leak 4s infinite ease-in-out;
 }
 
@@ -83,114 +161,13 @@
     opacity: 0.8;
 }
 
-/* --- ANIMATIONS FOR THE IMPOSTER VIBE --- */
-
-/* Slow atmospheric breathing effect */
-@keyframes semantic-leak {
-    0%, 100% {
-        transform: scale(1);
-        filter: hue-rotate(0deg) blur(0px);
-    }
-    50% {
-        transform: scale(1.02);
-        filter: hue-rotate(10deg) blur(0.3px);
-    }
-}
-
-/* Micro horizontal tearing representing the "Imposter" breaking through */
-@keyframes imposter-glitch-1 {
-    0% { clip: rect(20px, 9999px, 66px, 0); }
-    10% { clip: rect(80px, 9999px, 5px, 0); }
-    20% { clip: rect(40px, 9999px, 22px, 0); }
-    30% { clip: rect(90px, 9999px, 130px, 0); }
-    40% { clip: rect(10px, 9999px, 55px, 0); }
-    50% { clip: rect(120px, 9999px, 80px, 0); }
-    60% { clip: rect(30px, 9999px, 110px, 0); }
-    70% { clip: rect(70px, 9999px, 15px, 0); }
-    80% { clip: rect(100px, 9999px, 45px, 0); }
-    90% { clip: rect(15px, 9999px, 95px, 0); }
-    100% { clip: rect(50px, 9999px, 140px, 0); }
-}
-
-@keyframes imposter-glitch-2 {
-    0% { clip: rect(90px, 9999px, 15px, 0); }
-    15% { clip: rect(30px, 9999px, 120px, 0); }
-    30% { clip: rect(110px, 9999px, 50px, 0); }
-    45% { clip: rect(10px, 9999px, 85px, 0); }
-    60% { clip: rect(75px, 9999px, 5px, 0); }
-    75% { clip: rect(40px, 9999px, 130px, 0); }
-    90% { clip: rect(125px, 9999px, 60px, 0); }
-    100% { clip: rect(20px, 9999px, 105px, 0); }
-}
-
-/* --- Global Reset & Base Layout --- */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-}
-
-body {
-    background-color: var(--bg-dark);
-    color: var(--text-main);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow-x: hidden;
-    padding: 20px;
-}
-
-/* Neuro-Matrix Visual Background Background */
-.matrix-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: 
-        radial-gradient(circle at 10% 20%, rgba(0, 240, 255, 0.03) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(255, 0, 85, 0.03) 0%, transparent 40%);
-    z-index: -1;
-}
-
-/* --- Container & Cards --- */
-.game-container {
-    width: 100%;
-    max-width: 550px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-}
-
-.game-header {
-    text-align: center;
-}
-
-.game-header h1 {
-    font-size: 2.2rem;
-    font-weight: 800;
-    letter-spacing: 2px;
-    color: #fff;
-    text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
-    margin-bottom: 6px;
-}
-
-.subtitle {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
 .game-card {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
     padding: 30px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    display: none; /* Controlled via JS switching class */
+    display: none; 
     flex-direction: column;
     gap: 20px;
 }
@@ -215,6 +192,19 @@ h2 {
 }
 
 /* --- UI Controls & Forms --- */
+.setting-control {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.protocol-option {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 10px;
+}
+
 .input-group {
     display: flex;
     gap: 10px;
@@ -293,10 +283,6 @@ input[type="text"]:focus {
     box-shadow: none !important;
 }
 
-.dynamic-hide.hidden {
-    display: none;
-}
-
 /* --- Specific Modules & Lists --- */
 .player-list {
     list-style: none;
@@ -339,6 +325,7 @@ input[type="text"]:focus {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
 }
 
 .secret-data {
@@ -347,10 +334,6 @@ input[type="text"]:focus {
     gap: 15px;
     width: 100%;
     animation: flashIn 0.2s ease-out;
-}
-
-.secret-data.hidden {
-    display: none;
 }
 
 .data-field {
@@ -460,7 +443,104 @@ input[type="text"]:focus {
     background: #251624;
 }
 
-/* --- Animations --- */
+/* =========================================================================
+   📱 CRITICAL RESPONSIBILITY MEDIATION BLOCK (Phone Optimizations)
+   ========================================================================= */
+@media (max-width: 480px) {
+    body {
+        padding: 8px;
+        align-items: flex-start; /* Prevents center compression on short mobile webviews */
+    }
+
+    .game-container {
+        padding: 4px;
+        gap: 14px;
+        max-width: 100%;
+    }
+
+    .game-header {
+        padding: 24px 12px;
+    }
+
+    /* Scales down the title safely on mobile viewport widths so it never overlaps or clips */
+    .ominous-title {
+        font-size: 1.75rem; 
+        letter-spacing: 2px;
+    }
+
+    .subtitle {
+        font-size: 0.75rem;
+        letter-spacing: 2px;
+    }
+
+    .game-card {
+        padding: 20px 14px;
+        gap: 16px;
+    }
+
+    /* Form control fields adaptively unstack on tiny mobile dimensions */
+    .setting-control {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .setting-control select {
+        margin-left: 0 !important;
+        width: 100%;
+    }
+
+    .checkbox-wrapper {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        margin-top: 4px;
+    }
+
+    .protocol-option {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .protocol-option input[type="checkbox"] {
+        margin-left: 0;
+    }
+
+    /* Expands tap bounds for easy finger targeting during rapid pass-and-play sessions */
+    .btn, button {
+        width: 100% !important; 
+        padding: 16px 20px !important; 
+        font-size: 1.05rem !important;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .input-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    input[type="text"] {
+        width: 100% !important;
+        padding: 14px;
+    }
+
+    /* Linearizes player voting items into single-row listings to avoid squeezing text elements */
+    .voting-grid {
+        grid-template-columns: 1fr; 
+        gap: 8px;
+    }
+
+    #debate-turn-order-list div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+}
+
+/* --- ANIMATIONS FOR THE IMPOSTER VIBE --- */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
@@ -470,43 +550,47 @@ input[type="text"]:focus {
     100% { filter: blur(0); opacity: 1; }
 }
 
-/* --- Dynamic Moving Background --- */
-body {
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    background: linear-gradient(-45deg, #0a0f1d, #071426, #0d1b2e, #050b14);
-    background-size: 400% 400%;
-    animation: networkPulse 15s ease infinite;
-    position: relative;
-    overflow-x: hidden;
+/* Slow atmospheric breathing effect */
+@keyframes semantic-leak {
+    0%, 100% {
+        transform: scale(1);
+        filter: hue-rotate(0deg) blur(0px);
+    }
+    50% {
+        transform: scale(1.02);
+        filter: hue-rotate(10deg) blur(0.3px);
+    }
 }
 
 /* Smooth shifting color animation */
 @keyframes networkPulse {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
-/* Optional Matrix/Grid Overlay for depth */
-body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        linear-gradient(90deg, rgba(0, 242, 254, 0.03) 1px, transparent 1px),
-        linear-gradient(rgba(0, 242, 254, 0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    z-index: -1; /* Keeps it strictly behind your game screens */
-    pointer-events: none;
+/* Micro horizontal tearing representing the "Imposter" breaking through */
+@keyframes imposter-glitch-1 {
+    0% { clip: rect(20px, 9999px, 66px, 0); }
+    10% { clip: rect(80px, 9999px, 5px, 0); }
+    20% { clip: rect(40px, 9999px, 22px, 0); }
+    30% { clip: rect(90px, 9999px, 130px, 0); }
+    40% { clip: rect(10px, 9999px, 55px, 0); }
+    50% { clip: rect(120px, 9999px, 80px, 0); }
+    60% { clip: rect(30px, 9999px, 110px, 0); }
+    70% { clip: rect(70px, 9999px, 15px, 0); }
+    80% { clip: rect(100px, 9999px, 45px, 0); }
+    90% { clip: rect(15px, 9999px, 95px, 0); }
+    100% { clip: rect(50px, 9999px, 140px, 0); }
+}
+
+@keyframes imposter-glitch-2 {
+    0% { clip: rect(90px, 9999px, 15px, 0); }
+    15% { clip: rect(30px, 9999px, 120px, 0); }
+    30% { clip: rect(110px, 9999px, 50px, 0); }
+    45% { clip: rect(10px, 9999px, 85px, 0); }
+    60% { clip: rect(75px, 9999px, 5px, 0); }
+    75% { clip: rect(40px, 9999px, 130px, 0); }
+    90% { clip: rect(125px, 9999px, 60px, 0); }
+    100% { clip: rect(20px, 9999px, 105px, 0); }
 }
