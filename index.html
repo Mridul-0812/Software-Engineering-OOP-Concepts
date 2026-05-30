@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,32 +22,60 @@
             <h2>Initialise Neural Network</h2>
             <p class="instruction">Gather 3 to 10 players locally. Enter names to begin alignment.</p>
 
-            <div class="setting-control">
-                <label for="mutation-rate" style="color: #00f2fe; font-weight: bold; letter-spacing: 1px;">CHAOS MUTATION RATE</label>
-                <select id="mutation-rate" style="background: #121826; color: #fff; border: 1px solid #323f5e; padding: 8px; border-radius: 4px; margin-left: 10px; cursor: pointer;">
-                    <option value="0.0">0% (Pure Logic)</option>
-                    <option value="0.10" selected>10% (Standard Matrix)</option>
-                    <option value="0.25">25% (High Paranoia)</option>
-                    <option value="0.50">50% (Absolute Anarchy)</option>
-                </select>
-            </div>
-
-            <div class="setting-control" style="margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between;">
-                <label for="paranoiac-toggle" style="color: #00f2fe; font-weight: bold; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase;">
-                    Deploy Paranoiac Protocol
-                </label>
-                <div class="checkbox-wrapper">
-                    <input type="checkbox" id="paranoiac-toggle" checked style="width: 18px; height: 18px; cursor: pointer; accent-color: #00f2fe;">
-                    <span style="color: #fff; font-size: 0.85rem; margin-left: 8px; vertical-align: super;">Enabled (15% Chance)</span>
+            <div class="control-matrix-container" style="background: rgba(255, 255, 255, 0.03); border: 1px solid #323f5e; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; font-family: monospace; text-align: left;">
+                <h3 style="color: #00f2fe; margin-top: 0; font-size: 1rem; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid #323f5e; padding-bottom: 0.5rem; margin-bottom: 1rem;">
+                    SYSTEM MODIFIER PARAMETERS
+                </h3>
+                
+                <div style="margin-bottom: 0.8rem; display: flex; align-items: center;">
+                    <input type="checkbox" id="category-inversion-checkbox" checked style="margin-right: 10px; width: 18px; height: 18px; cursor: pointer; accent-color: #00f2fe;">
+                    <label for="category-inversion-checkbox" style="color: #fff; font-size: 0.9rem; cursor: pointer;">
+                        Enable Category Inversion Anomaly <span style="color: #4facfe;">(25% Event Chance)</span>
+                    </label>
                 </div>
-            </div>
 
-            <div class="protocol-option" style="display: flex; align-items: center; margin-bottom: 1.5rem; font-family: monospace;">
-                <span style="color: #00f2fe; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; flex-grow: 1;">
-                    ⚡ ACTIVATE STATIC FREQUENCY
-                </span>
-                <input type="checkbox" id="static-frequency-checkbox" style="width: 18px; height: 18px; cursor: pointer; accent-color: #ff0055;">
-                <span style="color: #8a99ad; margin-left: 8px; font-size: 0.85rem;">Enabled (10% Chance)</span>
+                <div style="margin-bottom: 0.8rem; display: flex; align-items: center;">
+                    <input type="checkbox" id="phantom-checkbox" checked style="margin-right: 10px; width: 18px; height: 18px; cursor: pointer; accent-color: #00ff66;">
+                    <label for="phantom-checkbox" style="color: #fff; font-size: 0.9rem; cursor: pointer;">
+                        Enable Phantom Protocol Ghost Threats <span style="color: #00ff66;">(15% Match Chance)</span>
+                    </label>
+                </div>
+
+                <div style="margin-bottom: 0.8rem; display: flex; align-items: center;">
+                    <input type="checkbox" id="paranoiac-toggle" checked style="margin-right: 10px; width: 18px; height: 18px; cursor: pointer; accent-color: #ffaa00;">
+                    <label for="paranoiac-toggle" style="color: #fff; font-size: 0.9rem; cursor: pointer;">
+                        Enable Blind Synchronisation Paranoiac <span style="color: #ffaa00;">(15% Event Chance)</span>
+                    </label>
+                </div>
+
+                <div style="margin-bottom: 0.8rem; display: flex; align-items: center;">
+                    <input type="checkbox" id="mimic-checkbox" checked style="margin-right: 10px; width: 18px; height: 18px; cursor: pointer; accent-color: #bc00ff;">
+                    <label for="mimic-checkbox" style="color: #fff; font-size: 0.9rem; cursor: pointer;">
+                        Enable Echo Chamber Mimic Allocation <span style="color: #bc00ff;">(10% Event Chance)</span>
+                    </label>
+                </div>
+
+                <div style="margin-bottom: 1.2rem; display: flex; align-items: center;">
+                    <input type="checkbox" id="static-frequency-checkbox" checked style="margin-right: 10px; width: 18px; height: 18px; cursor: pointer; accent-color: #ff0055;">
+                    <label for="static-frequency-checkbox" style="color: #fff; font-size: 0.9rem; cursor: pointer;">
+                        Enable Static Frequency Mute Sabotage <span style="color: #ff0055;">(10% Event Chance)</span>
+                    </label>
+                </div>
+
+                <div style="border-top: 1px solid #323f5e; padding-top: 0.8rem;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;">
+                        <div style="display: flex; align-items: center;">
+                            <input type="checkbox" id="mutation-rate-checkbox" checked style="margin-right: 10px; width: 18px; height: 18px; cursor: pointer; accent-color: #f43f5e;">
+                            <label for="mutation-rate-checkbox" style="color: #fff; font-size: 0.9rem; cursor: pointer;">
+                                Permit Chaos Mutation (Cross-Universe Dataset)
+                            </label>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px; padding-left: 28px;">
+                        <input type="range" id="mutation-rate" min="0.00" max="1.00" step="0.05" value="0.30" style="flex-grow: 1; cursor: pointer; accent-color: #f43f5e;">
+                        <span style="color: #f43f5e; font-size: 0.85rem; font-weight: bold; min-width: 40px; text-align: right;" id="mutation-rate-display">30%</span>
+                    </div>
+                </div>
             </div>
             
             <div class="input-group">
@@ -55,8 +83,7 @@
                 <button id="add-player-btn" class="btn secondary">Add Mind</button>
             </div>
 
-            <ul id="player-list" class="player-list">
-                </ul>
+            <ul id="player-list" class="player-list"></ul>
 
             <button id="start-game-btn" class="btn primary dynamic-hide" disabled>Synchronise Synapses</button>
             <button class="btn secondary rules-toggle-btn">VIEW GAME PROTOCOLS</button>
@@ -68,7 +95,7 @@
             <p class="instruction">Pass the device to the player named above. Nobody else look!</p>
             
             <div class="secret-vault">
-                <button id="secure-peek-btn" class="btn warning">Hold to Peek Secret Node</button>
+                <button id="secure-peek-btn" class="btn warning">Click to Peek Secret Node</button>
                 
                 <div id="secret-data" class="secret-data hidden">
                     <div class="data-field">
@@ -107,19 +134,16 @@
             <h2>Isolate the Paradox</h2>
             <p class="instruction">Cast your votes. Who is operating on a leaked context map?</p>
             
-            <div id="voting-pool" class="voting-grid">
-                </div>
+            <div id="voting-pool" class="voting-grid"></div>
         </section>
 
         <section id="results-screen" class="game-card">
             <h2>Matrix Evaluation</h2>
-            <div id="verdict-banner" class="verdict-banner">
-                </div>
+            <div id="verdict-banner" class="verdict-banner"></div>
 
             <div class="truth-reveal">
                 <h3>The Real Alignments:</h3>
-                <div id="final-reveal-list" class="reveal-list">
-                    </div>
+                <div id="final-reveal-list" class="reveal-list"></div>
             </div>
 
             <button id="play-again-btn" class="btn primary">Realign Synapses (Play Again)</button>
@@ -127,6 +151,17 @@
 
     </main>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slider = document.getElementById('mutation-rate');
+            const display = document.getElementById('mutation-rate-display');
+            if (slider && display) {
+                slider.addEventListener('input', (e) => {
+                    display.innerText = `${Math.round(e.target.value * 100)}%`;
+                });
+            }
+        });
+    </script>
     <script src="words.js"></script>
     <script src="script.js"></script>
 </body>
