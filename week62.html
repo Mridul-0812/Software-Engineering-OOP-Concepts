@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOP Learning Portal | Pillar 2: Inheritance</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0d0e15;
+            --bg-card: rgba(20, 20, 35, 0.7);
+            --bg-code: #07080d;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b4b7c5;
+            --neon-blue: #00f0ff;
+            --neon-purple: #9d4edd;
+            --neon-green: #39ff14;
+            --neon-orange: #ff6b6b;
+            --sidebar-width: 260px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #12131c;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: var(--neon-blue);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-menu li a:hover {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .sidebar-menu li a.active {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.1);
+            border-left-color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        .header-banner {
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .header-banner h1 {
+            font-size: 2.8rem;
+            margin-bottom: 12px;
+            background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-banner p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* --- EPITOME DESIGN LAYOUTS --- */
+        .section-block {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            backdrop-filter: blur(4px);
+        }
+
+        .section-block h2 {
+            font-size: 1.8rem;
+            color: var(--neon-blue);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 10px;
+        }
+
+        .section-block h3 {
+            font-size: 1.3rem;
+            color: var(--neon-purple);
+            margin-top: 24px;
+            margin-bottom: 12px;
+        }
+
+        p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+
+        ul, ol {
+            margin-left: 24px;
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+        }
+
+        li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: rgba(157, 78, 221, 0.1);
+            border-left: 4px solid var(--neon-purple);
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 20px 0;
+        }
+
+        .highlight-box strong {
+            color: var(--text-primary);
+        }
+
+        .alert-box {
+            background: rgba(255, 107, 107, 0.1);
+            border-left: 4px solid var(--neon-orange);
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 20px 0;
+        }
+
+        /* --- CODE ANATOMY DISPLAY --- */
+        .code-container {
+            background: var(--bg-code);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px 0;
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #161722;
+            padding: 8px 16px;
+            margin: -24px -24px 20px -24px;
+            border-radius: 12px 12px 0 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .code-header span i {
+            color: var(--neon-green);
+        }
+
+        pre {
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #f8f8f2;
+        }
+
+        .keyword { color: #ff79c6; font-weight: bold; }
+        .function { color: #50fa7b; }
+        .string { color: #f1fa8c; }
+        .comment { color: #6272a4; font-style: italic; }
+        .number { color: #bd93f9; }
+        .builtin { color: #8be9fd; font-style: italic; }
+
+        /* --- LINE-BY-LINE EXPLANATION TABLE --- */
+        .explanation-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+
+        .explanation-table th, .explanation-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            text-align: left;
+        }
+
+        .explanation-table th {
+            background: rgba(0, 240, 255, 0.05);
+            color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        .explanation-table tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .line-num {
+            font-family: monospace;
+            color: var(--neon-purple);
+            font-weight: bold;
+            width: 80px;
+        }
+
+        /* --- WORLD-CLASS ERD VISUALIZER --- */
+        .erd-container {
+            background: #11121a;
+            border: 2px dashed rgba(157, 78, 221, 0.4);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 30px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .erd-title {
+            color: var(--neon-blue);
+            font-size: 1.1rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .erd-flex {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .erd-box {
+            background: rgba(20, 21, 33, 0.9);
+            border: 2px solid var(--neon-blue);
+            border-radius: 10px;
+            width: 250px;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+        }
+
+        .erd-box.child-box {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 15px rgba(157, 78, 221, 0.1);
+        }
+
+        .erd-header {
+            background: var(--neon-blue);
+            color: #000;
+            font-weight: bold;
+            text-align: center;
+            padding: 8px;
+            border-radius: 8px 8px 0 0;
+            font-size: 0.95rem;
+        }
+
+        .erd-box.child-box .erd-header {
+            background: var(--neon-purple);
+            color: #fff;
+        }
+
+        .erd-body {
+            padding: 12px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .erd-body div {
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .erd-body div:last-child {
+            border-bottom: none;
+        }
+
+        .erd-arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--neon-purple);
+            font-weight: bold;
+        }
+
+        .erd-arrow i {
+            font-size: 2rem;
+        }
+
+        /* --- NAVIGATION ACTIONS --- */
+        .footer-nav {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 30px;
+        }
+
+        .next-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 28px;
+            background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue));
+            color: #ffffff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.05rem;
+            box-shadow: 0 4px 20px rgba(0, 240, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .next-btn:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 25px rgba(0, 240, 255, 0.5);
+        }
+
+        /* Responsive Rules */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; position: relative; border-right: none; border-bottom: 1px solid var(--border-color); }
+            .main-content { margin-left: 0; padding: 20px; }
+            .erd-flex { flex-direction: column; }
+            .erd-arrow { transform: rotate(90deg); margin: 10px 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-code"></i> SWE Portal
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Home Overview</a></li>
+            <li><a href="week1.html"><i class="fa-solid fa-cube"></i> Week 1: Core Blueprint</a></li>
+            <li><a href="week2.html" class="active"><i class="fa-solid fa-sitemap"></i> Week 2: Inheritance</a></li>
+            <li><a href="week3.html"><i class="fa-solid fa-arrows-split-up-and-left"></i> Week 3: Generalisation</a></li>
+            <li><a href="week4.html"><i class="fa-solid fa-crosshairs"></i> Week 4: Target Systems</a></li>
+            <li><a href="week5.html"><i class="fa-solid fa-database"></i> Week 5: Database & ERDs</a></li>
+            <li><a href="week6.html"><i class="fa-solid fa-vector-square"></i> Week 6: 3D Meshes & Relationships</a></li>
+            <li><a href="week8.html"><i class="fa-solid fa-vial-circle-check"></i> Week 8: Testing Frameworks</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header class="header-banner">
+            <h1>Pillar 2: Inheritance & Subclass Architectural Mechanics</h1>
+            <p>Comprehensive operational breakdown of Object-Oriented programming boundaries. Learn how code moves from a generalized base architecture down into specific, specialized child objects using Python syntax constructs from absolute scratch.</p>
+        </header>
+
+        <section class="section-block">
+            <h2><i class="fa-solid fa-book-bookmark"></i> Core Definitions: The Inheritance Hierarchy</h2>
+            <p><strong>Inheritance</strong> is a fundamental pillar of OOP that allows a class to derive properties and behaviours from another class, establishing a <strong>"is-a" relationship</strong> (e.g., a SniperRifle <em>is a</em> Weapon).</p>
+            
+            <div class="highlight-box">
+                <ul>
+                    <li><strong>Base Class (Superclass / Parent):</strong> The generalised class that contains common attributes and methods. It serves as a blueprint for more specific versions.</li>
+                    <li><strong>Derived Class (Subclass / Child):</strong> The specialised class that inherits from the Base Class. It can add unique features or modify inherited ones.</li>
+                </ul>
+            </div>
+
+            <h3>Why Use Inheritance?</h3>
+            <ul>
+                <li><strong>Reusability:</strong> Write code once in the parent class; all children use it automatically.</li>
+                <li><strong>Extensibility:</strong> Add new features to a child class without touching the parent class code.</li>
+                <li><strong>Clarity:</strong> Organises code into a logical hierarchy, reducing redundancy.</li>
+            </ul>
+
+            <h3>Key Technical Mechanisms</h3>
+            <p><strong>1. Method Overriding:</strong> This occurs when a <em>Derived Class</em> provides a specific implementation of a method that is already defined in its <em>Base Class</em>.</p>
+            <p><em>Purpose:</em> To allow a subclass to perform a general action (like fire()) in a way that is specific to its unique characteristics.</p>
+            <p><strong>2. The super() Function:</strong> The <code>super()</code> function is a built-in Python tool used to call methods from the Parent class inside the Child class.</p>
+            <p><em>In Constructors (__init__):</em> It ensures the parent’s attributes (like name or damage) are properly initialised before the child adds its own.</p>
+        </section>
+
+        <section class="section-block">
+            <h2><i class="fa-solid fa-graduation-cap"></i> New to Programming? Let's Break Down the Absolute Basics</h2>
+            <p>Before look at complex object patterns, let's look at the foundational code terms used in Python:</p>
+            <ul>
+                <li><strong>Variables (Attributes):</strong> These are boxes inside our class that store information/data. For example, storing an asset's <code>name</code> or a score value. In OOP, when a variable lives inside a class template, it is formally termed an <strong>Attribute</strong> or <strong>Instance Variable</strong>.</li>
+                <li><strong>Functions (Methods):</strong> These are blocks of code that perform actions. In OOP, when a function lives inside a class blueprint, it is called a <strong>Method</strong>. It defines the object's <strong>Behaviour</strong>.</li>
+                <li><strong>The <code>self</code> Keyword:</strong> This is a reference pointer to the *specific* object instance currently being modified in computer memory. Because a single blueprint can generate thousands of individual instances, <code>self</code> ensures Python updates the correct entity's internal dataset.</li>
+                <li><strong>The <code>__init__</code> Method (Constructor):</strong> This is a specialized initialization function that automatically executes the absolute microsecond a new object instance is constructed in memory.</li>
+            </ul>
+        </section>
+
+        <section class="section-block">
+            <h2><i class="fa-solid fa-shield-halved"></i> Practical Blueprinting: Comprehensive Code Breakdown</h2>
+            <p>Let's inspect the absolute standard way to construct a class using protective structural doors (Getters and Setters) alongside data security bounds (Visibility Indicators).</p>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span><i class="fa-solid fa-file-code"></i> Python Blueprint Blueprint</span>
+                    <span>Target: Data Security Isolation</span>
+                </div>
+                <pre>
+<span class="keyword">class</span> <span class="builtin">AssetProfile</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="builtin">self</span>, asset_name, baseline_value):
+        <span class="comment"># Public Attribute: Visible everywhere</span>
+        <span class="builtin">self</span>.asset_name = asset_name 
+        
+        <span class="comment"># Private Attribute: Bound tightly inside this specific capsule</span>
+        <span class="builtin">self</span>.__baseline_value = baseline_value 
+
+    <span class="comment"># Getter Method - Allows external systems to read private data securely</span>
+    <span class="keyword">def</span> <span class="function">get_baseline_value</span>(<span class="builtin">self</span>):
+        <span class="keyword">return</span> <span class="builtin">self</span>.__baseline_value
+
+    <span class="comment"># Setter Method - Evaluates incoming value criteria using validation statements</span>
+    <span class="keyword">def</span> <span class="function">set_baseline_value</span>(<span class="builtin">self</span>, proposed_value):
+        <span class="keyword">if</span> proposed_value >= <span class="number">0</span>:
+            <span class="builtin">self</span>.__baseline_value = proposed_value
+        <span class="keyword">else</span>:
+            <span class="keyword">raise</span> <span class="builtin">ValueError</span>(<span class="string">"Critical Error: Allocation metrics cannot fall below zero boundaries!"</span>)</pre>
+            </div>
+
+            <h3>Line-by-Line Execution Roadmap</h3>
+            <table class="explanation-table">
+                <thead>
+                    <tr>
+                        <th class="line-num">Line Context</th>
+                        <th>Syntactical Keyword / Statement</th>
+                        <th>Operational Architectural Significance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="line-num">Line 1</td>
+                        <td><code>class AssetProfile:</code></td>
+                        <td>Declares the structured template framework block. Uses Capitalized camel-case naming conventions.</td>
+                    </tr>
+                    <tr>
+                        <td class="line-num">Line 2</td>
+                        <td><code>def __init__(self, ...):</code></td>
+                        <td>Declares the automatic constructor framework used to instantiate data blocks right at object initialization.</td>
+                    </tr>
+                    <tr>
+                        <td class="line-num">Line 3</td>
+                        <td><code>self.asset_name = asset_name</code></td>
+                        <td>Initializes a fully public object field. Accessible by any external system script.</td>
+                    </tr>
+                    <tr>
+                        <td class="line-num">Line 4</td>
+                        <td><code>self.__baseline_value</code></td>
+                        <td>Uses the double underscore prefix string to trigger name mangling, hiding the internal property securely.</td>
+                    </tr>
+                    <tr>
+                        <td class="line-num">Line 5</td>
+                        <td><code>def get_baseline_value(self):</code></td>
+                        <td>Implements a standard <strong>Getter</strong> door to pass safe copy evaluation states back outward.</td>
+                    </tr>
+                    <tr>
+                        <td class="line-num">Line 6</td>
+                        <td><code>if proposed_value >= 0:</code></td>
+                        <td>An isolation wall checker preventing structural database breaking or data corruption states.</td>
+                    </tr>
+                    <tr>
+                        <td class="line-num">Line 7</td>
+                        <td><code>raise ValueError(...)</code></td>
+                        <td>Generates an active logical operational trap break statement when illegal arguments enter the system workspace.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="section-block">
+            <h2><i class="fa-solid fa-diagram-project"></i> Structural Architecture: Class ERD Mapping & Logic</h2>
+            <p>An Entity-Relationship Diagram (or localized Class Inheritance layout Diagram) defines structural entity properties, functional dependencies, and relationship links before writing down structural code statements.</p>
+
+            <div class="erd-container">
+                <div class="erd-title">Structural Enterprise Hierarchy Pipeline Mapping</div>
+                <div class="erd-flex">
+                    
+                    <div class="erd-box">
+                        <div class="erd-header">Employee [Base Class]</div>
+                        <div class="erd-body">
+                            <div>+ name : String</div>
+                            <div># salary : Float</div>
+                            <div>--------------------</div>
+                            <div>+ __init__(name, salary)</div>
+                            <div>+ get_bonus() -> Float</div>
+                        </div>
+                    </div>
+
+                    <div class="erd-arrow">
+                        <span>is-a Link</span>
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+
+                    <div class="erd-box child-box">
+                        <div class="erd-header">Manager [Derived Class]</div>
+                        <div class="erd-body">
+                            <div>+ department : String</div>
+                            <div>--------------------</div>
+                            <div>+ __init__(name, salary, dept)</div>
+                            <div>+ get_bonus() -> [Overridden]</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <h3>How to Read and Translate this Diagram into Clean Code:</h3>
+            <ol>
+                <li>The solid line connection with an upward arrow path denotes an <strong>Inheritance Hierarchy Connection</strong>. This proves that a <code>Manager</code> <em>is an</em> <code>Employee</code> at all times.</li>
+                <li>The <code>+</code> markers denote <strong>Public</strong> modifiers, while specialized properties implement core encapsulation boundaries.</li>
+                <li>The child entity automatically absorbs all base properties (like <code>name</code> and <code>salary</code>), but overrides structural function outputs (like <code>get_bonus</code>) to serve custom algorithmic needs.</li>
+            </ol>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span><i class="fa-solid fa-code-branch"></i> Practical Implementation of the Diagram Blueprint</span>
+                </div>
+                <pre>
+<span class="keyword">class</span> <span class="builtin">Employee</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="builtin">self</span>, name, salary):
+        <span class="builtin">self</span>.name = name
+        <span class="builtin">self</span>.salary = salary <span class="comment"># State baseline</span>
+
+    <span class="keyword">def</span> <span class="function">get_bonus</span>(<span class="builtin">self</span>):
+        <span class="keyword">return</span> <span class="builtin">self</span>.salary * <span class="number">0.10</span> <span class="comment"># Default calculation mapping</span>
+
+
+<span class="keyword">class</span> <span class="builtin">Manager</span>(<span class="builtin">Employee</span>): <span class="comment"># Passing Parent into Parentheses links the hierarchy</span>
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="builtin">self</span>, name, salary, department):
+        <span class="comment"># super() executes the Parent initialization sequence cleanly</span>
+        <span class="builtin">super</span>().<span class="function">__init__</span>(name, salary) 
+        <span class="builtin">self</span>.department = department <span class="comment"># Unique child modification</span>
+
+    <span class="keyword">def</span> <span class="function">get_bonus</span>(<span class="builtin">self</span>):
+        <span class="comment"># Overridden functional calculations</span>
+        <span class="keyword">return</span> <span class="builtin">self</span>.salary * <span class="number">0.20</span></pre>
+            </div>
+        </section>
+
+        <section class="section-block">
+            <h2><i class="fa-solid fa-pen-nib"></i> Rigorous Exam Preparation Sandbox</h2>
+            <p>Review these three realistic exam programming mock items designed directly around inheritance and structural OOP mechanics.</p>
+
+            <div class="highlight-box" style="background: rgba(0, 240, 255, 0.03); border-color: var(--neon-blue);">
+                <span class="card-btn" style="background: var(--neon-blue); color: #000; border: none; margin-bottom: 10px; display: inline-block;">Item 1: Easy (5 Marks)</span>
+                <p><strong>Scenario:</strong> Construct a base class called <code>Vehicle</code> containing a public string attribute <code>registration_id</code>. Derive a specialized subclass called <code>Truck</code> that implements an additional attribute <code>payload_capacity</code> (integer). Ensure both objects execute constructor initialization processes cleanly via <code>super()</code> usage rules.</p>
+                <details>
+                    <summary style="color: var(--neon-blue); cursor: pointer; font-weight: bold;">View Canonical Solution Code</summary>
+                    <div class="code-container" style="margin-top: 10px;">
+                        <pre>
+<span class="keyword">class</span> <span class="builtin">Vehicle</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="builtin">self</span>, registration_id):
+        <span class="builtin">self</span>.registration_id = registration_id
+
+<span class="keyword">class</span> <span class="builtin">Truck</span>(<span class="builtin">Vehicle</span>):
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="builtin">self</span>, registration_id, payload_capacity):
+        <span class="builtin">super</span>().<span class="function">__init__</span>(registration_id)
+        <span class="builtin">self</span>.payload_capacity = payload_capacity</pre>
+                    </div>
+                </details>
+            </div>
+
+            <div class="highlight-box" style="background: rgba(157, 78, 221, 0.03); border-color: var(--neon-purple);">
+                <span class="card-btn" style="background: var(--neon-purple); color: #fff; border: none; margin-bottom: 10px; display: inline-block;">Item 2: Medium (5 Marks)</span>
+                <p><strong>Scenario:</strong> Write an encapsulated <code>SavingsAccount</code> blueprint. Store an internal balance property as private (<code>__balance</code>). Implement a functional <code>set_balance</code> validation setter. If an incoming balance parameter falls under 100.0, raise an active <code>ValueError</code> tracking alert sequence to safeguard data validation compliance rules.</p>
+                <details>
+                    <summary style="color: var(--neon-purple); cursor: pointer; font-weight: bold;">View Canonical Solution Code</summary>
+                    <div class="code-container" style="margin-top: 10px;">
+                        <pre>
+<span class="keyword">class</span> <span class="builtin">SavingsAccount</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="builtin">self</span>, opening_deposit):
+        <span class="builtin">self</span>.__balance = <span class="number">0.0</span>
+        <span class="builtin">self</span>.set_balance(opening_deposit)
+
+    <span class="keyword">def</span> <span class="function">get_balance</span>(<span class="builtin">self</span>):
+        <span class="keyword">return</span> <span class="builtin">self</span>.__balance
+
+    <span class="keyword">def</span> <span class="function">set_balance</span>(<span class="builtin">self</span>, total_amount):
+        <span class="keyword">if</span> total_amount &lt; <span class="number">100.0</span>:
+            <span class="keyword">raise</span> <span class="builtin">ValueError</span>(<span class="string">"Security Exception: Savings accounts require a minimum balance of 100.0 units!"</span>)
+        <span class="builtin">self</span>.__balance = total_amount</pre>
+                    </div>
+                </details>
+            </div>
+
+            <div class="alert-box" style="background: rgba(255, 107, 107, 0.03);">
+                <span class="card-btn" style="background: var(--neon-orange); color: #fff; border: none; margin-bottom: 10px; display: inline-block;">Item 3: Hard (5 Marks)</span>
+                <p><strong>Scenario:</strong> Model an enterprise production architecture sequence. Write a parent template structural layout <code>ServiceWorker</code> containing a private base attribute tracking <code>__hourly_rate</code>, accompanied by clean getter/setter doors. Construct an inheriting subclass called <code>Contractor</code> that overrides a functional calculation loop <code>calculate_payroll_payout(hours_logged)</code>, integrating a localized conditional evaluation loop to process standard metrics or overtime parameters safely.</p>
+                <details>
+                    <summary style="color: var(--neon-orange); cursor: pointer; font-weight: bold;">View Canonical Solution Code</summary>
+                    <div class="code-container" style="margin-top: 10px;">
+                        <pre>
+<span class="keyword">class</span> <span class="builtin">ServiceWorker</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="builtin">self</span>, standard_rate):
+        <span class="builtin">self</span>.set_hourly_rate(standard_rate)
+
+    <span class="keyword">def</span> <span class="function">get_hourly_rate</span>(<span class="builtin">self</span>):
+        <span class="keyword">return</span> <span class="builtin">self</span>.__hourly_rate
+
+    <span class="keyword">def</span> <span class="function">set_hourly_rate</span>(<span class="builtin">self</span>, numeric_rate):
+        <span class="keyword">if</span> numeric_rate &lt;= <span class="number">0</span>:
+            <span class="keyword">raise</span> <span class="builtin">ValueError</span>(<span class="string">"Operation Halt: Payment rate criteria values must be positive non-zero floats."</span>)
+        <span class="builtin">self</span>.__hourly_rate = numeric_rate
+
+
+<span class="keyword">class</span> <span class="builtin">Contractor</span>(<span class="builtin">ServiceWorker</span>):
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="builtin">self</span>, standard_rate):
+        <span class="builtin">super</span>().<span class="function">__init__</span>(standard_rate)
+
+    <span class="keyword">def</span> <span class="function">calculate_payroll_payout</span>(<span class="builtin">self</span>, hours_logged):
+        <span class="keyword">if</span> hours_logged &gt; <span class="number">38</span>:
+            overtime_hours = hours_logged - <span class="number">38</span>
+            <span class="keyword">return</span> (<span class="number">38</span> * <span class="builtin">self</span>.get_hourly_rate()) + (overtime_hours * <span class="builtin">self</span>.get_hourly_rate() * <span class="number">1.5</span>)
+        <span class="keyword">return</span> hours_logged * <span class="builtin">self</span>.get_hourly_rate()</pre>
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <footer class="footer-nav">
+            <a href="week63.html" class="next-btn">
+                Proceed to Pillar 3: Polymorphism <i class="fa-solid fa-circle-arrow-right"></i>
+            </a>
+        </footer>
+    </main>
+
+</body>
+</html>

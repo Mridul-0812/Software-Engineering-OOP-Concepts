@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOP Learning Portal | Week 6: Encapsulation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0d0e15;
+            --bg-card: rgba(20, 20, 35, 0.6);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b4b7c5;
+            --neon-blue: #00f0ff;
+            --neon-purple: #9d4edd;
+            --sidebar-width: 260px;
+            --terminal-bg: #050508;
+            --success-green: #39ff14;
+            --warning-orange: #ff9e00;
+            --danger-red: #ff0055;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #12131c;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: var(--neon-blue);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-menu li a:hover {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .sidebar-menu li a.active {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.1);
+            border-left-color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        .header-banner {
+            margin-bottom: 40px;
+            position: relative;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .header-banner h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-banner p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* --- EPITOME DESIGN LAYOUT --- */
+        .concept-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--neon-blue);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px solid rgba(0, 240, 255, 0.2);
+            padding-bottom: 8px;
+        }
+
+        .section-title i {
+            color: var(--neon-purple);
+        }
+
+        p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .highlight-box {
+            background: rgba(157, 78, 221, 0.1);
+            border-left: 4px solid var(--neon-purple);
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 25px;
+        }
+
+        .highlight-box h4 {
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- CODE ANATOMY EXPLANATIONS --- */
+        .code-container {
+            background: var(--terminal-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 25px 0;
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+        }
+
+        .code-header {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 12px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            border-radius: 0 12px 0 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        pre {
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #f8f8f2;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        .comment { color: #6272a4; font-style: italic; }
+        .keyword { color: #ff79c6; font-weight: bold; }
+        .builtin { color: #8be9fd; }
+        .string { color: #f1fa8c; }
+        .number { color: #bd93f9; }
+        .def { color: #50fa7b; font-weight: bold; }
+        .self { color: #ffb86c; font-style: italic; }
+
+        /* --- LINE-BY-LINE breakdown table --- */
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+
+        .breakdown-table th, .breakdown-table td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .breakdown-table th {
+            background-color: rgba(0, 240, 255, 0.05);
+            color: var(--neon-blue);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        .breakdown-table tr:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .code-inline {
+            font-family: 'Consolas', monospace;
+            background: rgba(255,255,255,0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #ff79c6;
+            font-size: 0.9rem;
+        }
+
+        /* --- ERD / VISUAL CLASS MATRIX --- */
+        .erd-matrix {
+            background: #141520;
+            border: 2px dashed rgba(0, 240, 255, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 30px 0;
+        }
+
+        .erd-header {
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            background: linear-gradient(90deg, var(--neon-purple), var(--neon-blue));
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .erd-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .erd-box {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .erd-box h5 {
+            color: var(--neon-blue);
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(0,240,255,0.2);
+            padding-bottom: 4px;
+            font-size: 1rem;
+        }
+
+        .erd-box ul {
+            list-style: none;
+        }
+
+        .erd-box ul li {
+            padding: 6px 0;
+            font-size: 0.9rem;
+            font-family: 'Consolas', monospace;
+        }
+
+        /* --- EXAM PREPARATION ARCHITECTURE --- */
+        .exam-panel {
+            border: 1px solid var(--danger-red);
+            background: rgba(255, 0, 85, 0.03);
+            border-radius: 16px;
+            padding: 32px;
+            margin-top: 50px;
+        }
+
+        .exam-badge {
+            background: var(--danger-red);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .question-card {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .difficulty-indicator {
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: 10px;
+        }
+
+        .easy { background: rgba(57, 255, 20, 0.2); color: var(--success-green); }
+        .medium { background: rgba(255, 158, 0, 0.2); color: var(--warning-orange); }
+        .hard { background: rgba(255, 0, 85, 0.2); color: var(--danger-red); }
+
+        /* --- INTERACTION BUTTONS --- */
+        .navigation-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 50px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 30px;
+        }
+
+        .next-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 32px;
+            background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue));
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(157, 78, 221, 0.3);
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; position: relative; border-right: none; border-bottom: 1px solid var(--border-color); }
+            .main-content { margin-left: 0; padding: 20px; }
+            .erd-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-code"></i> SWE Portal
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Home Overview</a></li>
+            <li><a href="week1.html"><i class="fa-solid fa-cube"></i> Week 1: Core Blueprint</a></li>
+            <li><a href="week2.html"><i class="fa-solid fa-sitemap"></i> Week 2: Inheritance</a></li>
+            <li><a href="week3.html"><i class="fa-solid fa-arrows-split-up-and-left"></i> Week 3: Generalisation</a></li>
+            <li><a href="week4.html"><i class="fa-solid fa-crosshairs"></i> Week 4: Target Systems</a></li>
+            <li><a href="week5.html"><i class="fa-solid fa-database"></i> Week 5: Database & ERDs</a></li>
+            <li><a href="week6.html" class="active"><i class="fa-solid fa-vector-square"></i> Week 6: 3D Meshes & Relationships</a></li>
+            <li><a href="week8.html"><i class="fa-solid fa-vial-circle-check"></i> Week 8: Testing Frameworks</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header class="header-banner">
+            <h1>Week 6: The Core Foundations of OOP Practicality</h1>
+            <p>An elite, uncompromising, compilation of object-oriented syntax mechanics, explicit operational parameters, and programmatic pipeline architectures in Python. This comprehensive masterclass strips away abstraction to focus exclusively on direct implementation execution, layout logic, and exam configuration.</p>
+        </header>
+
+        <section class="concept-section">
+            <h2 class="section-title"><i class="fa-solid fa-capsules"></i> Pillar 1: Encapsulation (Practical Mechanics)</h2>
+            
+            <div class="highlight-box">
+                <h4><i class="fa-solid fa-terminal"></i> Word-for-Word Curricular Definition:</h4>
+                <p><strong>What is it in simple language?</strong><br>
+                Imagine a capsule pill. The actual medicine is safely bundled inside a protective shell. You swallow the pill to get the benefits, but you don't open it up and mess with the raw chemical powder inside. In programming, <strong>Encapsulation</strong> is the practice of bundling data (variables) and the actions that use them (methods) into a single "capsule" (a Class). More importantly, it is about <strong>hiding</strong> the internal data from the outside world to protect it from being accidentally or maliciously changed. We force outside code to use specific, safe "doors" (methods) to interact with the data.</p>
+            </div>
+
+            <p>For an absolute beginner who has never processed a line of Python code before, let us systematically dismantle the structural anatomy of how programming components operate. Think of code as a highly disciplined recipe manual. You have labels for items, storage zones, and sequences of directions.</p>
+
+            <h3>The Foundational Vocabularies of Execution</h3>
+            <p>Before executing syntax, you must explicitly differentiate these core structures:</p>
+            <ul>
+                <li><strong>Class:</strong> The ultimate structural master blueprint or template layout. It consumes zero live operational system memory. It simply maps out the requirements.</li>
+                <li><strong>Instance / Object:</strong> The physical entity brought to life inside the active hardware memory using that blueprint. If <code class="code-inline">Player</code> is the blueprint, then player one sitting at computer memory position 0x7FFF is a unique instance.</li>
+                <li><strong>Attribute / Variable:</strong> A storage box holding information inside an object (e.g., health, name, gold score).</li>
+                <li><strong>Method / Function:</strong> A block of executable instructions embedded inside the blueprint that allows an object to perform actions or state alterations (e.g., move forward, accept damage, calculate interest).</li>
+            </ul>
+
+            <h3>The Syntactical Core Architecture</h3>
+            <p>To implement variable protection, Python uses specific symbols called <strong>Visibility Indicators</strong>. By typing underscores directly in front of your attribute names, you change who is physically allowed to see and modify that storage container.</p>
+
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Visibility Level</th>
+                        <th>Python Syntax Code</th>
+                        <th>Architectural Access Right Meaning</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Public</strong></td>
+                        <td><code class="code-inline">self.name</code></td>
+                        <td>Anyone anywhere can directly look at, manipulate, or delete this variable from outside the object.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Protected</strong></td>
+                        <td><code class="code-inline">self._name</code></td>
+                        <td>A serious structural warning to other software engineers: <em>"Please do not touch or alter this variable directly unless you are inside a child subclass."</em></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Private</strong></td>
+                        <td><code class="code-inline">self.__name</code></td>
+                        <td>Absolute lockdown. Completely hidden from direct sight. Python intentionally scrambles the internal storage label using <strong>"Name Mangling"</strong>, preventing external code from executing mutations directly.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="concept-section">
+            <h2 class="section-title"><i class="fa-solid fa-code-branch"></i> Dismantling Every Line of Encapsulation Code</h2>
+            <p>Let us write a fully encapsulated <code class="code-inline">BankAccount</code> script designed to block invalid changes. Study this codebase meticulously; every line is unpacked immediately below it.</p>
+
+            <div class="code-container">
+                <div class="code-header">Python Engine script</div>
+<pre><span class="keyword">class</span> <span class="def">BankAccount</span>:
+    
+    <span class="keyword">def</span> <span class="def">__init__</span>(<span class="self">self</span>, account_holder, initial_balance):
+        <span class="self">self</span>.account_holder = account_holder
+        <span class="keyword">if</span> initial_balance &gt;= <span class="number">0</span>:
+            <span class="self">self</span>.__balance = initial_balance
+        <span class="keyword">else</span>:
+            <span class="keyword">raise</span> <span class="builtin">ValueError</span>(<span class="string">"Initial balance cannot be negative!"</span>)
+
+    <span class="keyword">def</span> <span class="def">get_balance</span>(<span class="self">self</span>):
+        <span class="keyword">return</span> <span class="self">self</span>.__balance
+
+    <span class="keyword">def</span> <span class="def">set_balance</span>(<span class="self">self</span>, new_balance):
+        <span class="keyword">if</span> new_balance &gt;= <span class="number">0</span>:
+            <span class="self">self</span>.__balance = new_balance
+        <span class="keyword">else</span>:
+            <span class="builtin">print</span>(<span class="string">"Error: Invalid balance amount requested."</span>)</pre>
+            </div>
+
+            <h3>Absolute Line-by-Line Syntactical Deconstruction</h3>
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Exact Statement Chunk</th>
+                        <th>Technical Operational Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code class="code-inline">class BankAccount:</code></td>
+                        <td>Uses the <code class="code-inline">class</code> keyword to claim a brand new blueprint framework workspace in memory called BankAccount. Notice the PascalCase capitalized naming format.</td>
+                    </tr>
+                    <tr>
+                        <td><code class="code-inline">def __init__(self, ...):</code></td>
+                        <td>Declares the <strong>Constructor Method</strong>. The double underscores mean this is built-in. It fires immediately, autonomously, and without manual invocation the precise microsecond an object is created.</td>
+                    </tr>
+                    <tr>
+                        <td><code class="code-inline">self</code></td>
+                        <td>The absolute anchor point reference variable. Because a blueprint can generate millions of actual living objects in memory, <code class="code-inline">self</code> explicitly tracks <em>"this specific object's data block currently running right now."</em> It prevents data bleeding across targets.</td>
+                    </tr>
+                    <tr>
+                        <td><code class="code-inline">account_holder, initial_balance</code></td>
+                        <td>Parameters (temporary gateway variables). These act as custom input funnels that accept data when outside modules pass arguments inside the initialization parentheses.</td>
+                    </tr>
+                    <tr>
+                        <td><code class="code-inline">self.account_holder = account_holder</code></td>
+                        <td>Creates a <strong>Public Attribute</strong>. It maps the data received from the entry funnel variable straight into the permanent object memory layout.</td>
+                    </tr>
+                    <tr>
+                        <td><code class="code-inline">if initial_balance >= 0:</code></td>
+                        <td>An operational evaluation path checking whether the numerical balance input value meets valid parameters (zero or higher).</td>
+                    </tr>
+                    <tr>
+                        <td><code class="code-inline">self.__balance = initial_balance</code></td>
+                        <td>Creates a <strong>Private Attribute</strong> due to the <code class="code-inline">__</code> prefix. This locks the critical parameter inside the container, preventing external code from bypassing security boundaries.</td>
+                    </tr>
+                    <tr>
+                        <td><code class="code-inline">else:</code></td>
+                        <td>Executes an alternate branch when the evaluation statement yields a false result.</td>
+                    </tr>
+                    <tr>
+                        <td><code class="code-inline">raise ValueError(...)</td>
+                        <td>Forces an absolute runtime application crash, generating a custom diagnostic message. This prevents unsafe data initialization.</td>
+                    </tr>
+                    <tr>
+                        <td><code class="code-inline">def get_balance(self):</code></td>
+                        <td>Declares a <strong>Getter Method</strong>. This serves as a read-only access port. External code can ask for the data via this function, but cannot modify it.</td>
+                    </tr>
+                    <tr>
+                        <td><code class="code-inline">return self.__balance</code></td>
+                        <td>The <code class="code-inline">return</code> directive passes the hidden attribute's current state value back to whoever called the method.</td>
+                    </tr>
+                    <tr>
+                        <td><code class="code-inline">def set_balance(self, new_balance):</code></td>
+                        <td>Declares a <strong>Setter Method</strong>. This is a controlled modification port. External code must pass its desired adjustment value through this gateway.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="concept-section">
+            <h2 class="section-title"><i class="fa-solid fa-diagram-project"></i> Mapping Class Blueprints & ERDs to Code</h2>
+            <p>In software engineering examinations, you are frequently presented with a structural layout block. You must interpret the design requirements and immediately synthesize working code from it.</p>
+            
+            <div class="erd-matrix">
+                <div class="erd-header">UML Blueprint Schema: CharacterEntity</div>
+                <div class="erd-grid">
+                    <div class="erd-box">
+                        <h5>Attributes (Variables Block)</h5>
+                        <ul>
+                            <li>+ name : String (Public)</li>
+                            <li>- __health : Integer (Private)</li>
+                            <li>- __mana : Integer (Private)</li>
+                        </ul>
+                    </div>
+                    <div class="erd-box">
+                        <h5>Behaviors (Methods Block)</h5>
+                        <ul>
+                            <li>+ __init__(name, health, mana)</li>
+                            <li>+ get_health() -> Integer</li>
+                            <li>+ set_health(value) : Void</li>
+                            <li>+ use_magic(cost) : Void</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <p>Observe how we explicitly transform the visual structural constraints above into a high-performance, validated Python class object representation:</p>
+
+            <div class="code-container">
+                <div class="code-header">Production Character Logic</div>
+<pre><span class="keyword">class</span> <span class="def">CharacterEntity</span>:
+    
+    <span class="keyword">def</span> <span class="def">__init__</span>(<span class="self">self</span>, name, health, mana):
+        <span class="self">self</span>.name = name  <span class="comment"># Public attribute</span>
+        
+        <span class="comment"># Protect health with explicit type checking and bounds protection</span>
+        <span class="keyword">if</span> <span class="builtin">isinstance</span>(health, <span class="builtin">int</span>) <span class="keyword">and</span> health &gt;= <span class="number">0</span>:
+            <span class="self">self</span>.__health = health
+        <span class="keyword">else</span>:
+            <span class="self">self</span>.__health = <span class="number">100</span> <span class="comment"># Fallback safe structural default</span>
+            
+        <span class="keyword">if</span> mana &gt;= <span class="number">0</span>:
+            <span class="self">self</span>.__mana = mana
+        <span class="keyword">else</span>:
+            <span class="keyword">raise</span> <span class="builtin">ValueError</span>(<span class="string">"Mana parameters cannot be sub-zero!"</span>)
+
+    <span class="comment"># GETTER for health read operations</span>
+    <span class="keyword">def</span> <span class="def">get_health</span>(<span class="self">self</span>):
+        <span class="keyword">return</span> <span class="self">self</span>.__health
+
+    <span class="comment"># SETTER with defensive logic guarding health state</span>
+    <span class="keyword">def</span> <span class="def">set_health</span>(<span class="self">self</span>, value):
+        <span class="keyword">if</span> value &lt; <span class="number">0</span>:
+            <span class="self">self</span>.__health = <span class="number">0</span>
+            <span class="builtin">print</span>(<span class="string">"Character has flatlined. Health set to minimum 0."</span>)
+        <span class="keyword">else</span>:
+            <span class="self">self</span>.__health = value
+
+    <span class="comment"># Operational capability mapping</span>
+    <span class="keyword">def</span> <span class="def">use_magic</span>(<span class="self">self</span>, cost):
+        <span class="keyword">if</span> <span class="self">self</span>.__mana & prime; &gt;= cost:
+            <span class="self">self</span>.__mana -= cost
+            <span class="builtin">print</span>(f<span class="string">"Spell cast successfully! Remaining Mana: {self.__mana}"</span>)
+        <span class="keyword">else</span>:
+            <span class="builtin">print</span>(<span class="string">"Insufficient mana pools available!"</span>)</pre>
+            </div>
+        </section>
+
+        <section class="concept-section">
+            <h2 class="section-title"><i class="fa-solid fa-dumbbell"></i> Architectural Practice Drills</h2>
+            <p>Review the application scripts below to understand how encapsulation behaves when multiple objects interact in real time. Notice how objects interact via methods, rather than directly touching each other's data attributes.</p>
+
+            <div class="code-container">
+                <div class="code-header">Drill 1: Secure Security Vault Verification</div>
+<pre><span class="keyword">class</span> <span class="def">SecurityVault</span>:
+    <span class="keyword">def</span> <span class="def">__init__</span>(<span class="self">self</span>, owner, master_code):
+        <span class="self">self</span>.owner = owner
+        <span class="self">self</span>.__master_code = master_code  <span class="comment"># Strictly Encapsulated String</span>
+        
+    <span class="comment"># Security validation gate instead of a raw getter</span>
+    <span class="keyword">def</span> <span class="def">verify_access</span>(<span class="self">self</span>, input_attempt):
+        <span class="keyword">return</span> <span class="self">self</span>.__master_code == input_attempt
+
+<span class="comment"># Execution confirmation</span>
+vault = SecurityVault(<span class="string">"Agent Smith"</span>, <span class="string">"Alpha99!"</span>)
+<span class="builtin">print</span>(vault.verify_access(<span class="string">"WrongCode"</span>)) <span class="comment"># Evaluates to False safely</span>
+<span class="builtin">print</span>(vault.verify_access(<span class="string">"Alpha99!"</span>)) <span class="comment"># Evaluates to True safely</span></pre>
+            </div>
+
+            <div class="code-container">
+                <div class="code-header">Drill 2: Inventory Capacity Management</div>
+<pre><span class="keyword">class</span> <span class="def">SpaceCargo</span>:
+    <span class="keyword">def</span> <span class="def">__init__</span>(<span class="self">self</span>, maximum_weight):
+        <span class="self">self</span>.__max_weight = maximum_weight
+        <span class="self">self</span>.__current_cargo = []
+
+    <span class="keyword">def</span> <span class="def">add_item</span>(<span class="self">self</span>, item_name, item_weight):
+        <span class="comment"># Calculate potential weight before mutating state</span>
+        current_total = <span class="builtin">sum</span>([item[<span class="number">1</span>] <span class="keyword">for</span> item <span class="keyword">in</span> <span class="self">self</span>.__current_cargo])
+        <span class="keyword">if</span> current_total + item_weight &lt;= <span class="self">self</span>.__max_weight:
+            <span class="self">self</span>.__current_cargo.append((item_name, item_weight))
+            <span class="keyword">return</span> <span class="keyword">True</span>
+        <span class="keyword">return</span> <span class="keyword">False</span>
+
+    <span class="keyword">def</span> <span class="def">get_manifest</span>(<span class="self">self</span>):
+        <span class="keyword">return</span> [item[<span class="number">0</span>] <span class="keyword">for</span> item <span class="keyword">in</span> <span class="self">self</span>.__current_cargo]</pre>
+            </div>
+        </section>
+
+        <section class="exam-panel">
+            <span class="exam-badge"><i class="fa-solid fa-graduation-cap"></i> Examination Assessment Engine</span>
+            <h2>Encapsulation Coding Examination</h2>
+            <p>The following three technical test problems are engineered precisely to match standard examination parameters. Each question requires a complete programmatic solution mapping to its assigned difficulty rubric.</p>
+
+            <div class="question-card">
+                <h3>Question 1: Patient Biometrics Protection <span class="difficulty-indicator easy">Easy - 5 Marks</span></h3>
+                <p><strong>Scenario:</strong> Design a medical records processing framework entity class called <code class="code-inline">PatientRecord</code>. The blueprint must accept and initialize a string parameter tracking <code class="code-inline">patient_name</code> and a floating-point metric value tracking <code class="code-inline">body_temperature</code> during constructor instantiation.</p>
+                <p><strong>Technical Constraints:</strong> The body temperature attribute must be flagged strictly private. Implement a secure getter method named <code class="code-inline">get_temperature()</code> alongside a setter method named <code class="code-inline">set_temperature()</code>. The setter function must explicitly evaluate incoming assignments; if an update is outside the rational range of 30.0 to 45.0 degrees, it must discard the input and print out <code class="code-inline">"Invalid biological metric reading rejected."</code></p>
+                
+                <div class="code-container">
+                    <div class="code-header">Official Solution Schema</div>
+<pre><span class="keyword">class</span> <span class="def">PatientRecord</span>:
+    <span class="keyword">def</span> <span class="def">__init__</span>(<span class="self">self</span>, patient_name, body_temperature):
+        <span class="self">self</span>.patient_name = patient_name
+        <span class="self">self</span>.__body_temperature = <span class="number">37.0</span>  <span class="comment"># Safe structural standard initialization</span>
+        <span class="self">self</span>.set_temperature(body_temperature) <span class="comment"># Route through setter logic</span>
+
+    <span class="keyword">def</span> <span class="def">get_temperature</span>(<span class="self">self</span>):
+        <span class="keyword">return</span> <span class="self">self</span>.__body_temperature
+
+    <span class="keyword">def</span> <span class="def">set_temperature</span>(<span class="self">self</span>, value):
+        <span class="keyword">if</span> <span class="number">30.0</span> &lt;= value &lt;= <span class="number">45.0</span>:
+            <span class="self">self</span>.__body_temperature = value
+        <span class="keyword">else</span>:
+            <span class="builtin">print</span>(<span class="string">"Invalid biological metric reading rejected."</span>)</pre>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <h3>Question 2: Smart Digital Wallet Ledger <span class="difficulty-indicator medium">Medium - 5 Marks</span></h3>
+                <p><strong>Scenario:</strong> You are tasked with coding a transaction validation object engine called <code class="code-inline">DigitalWallet</code>. It must instantiate tracking an explicit alphanumeric <code class="code-inline">wallet_id</code> and a private floating-point balance set initially to precisely zero.</p>
+                <p><strong>Technical Constraints:</strong> Direct manipulation of the balance attribute is prohibited. You must supply a single execution getter method to view the balance safely. To modify the variable, you must implement two specific internal methods: <code class="code-inline">deposit_funds(amount)</code> and <code class="code-inline">withdraw_funds(amount)</code>. If a withdrawal amount exceeds the private balance pool, or if either modification amount is less than or equal to zero, you must reject the operation and raise a <code class="code-inline">ValueError</code> exception detailing the failure.</p>
+                
+                <div class="code-container">
+                    <div class="code-header">Official Solution Schema</div>
+<pre><span class="keyword">class</span> <span class="def">DigitalWallet</span>:
+    <span class="keyword">def</span> <span class="def">__init__</span>(<span class="self">self</span>, wallet_id):
+        <span class="self">self</span>.wallet_id = wallet_id
+        <span class="self">self</span>.__wallet_balance = <span class="number">0.0</span>
+
+    <span class="keyword">def</span> <span class="def">get_wallet_balance</span>(<span class="self">self</span>):
+        <span class="keyword">return</span> <span class="self">self</span>.__wallet_balance
+
+    <span class="keyword">def</span> <span class="def">deposit_funds</span>(<span class="self">self</span>, amount):
+        <span class="keyword">if</span> amount &gt; <span class="number">0</span>:
+            <span class="self">self</span>.__wallet_balance += amount
+        <span class="keyword">else</span>:
+            <span class="keyword">raise</span> <span class="builtin">ValueError</span>(<span class="string">"Deposit increments must be positive numeric thresholds!"</span>)
+
+    <span class="keyword">def</span> <span class="def">withdraw_funds</span>(<span class="self">self</span>, amount):
+        <span class="keyword">if</span> amount &lt;= <span class="number">0</span>:
+            <span class="keyword">raise</span> <span class="builtin">ValueError</span>(<span class="string">"Withdrawal tracking requested must be positive value parameters."</span>)
+        <span class="keyword">if</span> amount &gt; <span class="self">self</span>.__wallet_balance:
+            <span class="keyword">raise</span> <span class="builtin">ValueError</span>(<span class="string">"Transaction aborted: Insufficient asset funding coverage."</span>)
+        <span class="self">self</span>.__wallet_balance -= amount</pre>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <h3>Question 3: Automated Corporate Payroll Allocation Engine <span class="difficulty-indicator hard">Hard - 5 Marks</span></h3>
+                <p><strong>Scenario:</strong> Build an elite production-grade administrative employee resource class defined explicitly as <code class="code-inline">PayrollProfile</code>. The initialization framework constructor must configure public string inputs for <code class="code-inline">employee_name</code>, an isolated private floating-point structure for <code class="code-inline">__base_salary</code>, and an internal private dictionary structure tracking historical tax deductions called <code class="code-inline">__withholdings_ledger</code>.</p>
+                <p><strong>Technical Constraints:</strong> Build a getter and setter mechanism for the salary variable. Ensure the setter blocks values under 2000.0 base credits. Furthermore, implement an operational processing method labeled <code class="code-inline">commit_deduction(tax_category, percentage)</code>. This method must calculate the absolute deduction cost using the private salary attribute and register it to the private dictionary array. Finally, implement a calculated read-only getter called <code class="code-inline">get_net_payout()</code> that subtracts all recorded deductions from the base salary and returns the final calculated number.</p>
+                
+                <div class="code-container">
+                    <div class="code-header">Official Solution Schema</div>
+<pre><span class="keyword">class</span> <span class="def">PayrollProfile</span>:
+    <span class="keyword">def</span> <span class="def">__init__</span>(<span class="self">self</span>, employee_name, base_salary):
+        <span class="self">self</span>.employee_name = employee_name
+        <span class="self">self</span>.__withholdings_ledger = {}  <span class="comment"># Structural key-value ledger dictionary</span>
+        <span class="self">self</span>.set_salary(base_salary)
+
+    <span class="keyword">def</span> <span class="def">get_salary</span>(<span class="self">self</span>):
+        <span class="keyword">return</span> <span class="self">self</span>.__base_salary
+
+    <span class="keyword">def</span> <span class="def">set_salary</span>(<span class="self">self</span>, value):
+        <span class="keyword">if</span> value &gt;= <span class="number">2000.0</span>:
+            <span class="self">self</span>.__base_salary = <span class="builtin">float</span>(value)
+        <span class="keyword">else</span>:
+            <span class="keyword">raise</span> <span class="builtin">ValueError</span>(<span class="string">"Salary cannot fall below standard corporate operational baselines."</span>)
+
+    <span class="keyword">def</span> <span class="def">commit_deduction</span>(<span class="self">self</span>, tax_category, percentage):
+        <span class="keyword">if</span> <span class="number">0.0</span> &lt; percentage &lt; <span class="number">1.0</span>:
+            deduction_amount = <span class="self">self</span>.__base_salary * percentage
+            <span class="self">self</span>.__withholdings_ledger[tax_category] = deduction_amount
+        <span class="keyword">else</span>:
+            <span class="keyword">raise</span> <span class="builtin">ValueError</span>(<span class="string">"Percentage ratios must fall strictly within 0.0 and 1.0 ranges."</span>)
+
+    <span class="keyword">def</span> <span class="def">get_net_payout</span>(<span class="self">self</span>):
+        total_deductions = <span class="builtin">sum</span>(<span class="self">self</span>.__withholdings_ledger.values())
+        <span class="keyword">return</span> <span class="self">self</span>.__base_salary - total_deductions</pre>
+                </div>
+            </div>
+        </section>
+
+        <div class="navigation-footer">
+            <a href="week62.html" class="next-btn">
+                Proceed to Pillar 2: Inheritance <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOP Learning Portal | Week 1</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0d0e15;
+            --bg-card: rgba(20, 20, 35, 0.6);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b4b7c5;
+            --neon-blue: #00f0ff;
+            --neon-purple: #9d4edd;
+            --sidebar-width: 260px;
+            --terminal-bg: #05060a;
+            --accent-green: #39ff14;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #12131c;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: var(--neon-blue);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-menu li a:hover {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .sidebar-menu li a.active {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.1);
+            border-left-color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        .header-banner {
+            margin-bottom: 40px;
+            position: relative;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .header-banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-banner p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* --- STUDY SECTIONS --- */
+        .study-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .study-section h2 {
+            font-size: 1.6rem;
+            color: var(--neon-blue);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+            padding-bottom: 8px;
+        }
+
+        .study-section h3 {
+            font-size: 1.25rem;
+            color: var(--neon-purple);
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        strong {
+            color: var(--text-primary);
+        }
+
+        ul {
+            margin-left: 25px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+        }
+
+        /* --- EXPLANATION SPECIFICATION BOXES --- */
+        .explanation-block {
+            background: rgba(157, 78, 221, 0.05);
+            border-left: 4px solid var(--neon-purple);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .explanation-block h4 {
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-size: 1.05rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- CODE SCRIPT CONTAINER --- */
+        .code-container {
+            background-color: var(--terminal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0 25px 0;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .code-container::before {
+            content: "PYTHON SOURCE SCRIPT";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 12px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            border-radius: 0 7px 0 7px;
+            font-family: monospace;
+        }
+
+        pre {
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            color: #e0e0e0;
+            line-height: 1.5;
+        }
+
+        .comment { color: #757575; font-style: italic; }
+        .keyword { color: #ff79c6; font-weight: bold; }
+        .class-name { color: #50fa7b; font-weight: bold; }
+        .string { color: #f1fa8c; }
+        .builtin { color: #8be9fd; }
+
+        /* --- DATA MATRIX TABLES --- */
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(10, 11, 18, 0.5);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .matrix-table th, .matrix-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border: 1px solid var(--border-color);
+        }
+
+        .matrix-table th {
+            background-color: rgba(0, 240, 255, 0.1);
+            color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        .matrix-table tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        /* --- EXAM PREPARATION BLOCK --- */
+        .exam-block {
+            background: rgba(0, 240, 255, 0.02);
+            border: 1px solid var(--neon-blue);
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 40px;
+        }
+
+        .exam-block h2 {
+            color: var(--neon-blue);
+            border-bottom: 1px solid var(--neon-blue);
+        }
+
+        .question-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .question-header {
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .marks {
+            color: var(--neon-purple);
+        }
+
+        .solution-box {
+            background: rgba(57, 255, 20, 0.03);
+            border-left: 4px solid var(--accent-green);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .solution-box h5 {
+            color: var(--accent-green);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+        }
+
+        /* Responsive Design Rules */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-code"></i> SWE Portal
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Home Overview</a></li>
+            <li><a href="week1.html" class="active"><i class="fa-solid fa-cube"></i> Week 1: Core Blueprint</a></li>
+            <li><a href="week2.html"><i class="fa-solid fa-sitemap"></i> Week 2: Inheritance</a></li>
+            <li><a href="week3.html"><i class="fa-solid fa-arrows-split-up-and-left"></i> Week 3: Generalisation</a></li>
+            <li><a href="week4.html"><i class="fa-solid fa-crosshairs"></i> Week 4: Target Systems</a></li>
+            <li><a href="week5.html"><i class="fa-solid fa-database"></i> Week 5: Database & ERDs</a></li>
+            <li><a href="week6.html"><i class="fa-solid fa-vector-square"></i> Week 6: 3D Meshes & Relationships</a></li>
+            <li><a href="week8.html"><i class="fa-solid fa-vial-circle-check"></i> Week 8: Testing Frameworks</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header class="header-banner">
+            <h1>Week 1: Foundations of the Object-Oriented Paradigm</h1>
+            <p>Comprehensive technical handbook detailing the transition from procedural compilation environments to highly modular encapsulation matrices.</p>
+        </header>
+
+        <section class="study-section">
+            <h2><i class="fa-solid fa-cubes"></i> 1. The Core Pillar: Classes vs. Instances</h2>
+            <p>The fundamental concept of OOP is the division between a generalised template and its concrete realisations.</p>
+            
+            <h3>The Class (The Blueprint)</h3>
+            <p>A class serves as the modular cornerstone of a program. It is a structured framework or "blueprint" that defines the properties and behaviours that any object created from it will possess.</p>
+            <ul>
+                <li><strong>Encapsulation of State and Behaviour:</strong> A class bundles data, known as attributes, and functions, known as methods, into a single cohesive unit.</li>
+                <li><strong>Structural Template:</strong> It establishes the definition of what an entity "is" (attributes) and what it "does" (methods).</li>
+                <li><strong>Example:</strong> A Car class is a template defining that every car must have a colour and a model, and the ability to start its engine.</li>
+            </ul>
+
+            <h3>The Instance (The Object)</h3>
+            <p>An instance, or object, is the concrete realisation of a class within the program's memory.</p>
+            <ul>
+                <li><strong>Unique State:</strong> While instances share the structure of their parent class, each possesses its own unique state (specific values for attributes).</li>
+                <li><strong>Concrete Entity:</strong> Objects are the entities that are actually manipulated during execution through method invocation.</li>
+                <li><strong>Example:</strong> If Car is the class, a "Toyota Camry" with the specific attribute colour = "Silver" is a unique instance.</li>
+            </ul>
+
+            <div class="explanation-block">
+                <h4>System Architecture Breakdown</h4>
+                <p><strong>General Analogy:</strong> Think of an architectural layout plan vs. a physical skyscraper built on a street corner. The layout design defines structural parameters (materials, dimensions, routing paths) but cannot house residents directly. Once built, individual physical buildings possess unique operational tracking parameters (such as structural wear metrics or current occupant configurations) despite executing matching foundational layouts.</p>
+                <p><strong>Python Syntax Implementation:</strong> The code below documents how a blueprint structure is specified using programmatic keywords, which are subsequently parsed to initialize completely separate memory tracking blocks.</p>
+            </div>
+
+            <div class="code-container">
+<pre><span class="keyword">class</span> <span class="class-name">Car</span>:
+    <span class="keyword">def</span> <span class="builtin">__init__</span>(<span class="keyword">self</span>, colour, model):
+        <span class="keyword">self</span>.colour = colour  <span class="comment"># Unique state tracking variable</span>
+        <span class="keyword">self</span>.model = model    <span class="comment"># Unique state tracking variable</span>
+        <span class="keyword">self</span>.engine_active = <span class="keyword">False</span>
+
+    <span class="keyword">def</span> <span class="class-name">start_engine</span>(<span class="keyword">self</span>):
+        <span class="keyword">self</span>.engine_active = <span class="keyword">True</span>
+        <span class="builtin">print</span>(<span class="string">f"The {self.model} engine has been activated."</span>)
+
+<span class="comment"># Allocating concrete instances within system memory structures</span>
+car1 = Car(<span class="string">"Silver"</span>, <span class="string">"Toyota Camry"</span>)
+car2 = Car(<span class="string">"Red"</span>, <span class="string">"Ferrari Roma"</span>)
+
+car1.start_engine()</pre>
+            </div>
+        </section>
+
+        <section class="study-section">
+            <h2><i class="fa-solid fa-gears"></i> 2. Theoretical Principles of OOP</h2>
+            <p>Three primary principles govern how classes interact to foster scalable, maintainable, and reusable code.</p>
+            
+            <h3>I. Encapsulation</h3>
+            <p>Encapsulation is the practice of bundling data and methods within a class while shielding its internal state from external interference.</p>
+            <ul>
+                <li><strong>Protection:</strong> It prevents direct external manipulation of an object's data, ensuring that state changes only occur through approved methods (such as setters).</li>
+                <li><strong>Maintenance:</strong> This enhances code readability and allows developers to change internal implementation details without affecting the rest of the program.</li>
+            </ul>
+
+            <div class="explanation-block">
+                <h4>Encapsulation Architectural Focus</h4>
+                <p><strong>General Analogy:</strong> A medical capsule capsule safely isolates raw dynamic chemical compounds from exterior elements. You consume the pill package interface to gain systemic benefits without slicing it open to modify the internal powder compound arrays. In software development, access boundary limits are deployed via visibility prefixes to enforce data governance standards.</p>
+            </div>
+
+            <div class="code-container">
+<pre><span class="keyword">class</span> <span class="class-name">SecureProfile</span>:
+    <span class="keyword">def</span> <span class="builtin">__init__</span>(<span class="keyword">self</span>, username, access_key):
+        <span class="keyword">self</span>.username = username
+        <span class="keyword">self</span>.__access_key = access_key  <span class="comment"># Private variable hiding data safely</span>
+
+    <span class="comment"># Approved access interface (Getter)</span>
+    <span class="keyword">def</span> <span class="class-name">get_masked_key</span>(<span class="keyword">self</span>):
+        <span class="keyword">return</span> <span class="string">"***"</span> + <span class="keyword">self</span>.__access_key[-3:]
+
+<span class="comment"># Usage execution pipeline</span>
+user = SecureProfile(<span class="string">"admin"</span>, <span class="string">"SECURE_PASS_99"</span>)
+<span class="comment"># print(user.__access_key) # CRASHES PROGRAM: Direct external intrusion blocked</span>
+<span class="builtin">print</span>(user.get_masked_key())  <span class="comment"># Output: ***_99</span></pre>
+            </div>
+
+            <h3>II. Inheritance</h3>
+            <p>Inheritance facilitates the creation of hierarchical relationships between classes.</p>
+            <ul>
+                <li><strong>Hierarchy:</strong> A subclass (child) can adopt the attributes and methods of a superclass (parent).</li>
+                <li><strong>Efficiency:</strong> It minimises redundancy by allowing developers to build upon existing code rather than "reinventing the wheel" for every new entity.</li>
+            </ul>
+
+            <div class="explanation-block">
+                <h4>Inheritance Architectural Focus</h4>
+                <p><strong>General Analogy:</strong> A generalised "Vehicle" category establishes foundational operational properties (propulsion mechanisms, cargo mass boundaries) that specialized classes automatically adapt. A freight truck "is a" vehicle, implying it inherits standard framework configurations while adding unique cargo-trailer decoupling subroutines without rewriting base transport layers.</p>
+            </div>
+
+            <div class="code-container">
+<pre><span class="keyword">class</span> <span class="class-name">Vehicle</span>:
+    <span class="keyword">def</span> <span class="builtin">__init__</span>(<span class="keyword">self</span>, mass):
+        <span class="keyword">self</span>.mass = mass
+    <span class="keyword">def</span> <span class="class-name">deploy_brakes</span>(<span class="keyword">self</span>):
+        <span class="builtin">print</span>(<span class="string">"Deceleration protocol initiated."</span>)
+
+<span class="keyword">class</span> <span class="class-name">Truck</span>(Vehicle):  <span class="comment"># Derived subclass configuration</span>
+    <span class="keyword">def</span> <span class="builtin">__init__</span>(<span class="keyword">self</span>, mass, trailer_capacity):
+        <span class="builtin">super</span>().__init__(mass)  <span class="comment"># Syncing parental context tracking bounds</span>
+        <span class="keyword">self</span>.trailer_capacity = trailer_capacity
+
+heavy_hauler = Truck(<span class="string">"15 Tons"</span>, <span class="string">"40 Tons"</span>)
+heavy_hauler.deploy_brakes()  <span class="comment"># Inherited functionality call executed cleanly</span></pre>
+            </div>
+
+            <h3>III. Polymorphism</h3>
+            <p>Polymorphism enables objects belonging to different classes to be treated uniformly through a common interface.</p>
+            <ul>
+                <li><strong>Flexibility:</strong> It allows subclasses to override or extend the functionality of inherited methods.</li>
+                <li><strong>Adaptability:</strong> Software systems become more extensible because the program can invoke the same method name on different objects, and each object will respond according to its specific implementation.</li>
+            </ul>
+
+            <div class="explanation-block">
+                <h4>Polymorphism Architectural Focus</h4>
+                <p><strong>General Analogy:</strong> Consider an electronic universal power button control panel. The system executes a universal command transmission ("Activate Power"). If connected to a display system, it initialises pixel matrices; if routed to an audio console, it excites audio frequency structures. The invocation vector is structurally uniform, but execution behaviors scale dynamically relative to the runtime object structure target.</p>
+            </div>
+
+            <div class="code-container">
+<pre><span class="keyword">class</span> <span class="class-name">AudioConsole</span>:
+    <span class="keyword">def</span> <span class="class-name">activate</span>(<span class="keyword">self</span>):
+        <span class="keyword">return</span> <span class="string">"Exciting audio frequency structures."</span>
+
+<span class="keyword">class</span> <span class="class-name">DisplayMatrix</span>:
+    <span class="keyword">def</span> <span class="class-name">activate</span>(<span class="keyword">self</span>):
+        <span class="keyword">return</span> <span class="string">"Initializing pixel matrices."</span>
+
+<span class="comment"># Universal polymorph execution algorithm loop</span>
+<span class="keyword">def</span> <span class="class-name">boot_system_device</span>(device_instance):
+    <span class="builtin">print</span>(device_instance.activate())
+
+boot_system_device(AudioConsole())
+boot_system_device(DisplayMatrix())</pre>
+            </div>
+        </section>
+
+        <section class="study-section">
+            <h2><i class="fa-solid fa-code-branch"></i> 3. Technical Implementation in Python</h2>
+            <p>Implementing these concepts requires specific syntax and standard method types.</p>
+            
+            <h3>Class Definition and The Constructor</h3>
+            <p>Classes are declared using the class keyword.</p>
+            <ul>
+                <li><strong>__init__ Method:</strong> Also known as the constructor, this special method is invoked automatically during instantiation to initialise the object’s attributes.</li>
+                <li><strong>Self:</strong> Within class methods, self represents the specific instance being operated on, allowing the method to access that instance’s unique attributes.</li>
+            </ul>
+
+            <h3>Standard Method Types</h3>
+            <p><strong>1. Constructors:</strong> Used for initial building/initialisation (e.g., <code>def __init__(self, title):</code>).</p>
+            <p><strong>2. Setters (Writers):</strong> Methods designed to modify or add data to an instance (e.g., <code>add_student()</code>).</p>
+            <p><strong>3. Getters (Readers):</strong> Methods designed to retrieve data or find specific information within an instance (e.g., <code>find_student()</code>).</p>
+
+            <h3>Instantiation and Dot Notation</h3>
+            <ul>
+                <li><strong>Creation:</strong> Objects are instantiated by calling the class name as if it were a function: <code>student1 = Student("John", "Smith", "01/01/2010", "M")</code>.</li>
+                <li><strong>Access:</strong> Dot notation is used to interact with the object. For example, <code>object.attribute</code> retrieves data, while <code>object.method()</code> executes a behaviour.</li>
+            </ul>
+
+            <div class="explanation-block">
+                <h4>Method Archetype Configurations</h4>
+                <p>The code baseline below tracks explicitly how Constructors, Getter pipelines, and Setter mutator methods partition programmatic state modifications securely.</p>
+            </div>
+
+            <div class="code-container">
+<pre><span class="keyword">class</span> <span class="class-name">StudentProfile</span>:
+    <span class="comment"># 1. Constructor Archetype</span>
+    <span class="keyword">def</span> <span class="builtin">__init__</span>(<span class="keyword">self</span>, name, identifier):
+        <span class="keyword">self</span>.__name = name
+        <span class="keyword">self</span>.__identifier = identifier
+        <span class="keyword">self</span>.__grade_records = []
+
+    <span class="comment"># 2. Getter Framework (Reader Link)</span>
+    <span class="keyword">def</span> <span class="class-name">get_student_summary</span>(<span class="keyword">self</span>):
+        <span class="keyword">return</span> <span class="string">f"ID: {self.__identifier} | Records: {self.__grade_records}"</span>
+
+    <span class="comment"># 3. Setter Framework (Writer Link with state protection checks)</span>
+    <span class="keyword">def</span> <span class="class-name">append_grade_metric</span>(<span class="keyword">self</span>, numerical_score):
+        <span class="keyword">if</span> 0 &lt;= numerical_score &lt;= 100:
+            <span class="keyword">self</span>.__grade_records.append(numerical_score)
+        <span class="keyword">else</span>:
+            <span class="builtin">print</span>(<span class="string">"ERROR: Invalid calculation metric bounds rejected."</span>)
+
+<span class="comment"># Instantiation using Dot Notation controls</span>
+student_obj = StudentProfile(<span class="string">"John Smith"</span>, <span class="string">"STU-4410"</span>)
+student_obj.append_grade_metric(92)
+<span class="builtin">print</span>(student_obj.get_student_summary())</pre>
+            </div>
+        </section>
+
+        <section class="study-section">
+            <h2><i class="fa-solid fa-brain"></i> 4. Practical Application: Logic and Workflow</h2>
+            <p>When applying these classes to a system (such as the Classroom Management example), logic must be refined to ensure a valid UX workflow.</p>
+            <ul>
+                <li><strong>Validation:</strong> Robust systems use helper functions (like get_input) and try...except blocks to prevent crashes from invalid user data.</li>
+                <li><strong>Relationship Management:</strong> Higher-level classes (like Classroom) often manage collections of lower-level objects (like Student).</li>
+                <li><strong>Existence Checks:</strong> Before adding data to a container, logic should verify if the target (e.g., a specific classroom title) exists using a search function to prevent data duplication or "NoneType" errors.</li>
+            </ul>
+
+            <div class="explanation-block">
+                <h4>Container Logic Workflow</h4>
+                <p>This implementation showcases how a parent management class orchestrates operations across lower-tier entity allocations safely, using built-in search filters and validation assertions.</p>
+            </div>
+
+            <div class="code-container">
+<pre><span class="keyword">class</span> <span class="class-name">Student</span>:
+    <span class="keyword">def</span> <span class="builtin">__init__</span>(<span class="keyword">self</span>, uid, full_name):
+        <span class="keyword">self</span>.uid = uid
+        <span class="keyword">self</span>.full_name = full_name
+
+<span class="keyword">class</span> <span class="class-name">ClassroomManager</span>:
+    <span class="keyword">def</span> <span class="builtin">__init__</span>(<span class="keyword">self</span>, room_title):
+        <span class="keyword">self</span>.room_title = room_title
+        <span class="keyword">self</span>.registry = []
+
+    <span class="comment"># Existence Check and Relationship Validation Strategy</span>
+    <span class="keyword">def</span> <span class="class-name">enroll_student</span>(<span class="keyword">self</span>, student_instance):
+        <span class="comment"># Validate existence to block redundant registration configurations</span>
+        <span class="keyword">for</span> active_student <span class="keyword">in</span> <span class="keyword">self</span>.registry:
+            <span class="keyword">if</span> active_student.uid == student_instance.uid:
+                <span class="builtin">print</span>(<span class="string">"ABORT: Student mapping entity already registered here."</span>)
+                <span class="keyword">return</span> <span class="keyword">False</span>
+        
+        <span class="comment"># Safely append down-tier tracking entities</span>
+        <span class="keyword">self</span>.registry.append(student_instance)
+        <span class="builtin">print</span>(<span class="string">f"Success: Added {student_instance.full_name} to {self.room_title}."</span>)
+        <span class="keyword">return</span> <span class="keyword">True</span>
+
+<span class="comment"># Execute safe registration runtime environment loop</span>
+manager = ClassroomManager(<span class="string">"Advanced Software Lab Alpha"</span>)
+s1 = Student(<span class="string">"STU-101"</span>, <span class="string">"Alice Vance"</span>)
+manager.enroll_student(s1)
+manager.enroll_student(s1)  <span class="comment"># Triggers existence check block logic cleanly</span></pre>
+            </div>
+        </section>
+
+        <section class="study-section">
+            <h2><i class="fa-solid fa-gavel"></i> 1. The Four Pillars of OOP (Critical Exam Concepts)</h2>
+            <ul>
+                <li><strong>Encapsulation:</strong> The bundling of data (attributes) and the methods that operate on them into a single class. It restricts direct access to an object's internal state, protecting the object's integrity by ensuring data is only accessible via its methods.</li>
+                <li><strong>Abstraction:</strong> Modelling complex real-world entities into simplified classes by focusing only on essential qualities. It allows developers to use a complex class without needing to understand its intricate internal workings.</li>
+                <li><strong>Inheritance:</strong> The mechanism by which one class (subclass) acquires the properties and behaviours of another (superclass). This promotes code reuse and hierarchical organisation (e.g., a ComicBook class inheriting from a Book class).</li>
+                <li><strong>Polymorphism:</strong> The ability of different objects to be treated as instances of a common superclass through a shared interface. It allows a single method name to operate in different ways depending on the specific object calling it.</li>
+            </ul>
+
+            <h3>Structural Units: Classes and Objects</h3>
+            <ul>
+                <li><strong>Class:</strong> A blueprint or template that defines the structure (attributes) and behaviours (methods) for a specific type.</li>
+                <li><strong>Object:</strong> A concrete instance of a class created with specific data.</li>
+            </ul>
+
+            <div class="explanation-block">
+                <h4>The Abstraction and Pillar Blueprint Paradigm</h4>
+                <p><strong>General Analogy:</strong> Consider a modern digital transaction terminal dashboard. To process payments, the operator interfaces with a single checkout function. The complicated processing networks, token parameters, and cloud validations are abstracted away. You work with an accessible abstraction tier while encapsulation protects transaction histories from malicious external changes.</p>
+            </div>
+
+            <div class="code-container">
+<pre><span class="keyword">from</span> abc <span class="keyword">import</span> ABC, abstractmethod
+
+<span class="comment"># Abstraction Tier Definition</span>
+<span class="keyword">class</span> <span class="class-name">DigitalPaymentGateway</span>(ABC):
+    <span class="annotation">@abstractmethod</span>
+    <span class="keyword">def</span> <span class="class-name">process_transaction</span>(<span class="keyword">self</span>, dollar_amount):
+        <span class="keyword">pass</span>
+
+<span class="comment"># Concrete Polymorphic Inherited Implementation Package</span>
+<span class="keyword">class</span> <span class="class-name">StripeTerminal</span>(DigitalPaymentGateway):
+    <span class="keyword">def</span> <span class="builtin">__init__</span>(<span class="keyword">self</span>):
+        <span class="keyword">self</span>.__vault_ledger_total = 0.00  <span class="comment"># Encapsulated data layer</span>
+        
+    <span class="keyword">def</span> <span class="class-name">process_transaction</span>(<span class="keyword">self</span>, dollar_amount):
+        <span class="keyword">self</span>.__vault_ledger_total += dollar_amount
+        <span class="keyword">return</span> <span class="string">f"Stripe processed ${dollar_amount:.2f} successfully."</span>
+
+processor = StripeTerminal()
+<span class="builtin">print</span>(processor.process_transaction(450.50))</pre>
+            </div>
+        </section>
+
+        <section class="study-section">
+            <h2><i class="fa-solid fa-scale-balanced"></i> III. Paradigm Comparison: Advantages & Limitations</h2>
+            <table class="matrix-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Procedural Programming</th>
+                        <th>Object-Oriented Programming</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Focus</strong></td>
+                        <td>Functions and Logic (The "Steps")</td>
+                        <td>Data and Objects (The "Entities")</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Data Organisation</strong></td>
+                        <td>Data is separate from functions</td>
+                        <td>Data and functions are coupled</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Scale Suitability</strong></td>
+                        <td>Efficient for small, simple programs</td>
+                        <td>Essential for large, complex systems</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Maintenance</strong></td>
+                        <td>Difficult; global state often leads to bugs</td>
+                        <td>Easier due to independent modular units</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Code Reuse</strong></td>
+                        <td>Limited to copying specific functions</td>
+                        <td>High; via inheritance and reusable classes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Security</strong></td>
+                        <td>Low; global data is exposed</td>
+                        <td>Higher; data is protected by encapsulation</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="study-section">
+            <h2><i class="fa-solid fa-network-wired"></i> IV. Practical Transition: Django MVT Implementation</h2>
+            <p>To transition from procedural logic to a scalable OOP web application, developers use Django's Model-View-Template (MVT) architecture.</p>
+            
+            <h3>1. The Django Model (Encapsulated Data)</h3>
+            <p>The model acts as an OOP representation of a database table. It encapsulates the attributes of the entity.</p>
+            <div class="code-container">
+<pre><span class="comment"># models.py</span>
+<span class="keyword">class</span> <span class="class-name">Book</span>(models.Model): 
+    barcode = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=100)
+    isbn = models.CharField(max_length=100)</pre>
+            </div>
+
+            <h3>2. The Form (Data Structure)</h3>
+            <p>Django uses forms to define how data should be handled and validated, maintaining the OOP principle of defining structures.</p>
+            <div class="code-container">
+<pre><span class="comment"># forms.py</span>
+<span class="keyword">class</span> <span class="class-name">BookForm</span>(forms.ModelForm):
+    <span class="keyword">class</span> <span class="class-name">Meta:</span>
+        model = Book
+        fields = [<span class="string">'title'</span>]</pre>
+            </div>
+
+            <h3>3. The Views (Logic Layer)</h3>
+            <p>Views handle the interaction between the user's request and the OOP data models.</p>
+            <ul>
+                <li><strong>add_book:</strong> Processes POST requests to save a new Book object instance.</li>
+                <li><strong>find_book:</strong> Retrieves a specific Book instance from the database based on its ID.</li>
+            </ul>
+
+            <h3>4. The Development Workflow</h3>
+            <p>To apply these OOP changes to the database, a specific command sequence is required:</p>
+            <ol style="margin-left: 25px; margin-bottom: 20px; color: var(--text-secondary);">
+                <li><code>python manage.py makemigrations</code>: Creates instructions for database changes.</li>
+                <li><code>python manage.py migrate</code>: Applies those changes to the database.</li>
+                <li><code>python manage.py runserver</code>: Launches the web application for usage.</li>
+            </ol>
+        </section>
+
+        <section class="study-section">
+            <h2><i class="fa-solid fa-table-cells"></i> V. Core Architectural Summary Matrices</h2>
+            
+            <h3>Concept Glossary Matrix</h3>
+            <table class="matrix-table">
+                <thead>
+                    <tr>
+                        <th>Concept</th>
+                        <th>Simple Technical Definition</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Class</strong></td>
+                        <td>A generalised template (Blueprint).</td>
+                        <td>Defines structure and behaviour.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Instance</strong></td>
+                        <td>A concrete entity in memory (Object).</td>
+                        <td>Holds unique, specific data.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Encapsulation</strong></td>
+                        <td>Bundling data and methods into a class.</td>
+                        <td>Protects data from external interference.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Inheritance</strong></td>
+                        <td>Subclasses adopting parent class traits.</td>
+                        <td>Promotes code reuse and hierarchy.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Polymorphism</strong></td>
+                        <td>Different classes using a common interface.</td>
+                        <td>Allows adaptable and extensible code.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Structural Variance Matrix</h3>
+            <table class="matrix-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Class (Blueprint)</th>
+                        <th>Instance (Object)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Definition</strong></td>
+                        <td>Abstract template/structure.</td>
+                        <td>Concrete entity in memory.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>State</strong></td>
+                        <td>Defines potential attributes.</td>
+                        <td>Holds specific values for attributes.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Functionality</strong></td>
+                        <td>Defines available methods.</td>
+                        <td>Executes specific implementations.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="exam-block">
+            <h2><i class="fa-solid fa-graduation-cap"></i> Section V: Rigorous Examination Assessment Suite</h2>
+            <p>Review these exam-level Short Answer Questions (SAQs) designed to replicate formal grading criteria metrics.</p>
+
+            <div class="question-card">
+                <div class="question-header">
+                    <span>Question 1: Structural Differentiation Paradigm Analysis</span>
+                    <span class="marks">[4 Marks]</span>
+                </div>
+                <p><strong>Compare the operational roles of a class and an instance within computer scene memory, referencing code maintainability and data duplication issues.</strong></p>
+                
+                <div class="solution-box">
+                    <h5>Sample Solution Model Answer</h5>
+                    <p>A <strong>class</strong> acts as an abstract template or architectural blueprint stored in code definition memory. It specifies the overarching structural constraints, defining the attributes (state boundaries) and methods (functional behaviours) available to all instances without holding unique operational state records itself. This structure promotes high code maintainability by establishing a central repository for bug fixes and logic updates.</p>
+                    <p>Conversely, an <strong>instance</strong> is a concrete entity explicitly allocated within volatile computer system memory (RAM) through instantiation. While it mirrors the structural parameters enforced by its base class, each unique instance maintains its own distinct values for data attributes. This prevents data duplication issues, as multiple isolated tracking blocks can co-exist at runtime without overlapping or cross-corrupting each other's execution states.</p>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-header">
+                    <span>Question 2: Architectural Security Analysis</span>
+                    <span class="marks">[3 Marks]</span>
+                </div>
+                <p><strong>Explain how the technical principle of Encapsulation safeguards data integrity, and state how private properties alter direct external mutator operations.</strong></p>
+                
+                <div class="solution-box">
+                    <h5>Sample Solution Model Answer</h5>
+                    <p>Encapsulation ensures high data integrity by bundling data attributes and the specific operations that manipulate them within an isolated class structure. This architecture safeguards internal state information from direct, unauthorized manipulation by external software layers.</p>
+                    <p>By enforcing clear visibility boundaries (using private visibility indicators such as Python double underscores), external code layers are blocked from making direct adjustments to internal attributes. Instead, any state modification must pass through approved public accessor pipelines (such as validation-backed setter methods). This layout blocks invalid input data from entering the object, preventing runtime corruption and application instability.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="exam-block" style="border-color: var(--accent-green);">
+            <h2 style="color: var(--accent-green); border-bottom-color: var(--accent-green);"><i class="fa-solid fa-terminal"></i> Technical Sandbox: Week 1 Code Practise</h2>
+            <p>Analyze this production-ready code challenge mapping the structural requirements of a professional Python system implementation.</p>
+            
+            <div class="question-card" style="background: rgba(0,0,0,0.4);">
+                <p><strong>Scenario Constraint Challenge:</strong> Design an inventory management pipeline tracking digital bookstore assets. Build a <code>BookAsset</code> class that encapsulates state fields. Enforce data input verification via programmatic checking rules inside a setter interface. Ensure that invalid updates fail early and do not corrupt existing system memory values.</p>
+            </div>
+
+            <div class="code-container">
+<pre><span class="keyword">class</span> <span class="class-name">BookAsset</span>:
+    <span class="keyword">def</span> <span class="builtin">__init__</span>(<span class="keyword">self</span>, asset_id, base_title, initial_stock):
+        <span class="keyword">self</span>.__asset_id = asset_id          <span class="comment"># Protected Encapsulated Private Variable</span>
+        <span class="keyword">self</span>.__base_title = base_title      <span class="comment"># Protected Encapsulated Private Variable</span>
+        <span class="keyword">self</span>.__stock_count = 0              <span class="comment"># Default safe initial state tracking initialization</span>
+        
+        <span class="comment"># Route baseline allocation through verified mutator link directly</span>
+        <span class="keyword">self</span>.set_stock_level(initial_stock)
+
+    <span class="comment"># Getter Interface Protocol Link (Reader Access Vector)</span>
+    <span class="keyword">def</span> <span class="class-name">get_asset_report</span>(<span class="keyword">self</span>):
+        <span class="keyword">return</span> <span class="string">f"Asset: [{self.__asset_id}] -> Title: {self.__base_title} | Stock: {self.__stock_count}"</span>
+
+    <span class="comment"># Setter Interface Protocol Link with embedded Data Validation checks</span>
+    <span class="keyword">def</span> <span class="class-name">set_stock_level</span>(<span class="keyword">self</span>, total_units):
+        <span class="keyword">if</span> <span class="builtin">isinstance</span>(total_units, <span class="builtin">int</span>) <span class="keyword">and</span> total_units &gt;= 0:
+            <span class="keyword">self</span>.__stock_count = total_units
+            <span class="keyword">return</span> <span class="keyword">True</span>
+        <span class="keyword">else</span>:
+            <span class="builtin">print</span>(<span class="string">"MUTATION EXCEPTION BLOCKED: Invalid stock update quantity parameter."</span>)
+            <span class="keyword">return</span> <span class="keyword">False</span>
+
+<span class="comment"># --- Execution Validation Loop Verification ---</span>
+<span class="builtin">print</span>(<span class="string">"--- Initializing Asset Module Instance ---"</span>)
+book_item = BookAsset(<span class="string">"BK-9982"</span>, <span class="string">"Object-Oriented Design Handbook"</span>, 14)
+<span class="builtin">print</span>(book_item.get_asset_report())
+
+<span class="builtin">print</span>(<span class="string">"\n--- Attempting Safe Mutation (Valid Value) ---"</span>)
+book_item.set_stock_level(25)
+<span class="builtin">print</span>(book_item.get_asset_report())
+
+<span class="builtin">print</span>(<span class="string">"\n--- Attempting Harmful Mutation (Negative Value Out-of-Bounds Error) ---"</span>)
+book_item.set_stock_level(-5)  <span class="comment"># Triggers system validation guard rule</span>
+<span class="builtin">print</span>(book_item.get_asset_report())  <span class="comment"># Proves memory tracking remains uncorrupted (Still 25)</span></pre>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>

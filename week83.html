@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOP Learning Portal | Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0d0e15;
+            --bg-card: rgba(20, 20, 35, 0.6);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b4b7c5;
+            --neon-blue: #00f0ff;
+            --neon-purple: #9d4edd;
+            --sidebar-width: 260px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #12131c;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: var(--neon-blue);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-menu li a:hover {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .sidebar-menu li a.active {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.1);
+            border-left-color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        .header-banner {
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .header-banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-banner p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* --- DASHBOARD TILES / GRID --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-blue);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            color: var(--neon-purple);
+        }
+
+        .card-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .card-btn {
+            align-self: flex-start;
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .card-btn:hover {
+            background: var(--neon-blue);
+            color: var(--bg-main);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+        }
+        
+        /* --- ARTICLE STYLING FOR WEEK 8.3 --- */
+        .article-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+
+        .article-section h2 {
+            color: var(--neon-blue);
+            font-size: 1.8rem;
+            border-bottom: 2px solid rgba(0, 240, 255, 0.2);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .article-section h3 {
+            color: var(--neon-purple);
+            font-size: 1.4rem;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .article-section p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+        }
+
+        .article-section ul {
+            margin-left: 25px;
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .article-section li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        /* --- CODE BLOCKS --- */
+        pre {
+            background: #050508;
+            border-left: 4px solid var(--neon-purple);
+            border-radius: 6px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            color: #e2e4ef;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+        }
+
+        code {
+            font-family: inherit;
+        }
+        .c-kw { color: #ff79c6; font-weight: bold; }
+        .c-str { color: #f1fa8c; }
+        .c-def { color: #50fa7b; }
+        .c-com { color: #6272a4; font-style: italic; }
+        .c-self { color: #ffb86c; font-style: italic; }
+
+        /* --- TABLES --- */
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: rgba(10, 11, 18, 0.8);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        .styled-table th {
+            background-color: rgba(157, 78, 221, 0.15);
+            color: var(--neon-blue);
+            text-align: left;
+            padding: 15px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .styled-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        .styled-table tr:hover {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .badge-pass { background: rgba(57, 255, 20, 0.15); color: #39ff14; padding: 4px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #39ff14; font-size: 0.8rem;}
+        .badge-fail { background: rgba(255, 0, 85, 0.15); color: #ff0055; padding: 4px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #ff0055; font-size: 0.8rem;}
+
+        /* --- DIAGRAMS --- */
+        .diagram-container {
+            background: #11121a;
+            border: 2px dashed rgba(0, 240, 255, 0.3);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .diagram-title {
+            color: var(--text-primary);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        /* --- EXAM CARDS --- */
+        .exam-panel {
+            border: 1px solid #ff9e00;
+            background: rgba(255, 158, 0, 0.03);
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 40px;
+        }
+        .exam-badge {
+            background: #ff9e00;
+            color: #000;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        .exam-card {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .exam-card h4 {
+            color: var(--neon-blue);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .marks {
+            color: var(--neon-purple);
+            font-size: 0.9rem;
+        }
+        .solution-box {
+            background: rgba(57, 255, 20, 0.05);
+            border-left: 4px solid #39ff14;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 0 4px 4px 0;
+        }
+        .solution-box h5 {
+            color: #39ff14;
+            margin-bottom: 8px;
+        }
+
+        /* Responsive Design Rules */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-code"></i> SWE Portal
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Home Overview</a></li>
+            <li><a href="week1.html"><i class="fa-solid fa-cube"></i> Week 1: Core Blueprint</a></li>
+            <li><a href="week2.html"><i class="fa-solid fa-sitemap"></i> Week 2: Inheritance</a></li>
+            <li><a href="week3.html"><i class="fa-solid fa-arrows-split-up-and-left"></i> Week 3: Generalisation</a></li>
+            <li><a href="week4.html"><i class="fa-solid fa-crosshairs"></i> Week 4: Target Systems</a></li>
+            <li><a href="week5.html"><i class="fa-solid fa-database"></i> Week 5: Database & ERDs</a></li>
+            <li><a href="week6.html"><i class="fa-solid fa-vector-square"></i> Week 6: 3D Meshes & Relationships</a></li>
+            <li><a href="week8.html" class="active"><i class="fa-solid fa-vial-circle-check"></i> Week 8: Testing Frameworks</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header class="header-banner">
+            <h1>Week 8.3 & 8.4: Quality Assurance & Integration Validation</h1>
+            <p>A masterclass strictly defining Grey Box Software Testing, Structural Hierarchies in Quality Assurance, and Automated CI/CD Execution Pipelines within the Object-Oriented Paradigm.</p>
+        </header>
+
+        <section class="article-section">
+            <h2><i class="fa-solid fa-box-open"></i> 1. Theoretical Foundations of Grey Box Testing</h2>
+            <p>
+                <strong>Grey Box Testing</strong> is a software validation methodology that combines features of both Black Box (functional) and White Box (structural) testing. Instead of treating the code as completely hidden or completely visible, the tester operates with partial knowledge of the system's internal architecture, data structures, and algorithms.
+            </p>
+
+            <div class="diagram-container">
+                <div class="diagram-title">The Validation Visibility Spectrum</div>
+                <svg width="700" height="180" viewBox="0 0 700 180" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="20" y="20" width="180" height="140" rx="8" fill="#000000" stroke="#ff0055" stroke-width="2"/>
+                    <text x="110" y="45" fill="#ff0055" font-weight="bold" font-size="14" text-anchor="middle">BLACK BOX TESTING</text>
+                    <text x="110" y="70" fill="#ffffff" font-size="12" text-anchor="middle">Opaque / Hidden</text>
+                    <text x="30" y="95" fill="#b4b7c5" font-size="11">• Focuses on outputs</text>
+                    <text x="30" y="115" fill="#b4b7c5" font-size="11">• Ignores internal</text>
+                    <text x="30" y="135" fill="#b4b7c5" font-size="11">  source code paths</text>
+                    
+                    <path d="M 210 90 L 250 90" stroke="#b4b7c5" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                    
+                    <rect x="260" y="20" width="180" height="140" rx="8" fill="#2d2d3a" stroke="#00f0ff" stroke-width="2"/>
+                    <text x="350" y="45" fill="#00f0ff" font-weight="bold" font-size="14" text-anchor="middle">GREY BOX TESTING</text>
+                    <text x="350" y="70" fill="#ffffff" font-size="12" text-anchor="middle">Partial Knowledge</text>
+                    <text x="270" y="95" fill="#b4b7c5" font-size="11">• Focuses on object</text>
+                    <text x="270" y="115" fill="#b4b7c5" font-size="11">  interactions &amp; logic</text>
+                    <text x="270" y="135" fill="#b4b7c5" font-size="11">  integration patterns</text>
+
+                    <path d="M 450 90 L 490 90" stroke="#b4b7c5" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+
+                    <rect x="500" y="20" width="180" height="140" rx="8" fill="rgba(255,255,255,0.1)" stroke="#39ff14" stroke-width="2"/>
+                    <text x="590" y="45" fill="#39ff14" font-weight="bold" font-size="14" text-anchor="middle">WHITE BOX TESTING</text>
+                    <text x="590" y="70" fill="#ffffff" font-size="12" text-anchor="middle">Transparent Glass</text>
+                    <text x="510" y="95" fill="#b4b7c5" font-size="11">• Focuses on branches,</text>
+                    <text x="510" y="115" fill="#b4b7c5" font-size="11">  loops, statements</text>
+                    <text x="510" y="135" fill="#b4b7c5" font-size="11">  and conditions</text>
+
+                    <defs>
+                        <marker id="arrowhead" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                            <polygon points="0 0, 6 3, 0 6" fill="#b4b7c5" />
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+
+            <h3>Core Architectural Positioning</h3>
+            <ul>
+                <li><strong>The Structural Hybrid:</strong> The tester identifies external user interfaces and input vectors (Black Box) but uses structural knowledge of the class blueprint dependencies, relational databases, or system subroutines (White Box) to design highly targeted test suites.</li>
+                <li><strong>Primary Scope:</strong> Grey box testing is primarily utilized in <strong>Integration Testing</strong>. It evaluates whether independent code modules, distinct classes, and system components interact correctly when passing messages and mutating state data.</li>
+            </ul>
+        </section>
+
+        <section class="article-section">
+            <h2><i class="fa-solid fa-magnifying-glass-chart"></i> 2. Analysing the Testing Methodology Gaps</h2>
+            <p>
+                To understand why Grey Box testing is necessary, engineers evaluate the structural limitations of relying strictly on Black Box or White Box verification in absolute isolation:
+            </p>
+
+            <h3>The Black Box Gap (Missing Process Visibility)</h3>
+            <ul>
+                <li><strong>Process Blindness:</strong> Black Box testing confirms that a given input yields a correct final output, but it cannot verify <em>how</em> the system computed that state. For example, in a database fund transfer, it checks if the balances look correct at the end, but fails to check if intermediate records were accidentally skipped or duplicated.</li>
+                <li><strong>State Blindness:</strong> It lacks visibility into temporary or intermediate variables, memory storage mutations, security logs, or transaction histories created during runtime execution loops.</li>
+            </ul>
+
+            <h3>The White Box Gap (Missing User Context)</h3>
+            <ul>
+                <li><strong>Isolation Vulnerability:</strong> White Box testing validates small sections of code (like specific lines or branches) in isolation. It ensures that the mathematical formulas or loops execute cleanly, but it often misses how these pieces fit together under real-world usage patterns.</li>
+                <li><strong>Assumption of Design Correctness:</strong> It checks if the code matches the developer's logic, but cannot determine if the developer's underlying design actually meets the high-level business goals or structural specifications.</li>
+            </ul>
+
+            <h3>The Grey Box Solution (Bridging the Divide)</h3>
+            <p>
+                Grey Box testing fills these structural gaps by looking at both user behaviour and code structure simultaneously. It maps external user commands directly to internal multi-class interaction chains, ensuring that individual operations combine to form a reliable, integrated system.
+            </p>
+        </section>
+
+        <section class="article-section">
+            <h2><i class="fa-solid fa-network-wired"></i> 3. Grey Box Application in Object-Oriented Frameworks</h2>
+            <p>
+                In Object-Oriented Analysis and Design (OOAD), grey box testing focuses on verifying the communication channels between distinct, encapsulated classes.
+            </p>
+
+            <div class="diagram-container">
+                <div class="diagram-title">Message Passing & State Mutation Vector</div>
+                <svg width="600" height="150" viewBox="0 0 600 150" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="20" y="45" width="180" height="50" rx="4" fill="#12131c" stroke="#ff0055" stroke-width="2"/>
+                    <text x="110" y="75" fill="#ffffff" font-weight="bold" font-size="12" text-anchor="middle">External User Input Trigger</text>
+
+                    <path d="M 200 70 L 250 70" stroke="#00f0ff" stroke-width="3" fill="none" marker-end="url(#arrowhead_blue)"/>
+
+                    <rect x="260" y="20" width="180" height="40" rx="4" fill="#12131c" stroke="#00f0ff" stroke-width="2"/>
+                    <text x="350" y="45" fill="#ffffff" font-weight="bold" font-size="12" text-anchor="middle">Class A (Orchestration Engine)</text>
+
+                    <path d="M 350 60 L 350 90" stroke="#9d4edd" stroke-width="3" fill="none" stroke-dasharray="5,5" marker-end="url(#arrowhead_purple)"/>
+                    <text x="470" y="80" fill="#9d4edd" font-size="11" text-anchor="middle">(Message Passing Vector)</text>
+
+                    <rect x="260" y="95" width="180" height="40" rx="4" fill="#12131c" stroke="#9d4edd" stroke-width="2"/>
+                    <text x="350" y="120" fill="#ffffff" font-weight="bold" font-size="12" text-anchor="middle">Class B (Component State Model)</text>
+
+                    <defs>
+                        <marker id="arrowhead_blue" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                            <polygon points="0 0, 6 3, 0 6" fill="#00f0ff" />
+                        </marker>
+                        <marker id="arrowhead_purple" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                            <polygon points="0 0, 6 3, 0 6" fill="#9d4edd" />
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+
+            <h3>Key Object-Oriented Targets</h3>
+            <ul>
+                <li><strong>Message Passing and Interface Integrity:</strong> Verifying that calling a method on an orchestration object correctly routes data parameters to dependent component parts.</li>
+                <li><strong>State Synchronisation Across Composition Boundaries:</strong> Ensuring that when a parent class executes a complex multi-step lifecycle, all nested, strongly bound child instances update their internal variables correctly without causing state synchronisation errors.</li>
+                <li><strong>Integration Points:</strong> Validating how memory collections, such as dictionaries storing key-value pairs, respond to lookup attempts, key collisions, or calls for non-existent entities.</li>
+            </ul>
+        </section>
+
+        <section class="article-section">
+            <h2><i class="fa-solid fa-code"></i> 4. Architectural Analysis of Grey Box Code Testing</h2>
+            <p>
+                The provided code scaffold uses Python's standard <code>unittest</code> framework to execute a Grey Box Integration Test on a multi-class banking architecture. The suite demonstrates <strong>partial structural awareness</strong> by verifying how the orchestration class (<code>Bank</code>) manages data interactions between individual object instances (<code>Account</code>).
+            </p>
+            
+            <p>Let's dismantle how to write integration checks. We must use specific built-in assertions to validate states:</p>
+            <ul>
+                <li><span class="highlight">setUp(self)</span>: Rebuilds a clean architectural state before every test.</li>
+                <li><span class="highlight">self.assertTrue(expr)</span>: Asserts that an executed method returns exactly <code>True</code>.</li>
+                <li><span class="highlight">self.assertFalse(expr)</span>: Asserts that an illegal operation gets blocked and returns <code>False</code>.</li>
+                <li><span class="highlight">self.assertEqual(a, b)</span>: Directly peers into memory parameters (White Box technique) to verify the numeric state perfectly matches user expectations (Black Box expectation).</li>
+                <li><span class="highlight">self.assertIsNone(obj)</span>: Checks if a dictionary retrieval safely handles missing lookup keys.</li>
+            </ul>
+
+<pre><code><span class="c-kw">import</span> unittest
+<span class="c-kw">from</span> bank_system <span class="c-kw">import</span> Bank, Account
+
+<span class="c-kw">class</span> <span class="c-def">TestBankSystemGreyBox</span>(unittest.TestCase):
+    
+    <span class="c-kw">def</span> <span class="c-def">setUp</span>(<span class="c-self">self</span>):
+        <span class="c-com">"""
+        Structural Precondition Configuration.
+        Establishes an isolated environment consisting of an orchestration engine
+        populating its key-value dictionary stores with distinct entities.
+        """</span>
+        <span class="c-self">self</span>.bank = Bank()
+        <span class="c-self">self</span>.bank.create_account(<span class="c-str">"12345"</span>, <span class="c-str">"Alice"</span>)
+        <span class="c-self">self</span>.bank.create_account(<span class="c-str">"67890"</span>, <span class="c-str">"Bob"</span>)
+
+    <span class="c-kw">def</span> <span class="c-def">test_account_creation</span>(<span class="c-self">self</span>):
+        <span class="c-com">"""
+        Integration Context: Verifies both positive and negative state mutations
+        within the underlying dictionary collection framework.
+        """</span>
+        <span class="c-com"># Test Case Part A: Confirm successful instantiation of a new key</span>
+        <span class="c-self">self</span>.assertTrue(<span class="c-self">self</span>.bank.create_account(<span class="c-str">"54321"</span>, <span class="c-str">"Charlie"</span>))
+        
+        <span class="c-com"># Test Case Part B: Leverage internal knowledge that key "12345" exists</span>
+        <span class="c-com"># to ensure the system cleanly blocks duplicate identity overwrites.</span>
+        <span class="c-self">self</span>.assertFalse(<span class="c-self">self</span>.bank.create_account(<span class="c-str">"12345"</span>, <span class="c-str">"Alice"</span>))
+
+    <span class="c-kw">def</span> <span class="c-def">test_transfer_between_accounts</span>(<span class="c-self">self</span>):
+        <span class="c-com">"""
+        Multi-Object Message Passing Context: Verifies an intermediate sequence
+        where data shifts across separate object instances in a transfer chain.
+        """</span>
+        <span class="c-com"># 1. Retrieve references to two separate object instances from memory</span>
+        account1 = <span class="c-self">self</span>.bank.get_account(<span class="c-str">"12345"</span>)
+        account2 = <span class="c-self">self</span>.bank.get_account(<span class="c-str">"67890"</span>)
+        
+        <span class="c-com"># 2. Establish a baseline starting state</span>
+        account1.deposit(<span class="c-number">500</span>)
+        
+        <span class="c-com"># 3. Simulate an integrated transfer transaction sequence</span>
+        <span class="c-com"># The test checks the method return values while tracking the data flow across instances</span>
+        <span class="c-self">self</span>.assertTrue(account1.withdraw(<span class="c-number">200</span>))
+        <span class="c-self">self</span>.assertTrue(account2.deposit(<span class="c-number">200</span>))
+        
+        <span class="c-com"># 4. Final verification of shared state correctness across both objects</span>
+        <span class="c-self">self</span>.assertEqual(account1.get_balance(), <span class="c-number">300</span>)
+        <span class="c-self">self</span>.assertEqual(account2.get_balance(), <span class="c-number">200</span>)
+
+    <span class="c-kw">def</span> <span class="c-def">test_invalid_account_access</span>(<span class="c-self">self</span>):
+        <span class="c-com">"""
+        Boundary Exception Context: Verifies how the database dictionary
+        engine handles a lookup failure for a non-existent key.
+        """</span>
+        <span class="c-com"># Checks that looking up an invalid key safely returns a NoneType reference</span>
+        <span class="c-self">self</span>.assertIsNone(<span class="c-self">self</span>.bank.get_account(<span class="c-str">"11111"</span>))
+
+<span class="c-kw">if</span> __name__ == <span class="c-str">"__main__"</span>:
+    unittest.main()</code></pre>
+        </section>
+
+        <section class="article-section">
+            <h2><i class="fa-solid fa-table-list"></i> 5. Creating Grey Box Verification Ledgers</h2>
+            <p>
+                In an examination environment, you may be asked to construct a manual test ledger for a Grey Box scenario. Unlike a purely Black Box table, a Grey Box table must explicitly mention the <strong>internal architectural states</strong> or <strong>database structures</strong> being audited alongside the user input.
+            </p>
+            <p>
+                Below is a formal Grey Box test ledger focusing on multi-object interaction (Transfer).
+            </p>
+
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Test Case ID</th>
+                        <th>Test Scenario</th>
+                        <th>Preconditions (Internal State)</th>
+                        <th>Test Steps &amp; Input</th>
+                        <th>Expected Result (User + System View)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>GB_TC01</strong></td>
+                        <td>Integration validation of Fund Transfer across Composition boundaries.</td>
+                        <td>Orchestration <code>Bank</code> dictionary populated with keys <code>"123"</code> (Bal: 500) and <code>"456"</code> (Bal: 0).</td>
+                        <td>
+                            1. Retrieve both objects via dictionary.<br>
+                            2. Call <code>withdraw(200)</code> on "123".<br>
+                            3. Call <code>deposit(200)</code> on "456".
+                        </td>
+                        <td>
+                            Methods return <code>True</code>.<br>
+                            Memory inspect confirms Acc "123" holds 300.<br>
+                            Memory inspect confirms Acc "456" holds 200.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>GB_TC02</strong></td>
+                        <td>Dictionary Key Integrity Verification on duplicate injection.</td>
+                        <td><code>Bank.accounts</code> dictionary currently contains active key <code>"123"</code>.</td>
+                        <td>
+                            1. Invoke <code>create_account("123", "New_User")</code>.
+                        </td>
+                        <td>
+                            Method intercepts collision returning <code>False</code>.<br>
+                            Dictionary count does not increase.<br>
+                            Original object mapped to "123" is preserved.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="article-section">
+            <h2><i class="fa-solid fa-server"></i> 6. Quality Assurance (QA) in OOP &amp; Deployment Loops</h2>
+            <p>
+                In Object-Oriented Software Engineering, <strong>Quality Assurance (QA)</strong> is defined as a systematic, planned lifecycle process designed to evaluate whether software architectures fulfill specified business requirements, adhere to organisational standards, and remain structurally free of execution anomalies (bugs).
+            </p>
+            <ul>
+                <li><strong>Encapsulation Protection:</strong> QA protocols explicitly audit access modifiers (<code>+</code> vs <code>-</code>) to verify that an object’s private internal state is completely shielded from unauthorized direct mutation by external classes.</li>
+                <li><strong>Component Modularity:</strong> Because systems are composed of decoupled classes with single operational responsibilities, QA can systematically target isolated object blueprints before testing the macro-system as a unified whole.</li>
+            </ul>
+
+            <h3>The Structural Testing Hierarchy</h3>
+            <p>Testing flows sequentially from micro-isolation to macro-integration:</p>
+            
+            <div class="diagram-container">
+                <svg width="700" height="250" viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="50" y="20" width="200" height="50" rx="8" fill="#12131c" stroke="#39ff14" stroke-width="2"/>
+                    <text x="150" y="50" fill="#39ff14" font-weight="bold" font-size="14" text-anchor="middle">[ PHASE 1: UNIT TESTING ]</text>
+                    <text x="300" y="50" fill="#ffffff" font-size="12">───&gt; Validates single methods/classes in absolute isolation.</text>
+
+                    <path d="M 150 70 L 150 100" stroke="#b4b7c5" stroke-width="2" fill="none" marker-end="url(#arrow_down)"/>
+
+                    <rect x="50" y="100" width="200" height="50" rx="8" fill="#12131c" stroke="#00f0ff" stroke-width="2"/>
+                    <text x="150" y="130" fill="#00f0ff" font-weight="bold" font-size="14" text-anchor="middle">[ PHASE 2: INTEGRATION ]</text>
+                    <text x="300" y="130" fill="#ffffff" font-size="12">───&gt; Validates message-passing contracts between multi-class ecosystems.</text>
+
+                    <path d="M 150 150 L 150 180" stroke="#b4b7c5" stroke-width="2" fill="none" marker-end="url(#arrow_down)"/>
+
+                    <rect x="50" y="180" width="200" height="50" rx="8" fill="#12131c" stroke="#ff0055" stroke-width="2"/>
+                    <text x="150" y="210" fill="#ff0055" font-weight="bold" font-size="14" text-anchor="middle">[ PHASE 3: REGRESSION ]</text>
+                    <text x="300" y="210" fill="#ffffff" font-size="12">───&gt; Re-runs entire suites to prove updates didn't break legacy logic.</text>
+
+                    <defs>
+                        <marker id="arrow_down" markerWidth="6" markerHeight="6" refX="3" refY="5" orient="auto">
+                            <polygon points="0 0, 6 0, 3 6" fill="#b4b7c5" />
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+
+            <ul>
+                <li><strong>1. Unit Testing:</strong> The isolation and verification of the smallest testable units of an application (single methods/classes). Testing <code>Account.deposit()</code> accurately calculates variables.</li>
+                <li><strong>2. Integration Testing:</strong> Verifying that independently developed modules behave correctly when combined. Validating Message-Passing vectors across a composition boundary.</li>
+                <li><strong>3. Regression Testing:</strong> The complete or selective re-execution of previously passed test suites following a modification, refactoring, or patch injection to ensure legacy functionality has not been inadvertently broken.</li>
+            </ul>
+
+            <h3>Automated Engineering &amp; Modern Deployment (CI/CD)</h3>
+            <p>
+                <strong>Continuous Integration / Continuous Deployment (CI/CD):</strong> An infrastructure pipeline that automates quality control. Every time a developer commits code to a central server (e.g., via a Git push), a virtual runner automatically intercepts the build, provisions an isolated environment, and fires the unit, integration, and regression suites. If a single assertion fails, the pipeline halts, blocking defective code from deploying to production environments.
+            </p>
+        </section>
+
+        <section class="exam-panel">
+            <span class="exam-badge"><i class="fa-solid fa-pen-to-square"></i> Formal Examination Scenarios</span>
+            
+            <h2 style="color: var(--neon-blue); margin-bottom: 20px; font-size: 1.8rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Theoretical Analysis SAQs</h2>
+
+            <div class="exam-card">
+                <h4><span>Question 1: Testing Paradigm Definitions</span> <span class="marks">[3 Marks]</span></h4>
+                <p>Define Grey Box Testing and explain how it resolves the "Process Blindness" limitation inherent to purely Black Box functional testing protocols.</p>
+                <div class="solution-box">
+                    <h5><i class="fa-solid fa-check"></i> Marking Scheme Solution:</h5>
+                    <p>Grey Box Testing is a software validation methodology where the tester operates with <em>partial knowledge</em> of the system's internal architecture, data structures, and algorithms, combining external user evaluation with internal structural awareness. It resolves "Process Blindness" by verifying not only that an external input generates the correct final output, but also inspecting intermediate database states, object memory mutations, and multi-class message passing logic to ensure the underlying computation route was mathematically and architecturally sound.</p>
+                </div>
+            </div>
+
+            <div class="exam-card">
+                <h4><span>Question 2: Quality Assurance Hierarchies</span> <span class="marks">[3 Marks]</span></h4>
+                <p>Distinguish explicitly between Integration Testing and Regression Testing within an Object-Oriented Software Engineering lifecycle.</p>
+                <div class="solution-box">
+                    <h5><i class="fa-solid fa-check"></i> Marking Scheme Solution:</h5>
+                    <p><strong>Integration Testing</strong> validates that distinct, independently developed modules and interacting class objects function correctly when combined, verifying message-passing contracts across structural boundaries (e.g., a Bank coordinating multiple Accounts). Conversely, <strong>Regression Testing</strong> is the systematic re-execution of existing, previously passed test suites immediately following a source code modification, refactoring, or patch injection. Its sole purpose is to guarantee that the new code alterations did not inadvertently corrupt or break established legacy logic elsewhere in the system.</p>
+                </div>
+            </div>
+
+            <h2 style="color: var(--neon-blue); margin-top: 40px; margin-bottom: 20px; font-size: 1.8rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Scenario &amp; Practical Execution Tasks</h2>
+
+            <div class="exam-card">
+                <h4><span>Question 3: Programmatic Integration Verification</span> <span class="marks">[4 Marks]</span></h4>
+                <p><strong>Scenario:</strong> You are testing an e-commerce platform where a <code>ShoppingCart</code> class interacts with an <code>InventoryDatabase</code> class. The inventory tracks a dictionary of items. You must write a Python Grey Box integration test using <code>unittest</code>. Validate that when a user calls <code>cart.checkout("laptop")</code>, it returns <code>True</code> AND structurally verifies that the underlying <code>inventory.stock["laptop"]</code> count drops by exactly 1.</p>
+                <div class="solution-box">
+                    <h5><i class="fa-solid fa-check"></i> Marking Scheme Solution:</h5>
+<pre style="background: #000; padding: 10px; margin-top: 10px; border-left: 2px solid #39ff14;"><code><span class="c-kw">class</span> <span class="c-def">TestCartIntegrationGreyBox</span>(unittest.TestCase):
+    <span class="c-kw">def</span> <span class="c-def">setUp</span>(<span class="c-self">self</span>):
+        <span class="c-self">self</span>.inventory = InventoryDatabase()
+        <span class="c-self">self</span>.inventory.stock[<span class="c-str">"laptop"</span>] = <span class="c-number">5</span> <span class="c-com"># Structural Precondition</span>
+        <span class="c-self">self</span>.cart = ShoppingCart(<span class="c-self">self</span>.inventory)
+
+    <span class="c-kw">def</span> <span class="c-def">test_checkout_deducts_internal_stock</span>(<span class="c-self">self</span>):
+        <span class="c-com"># Black Box: Verify output behaviour</span>
+        transaction_success = <span class="c-self">self</span>.cart.checkout(<span class="c-str">"laptop"</span>)
+        <span class="c-self">self</span>.assertTrue(transaction_success)
+        
+        <span class="c-com"># White Box: Validate internal database mutation (Grey Box approach)</span>
+        <span class="c-self">self</span>.assertEqual(<span class="c-self">self</span>.inventory.stock[<span class="c-str">"laptop"</span>], <span class="c-number">4</span>)</code></pre>
+                </div>
+            </div>
+
+            <div class="exam-card">
+                <h4><span>Question 4: Grey Box Manual Test Ledger Design</span> <span class="marks">[5 Marks]</span></h4>
+                <p><strong>Scenario:</strong> A <code>SmartHomeHub</code> class controls a nested <code>SmartThermostat</code> object. Design a single, formal Grey Box manual test ledger row confirming that calling <code>hub.blackout_all_systems()</code> successfully mutates the internal private state <code>_is_powered</code> of the nested thermostat to <code>False</code>. Include ID, Scenario, Preconditions, Test Steps, Expected Result.</p>
+                <div class="solution-box">
+                    <h5><i class="fa-solid fa-check"></i> Marking Scheme Solution:</h5>
+                    <table class="styled-table" style="background: rgba(0,0,0,0.5);">
+                        <thead>
+                            <tr>
+                                <th>Test Case ID</th>
+                                <th>Test Scenario</th>
+                                <th>Preconditions</th>
+                                <th>Test Steps</th>
+                                <th>Expected Result</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>GB_TC003</strong></td>
+                                <td>Validate hub orchestrates internal state termination across boundaries.</td>
+                                <td>Hub orchestrator initialized. Thermostat object registered and <code>_is_powered</code> state set to <code>True</code>.</td>
+                                <td>
+                                    1. Execute <code>hub.blackout_all_systems()</code>.<br>
+                                    2. Query memory reference to the registered Thermostat instance.
+                                </td>
+                                <td>Method executes silently. System memory inspection verifies the nested thermostat's <code>_is_powered</code> variable is updated to <code>False</code>.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="exam-card">
+                <h4><span>Question 5: Boundary Exception Context Testing</span> <span class="marks">[3 Marks]</span></h4>
+                <p><strong>Scenario:</strong> Relying on the <code>Bank</code> system structure containing a dictionary called <code>self.accounts</code>, write an automated <code>unittest</code> grey box assertion that proves looking up a non-existent account number (e.g., "99999") utilizing the <code>get_account()</code> method cleanly prevents a fatal crash and instead returns a Python <code>NoneType</code> structure.</p>
+                <div class="solution-box">
+                    <h5><i class="fa-solid fa-check"></i> Marking Scheme Solution:</h5>
+<pre style="background: #000; padding: 10px; margin-top: 10px; border-left: 2px solid #39ff14;"><code><span class="c-kw">def</span> <span class="c-def">test_invalid_dictionary_key_access</span>(<span class="c-self">self</span>):
+    <span class="c-com">"""Boundary Exception Context: Verifies dictionary handles lookup failures gracefully."""</span>
+    <span class="c-com"># We utilize assertIsNone to explicitly check for a None return state</span>
+    <span class="c-com"># ensuring the missing key "99999" did not cause a KeyError crash.</span>
+    <span class="c-self">self</span>.assertIsNone(<span class="c-self">self</span>.bank.get_account(<span class="c-str">"99999"</span>))</code></pre>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

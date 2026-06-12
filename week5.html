@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOP Learning Portal | Week 5: Database Design & ERDs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0d0e15;
+            --bg-card: rgba(20, 20, 35, 0.6);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b4b7c5;
+            --neon-blue: #00f0ff;
+            --neon-purple: #9d4edd;
+            --sidebar-width: 260px;
+            --terminal-bg: #050508;
+            --success-green: #00ff66;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #12131c;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: var(--neon-blue);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-menu li a:hover {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .sidebar-menu li a.active {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.1);
+            border-left-color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        .header-banner {
+            margin-bottom: 40px;
+            position: relative;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .header-banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-banner p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* --- EXTREME CONTENT LAYOUTS --- */
+        h2.section-heading {
+            font-size: 1.8rem;
+            color: var(--neon-blue);
+            margin: 40px 0 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid var(--neon-purple);
+            padding-left: 15px;
+        }
+
+        h3.sub-heading {
+            font-size: 1.3rem;
+            color: #ffffff;
+            margin: 25px 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        p.text-block {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .analogy-box {
+            background: rgba(157, 78, 221, 0.1);
+            border-left: 4px solid var(--neon-purple);
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 20px 0;
+            font-style: italic;
+            color: #e2d4f0;
+        }
+
+        /* --- SYSTEMATIC TABLES --- */
+        .table-container {
+            overflow-x: auto;
+            margin: 25px 0;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        table.data-table th {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--neon-blue);
+            padding: 16px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        table.data-table td {
+            padding: 16px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+
+        table.data-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* --- CODE VECTOR EDITOR BLOCKS --- */
+        .code-container {
+            background: var(--terminal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin: 25px 0;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .code-header {
+            background: #161722;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .code-header .dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .code-header .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff5f56;
+        }
+        .code-header .dot:nth-child(2) { background: #ffbd2e; }
+        .code-header .dot:nth-child(3) { background: #27c93f; }
+
+        pre code {
+            display: block;
+            padding: 20px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #e6e6e6;
+        }
+
+        /* Syntax Highlighting Base colors */
+        .keyword { color: #ff79c6; font-weight: bold; }
+        .class-name { color: #50fa7b; text-decoration: underline; }
+        .method { color: #8be9fd; }
+        .string { color: #f1fa8c; }
+        .comment { color: #6272a4; font-style: italic; }
+        .decorator { color: #bd93f9; }
+
+        /* --- VECTOR DRAWINGS (SVG COMPONENTS) --- */
+        .vector-canvas {
+            background: #11121a;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin: 30px 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .vector-canvas svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* --- EXAM PREPARATION BLOCK --- */
+        .exam-panel {
+            background: rgba(0, 240, 255, 0.03);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 40px 0;
+        }
+
+        .exam-question {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .marks-badge {
+            float: right;
+            background: rgba(157, 78, 221, 0.2);
+            color: var(--neon-purple);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border: 1px solid var(--neon-purple);
+        }
+
+        .sample-solution {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        .solution-title {
+            color: var(--success-green);
+            font-weight: bold;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* --- CHECKLIST INTERACTIVE --- */
+        .checklist-container {
+            background: #141622;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .checklist-item i {
+            color: var(--neon-blue);
+        }
+
+        /* --- FOOTER NAVIGATION --- */
+        .flow-footer {
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn.prev {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .nav-btn.prev:hover {
+            background: rgba(255,255,255,0.05);
+            color: #ffffff;
+        }
+
+        .nav-btn.next {
+            background: var(--neon-blue);
+            color: var(--bg-main);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+        }
+
+        .nav-btn.next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; position: relative; border-right: none; border-bottom: 1px solid var(--border-color); }
+            .main-content { margin-left: 0; padding: 20px; }
+            .flow-footer { flex-direction: column; gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-code"></i> SWE Portal
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Home Overview</a></li>
+            <li><a href="week1.html"><i class="fa-solid fa-cube"></i> Week 1: Core Blueprint</a></li>
+            <li><a href="week2.html"><i class="fa-solid fa-sitemap"></i> Week 2: Inheritance</a></li>
+            <li><a href="week3.html"><i class="fa-solid fa-arrows-split-up-and-left"></i> Week 3: Generalisation</a></li>
+            <li><a href="week4.html"><i class="fa-solid fa-crosshairs"></i> Week 4: Target Systems</a></li>
+            <li><a href="week5.html" class="active"><i class="fa-solid fa-database"></i> Week 5: Database & ERDs</a></li>
+            <li><a href="week6.html"><i class="fa-solid fa-vector-square"></i> Week 6: 3D Meshes & Relationships</a></li>
+            <li><a href="week8.html"><i class="fa-solid fa-vial-circle-check"></i> Week 8: Testing Frameworks</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header class="header-banner">
+            <h1>Week 5: Database Design & Entity-Relationship Diagrams (ERDs)</h1>
+            <p>Comprehensive Masterclass Study Node — Modelling Logical Architectures, Normalisation, Key Identifiers, and Object-Oriented Implementations.</p>
+        </header>
+
+        <h2 class="section-heading"><i class="fa-solid fa-circle-info"></i> 1. Fundamentals of ERDs</h2>
+        <p class="text-block">
+            An <strong>Entity-Relationship Diagram (ERD)</strong> is a structural diagram used to model the logical architecture of a database. It ensures data integrity and prevents redundancy (repeating data unnecessarily). By formalising data structures graphically before writing code or configuring databases, engineers prevent structural errors that degrade operational execution speeds.
+        </p>
+        <p class="text-block">
+            In modern systems engineering, an ERD acts as the ultimate blueprint for data persistence layer interactions. It ensures the system is logically sound, free from data anomalies (errors caused by poor organisation), and normalised. Without mapping structural properties clearly, complex databases risk breaking integrity restraints during deletion, modification, or creation processes.
+        </p>
+
+        <div class="analogy-box">
+            <strong>System Analogy:</strong> Think of an ERD as an architectural floor plan for a building. Before pouring physical concrete or routing copper wire, an architect maps exactly where rooms reside and how corridors connect them. If you build without this structural blueprint, you risk placing doors that open into blank brick walls. In software, an ERD stops data elements from being left stranded or duplicated needlessly.
+        </div>
+
+        <h3 class="sub-heading"><i class="fa-solid fa-network-wired"></i> Core Components Mapping</h3>
+        <p class="text-block">
+            ERDs consist of three main components: <strong>Entities</strong> (analogous to tables in a database, representing objects or things within the system), <strong>Attributes</strong> (the properties or characteristics of these entities, similar to columns in a database table), and <strong>Relationships</strong> (which depict how entities are connected to each other, defining the associations between tables). These components form the absolute foundation of database structure.
+        </p>
+
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Software Engineering Definition</th>
+                        <th>OOP Analogy</th>
+                        <th>Deep-Dive Operational Definition</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Entity</strong></td>
+                        <td>A definable thing or concept (e.g., Student, Book).</td>
+                        <td>Class</td>
+                        <td>Significant objects or items within the system. These represent programmatic data blocks that eventually resolve into physical tables within a storage engine.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Attribute</strong></td>
+                        <td>A specific property of an entity (e.g., Name, Price).</td>
+                        <td>Variable / Field</td>
+                        <td>The exact data types, descriptions, and characteristics that an entity holds. These govern what metrics are collected and tracked for individual records.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Relationship</strong></td>
+                        <td>How entities interact or connect with one another.</td>
+                        <td>Association</td>
+                        <td>The explicit logical linkages binding individual entities together, dictating structural execution paths when reading or querying matching blocks.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="section-heading"><i class="fa-solid fa-key"></i> 2. Key Identification (Data Integrity)</h2>
+        <p class="text-block">
+            To ensure every record in a database is unique and properly connected, we use <strong>Keys</strong>. Maintaining rigorous <strong>Data Integrity</strong> means preventing conflicting records, orphaned entries, or data corruption. Keys function as programmatic lookup markers to map memory structures cleanly.
+        </p>
+        
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Key Type</th>
+                        <th>Technical Definition & Purpose</th>
+                        <th>Concrete Systems Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Primary Key (PK)</strong></td>
+                        <td>A unique identifier for an entity instance. Every entity must have one. No two records can ever share the same PK value. Imposes structural isolation.</td>
+                        <td><code>StudentID</code> maps to a unique human. Even if two students share the name "John Smith", their PK isolates their grades and profiles.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Composite Key</strong></td>
+                        <td>A primary key made of <strong>two or more</strong> attributes combined together to guarantee uniqueness. Used when a single property fails to achieve clean uniqueness.</td>
+                        <td>In a <code>CourseEnrolment</code> entity, combining <code>StudentID</code> + <code>CourseID</code> creates a unique composite pair, preventing double-enrolments.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Foreign Key (FK)</strong></td>
+                        <td>An attribute in one table that serves as a Primary Key in another. It acts as a "link", "pointer", or relational "glue" to connect entities together.</td>
+                        <td>Placing <code>TeacherID</code> inside a <code>Course</code> table to map exactly which instructor is currently assigned to deliver that specific syllabus block.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="section-heading"><i class="fa-solid fa-diagram-project"></i> 3. Relationship Types & Cardinality</h2>
+        <p class="text-block">
+            <strong>Cardinality</strong> defines the numerical constraints of a relationship (how many instances of Entity A can relate to instances of Entity B). It provides numerical indicators along connection paths to constrain database mutations. Coupled with this is <strong>Participation</strong>, which defines structural dependency rules.
+        </p>
+
+        <h3 class="sub-heading"><i class="fa-solid fa-unitalic"></i> Structural Subtypes of Cardinality</h3>
+        <p class="text-block">
+            <strong>One-to-One (1..1):</strong> Each instance of Entity A relates to exactly one instance of Entity B. This is represented by a single line with a "1" or specific perpendicular marks at both ends. Used to enforce secure data isolation.
+            <br><em>Example:</em> One <code>Person</code> has exactly one <code>Passport</code>, and that passport belongs to that individual alone.
+        </p>
+        <p class="text-block">
+            <strong>One-to-Many (1..*):</strong> One instance of Entity A relates to multiple instances of Entity B. This forms the backbone of hierarchical structures in enterprise software architectures.
+            <br><em>Example:</em> One <code>Teacher</code> manages many <code>Students</code>. A single instructor controls an entire list of downstream learners.
+        </p>
+        <p class="text-block">
+            <strong>Many-to-Many (*..*):</strong> Multiple instances of Entity A relate to multiple instances of Entity B. 
+            <br><em>Example:</em> <code>Students</code> and <code>Courses</code>. A student takes multiple subjects, while a single course contains an array of students.
+        </p>
+
+        <div class="analogy-box">
+            <strong>Software Engineering Rule:</strong> Direct representation of Many-to-Many relationships is highly inefficient and cannot be implemented directly within physical relational tables. They introduce critical querying overheads and structural fragmentation. To fix this, software engineers break them down using a <strong>Junction Table</strong> (also known as an <strong>Associative Entity</strong>), which converts the complex layout into two clean, manageable One-to-Many relationships.
+        </div>
+
+        <h3 class="sub-heading"><i class="fa-solid fa-bezier-curve"></i> Participation & Constraints</h3>
+        <p class="text-block">
+            <strong>Mandatory Participation:</strong> An entity must exist in the relationship. If an instance requires an active match to remain valid, it is drawn using a <strong>solid line</strong>. For example, a <code>Course</code> must have an assigned instructor to exist.
+        </p>
+        <p class="text-block">
+            <strong>Optional Participation:</strong> An entity can exist completely independent of the relationship. It is drawn using a <strong>dashed line</strong>. For instance, a <code>Teacher</code> can exist within HR systems without currently being assigned to any active teaching course modules.
+        </p>
+
+        <h2 class="section-heading"><i class="fa-solid fa-pen-nib"></i> 4. Notation Styles & Visual Glossary</h2>
+        <p class="text-block">
+            Engineers apply two distinct notation patterns based on the development phase. <strong>Chen Notation</strong> (Traditional) uses separate structural shapes for abstract concept mapping. <strong>Crow’s Foot Notation</strong> (Modern/Industry Standard) uses integrated table layouts and structural endpoints for physical blueprint building.
+        </p>
+
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Feature / Element</th>
+                        <th>Chen Notation Style</th>
+                        <th>Crow’s Foot Notation Style</th>
+                        <th>Target Design Phase</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Entities</strong></td>
+                        <td>Rectangles</td>
+                        <td>Rectangles with Attributes nested inside</td>
+                        <td>Conceptual vs. Physical Architecture</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Attributes</strong></td>
+                        <td>Ovals branched out via lines</td>
+                        <td>Listed cleanly inside the entity block</td>
+                        <td>High-level tracking vs. Exact schema parsing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Relationships</strong></td>
+                        <td>Diamonds containing action verbs</td>
+                        <td>Direct lines connecting tables together</td>
+                        <td>Verb mapping vs. Key lookup mapping</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cardinality Indicators</strong></td>
+                        <td>Text markers (1, M, N) on lines</td>
+                        <td>Symbols (prongs, lines, circles) on line ends</td>
+                        <td>Mathematical abstracting vs. Production builds</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 class="sub-heading"><i class="fa-solid fa-compass-drafting"></i> Visual Standard: Crow's Foot Symbol Meanings</h3>
+        <p class="text-block">
+            To confidently read and interpret industrial data models, you must understand the exact meanings of Crow's Foot lines and terminal shapes. The vector canvas below explicitly diagrams these indicators:
+        </p>
+
+        <div class="vector-canvas">
+            <svg width="1000" height="240" viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg">
+                <rect width="800" height="240" rx="10" fill="#161722" stroke="rgba(255,255,255,0.05)" stroke-width="2"/>
+                
+                <text x="20" y="30" fill="#00f0ff" font-family="Segoe UI" font-size="14" font-weight="bold">RELATIONAL NOTATION DICTIONARY (CROW'S FOOT Standard)</text>
+                
+                <g transform="translate(40, 60)">
+                    <line x1="0" y1="20" x2="200" y2="20" stroke="#b4b7c5" stroke-width="2"/>
+                    <line x1="170" y1="5" x2="170" y2="35" stroke="#00f0ff" stroke-width="3"/>
+                    <line x1="180" y1="5" x2="180" y2="35" stroke="#00f0ff" stroke-width="3"/>
+                    <text x="230" y="25" fill="#ffffff" font-family="Segoe UI" font-size="13" font-weight="bold">Exactly One (Mandatory One)</text>
+                    <text x="450" y="25" fill="#b4b7c5" font-family="Segoe UI" font-size="12" font-style="italic">Solid line = Mandatory, Double bars = 1 and only 1</text>
+                </g>
+
+                <g transform="translate(40, 110)">
+                    <line x1="0" y1="20" x2="200" y2="20" stroke="#b4b7c5" stroke-width="2" stroke-dasharray="6,4"/>
+                    <circle cx="165" cy="20" r="6" fill="#161722" stroke="#9d4edd" stroke-width="2"/>
+                    <line x1="185" y1="20" x2="200" y2="10" stroke="#9d4edd" stroke-width="2"/>
+                    <line x1="185" y1="20" x2="200" y2="30" stroke="#9d4edd" stroke-width="2"/>
+                    <line x1="200" y1="5" x2="200" y2="35" stroke="#9d4edd" stroke-width="2"/>
+                    <text x="230" y="25" fill="#ffffff" font-family="Segoe UI" font-size="13" font-weight="bold">Zero or Many (Optional Many)</text>
+                    <text x="450" y="25" fill="#b4b7c5" font-family="Segoe UI" font-size="12" font-style="italic">Dashed line = Optional, Circle = 0, Prongs = Many</text>
+                </g>
+
+                <g transform="translate(40, 160)">
+                    <line x1="0" y1="20" x2="200" y2="20" stroke="#b4b7c5" stroke-width="2"/>
+                    <line x1="160" y1="5" x2="160" y2="35" stroke="#00f0ff" stroke-width="2"/>
+                    <line x1="180" y1="20" x2="200" y2="10" stroke="#00f0ff" stroke-width="2"/>
+                    <line x1="180" y1="20" x2="200" y2="30" stroke="#00f0ff" stroke-width="2"/>
+                    <line x1="200" y1="5" x2="200" y2="35" stroke="#00f0ff" stroke-width="2"/>
+                    <text x="230" y="25" fill="#ffffff" font-family="Segoe UI" font-size="13" font-weight="bold">One or Many (Mandatory Many)</text>
+                    <text x="450" y="25" fill="#b4b7c5" font-family="Segoe UI" font-size="12" font-style="italic">Solid line = Mandatory, Bar = At least 1, Prongs = Many</text>
+                </g>
+            </svg>
+        </div>
+
+        <h2 class="section-heading"><i class="fa-solid fa-right-left"></i> 5. Mapping ERDs to Class Diagrams & Python Logic</h2>
+        <p class="text-block">
+            Once a database structure is cleanly normalised to prevent structural issues, it acts as a layout map for object-oriented production code. When converting database structures to object classes, remember three core transformation rules:
+        </p>
+        <p class="text-block">
+            1. <strong>Entities become Classes:</strong> Each table translates into an independent Python class.
+            <br>
+            2. <strong>Attributes become Private Variables:</strong> Property names map directly to encapsulated internal state fields (prefixed with underscores to protect their structure).
+            <br>
+            3. <strong>Relationships become Object References:</strong> One-to-Many pathways translate to objects storing references or full Python lists of other sub-objects (<strong>Aggregation</strong> or <strong>Composition</strong>).
+        </p>
+
+        <h3 class="sub-heading"><i class="fa-solid fa-book-open"></i> Production Scenario: Library Management System</h3>
+        <p class="text-block">
+            Let us inspect how a real-world scenario maps directly to a high-fidelity database architecture, followed by pure Python code to see it in action.
+        </p>
+        <p class="text-block">
+            <em>Business Rules:</em> A <strong>Member</strong> can register multiple active <strong>Loan</strong> records. Each individual <strong>Loan</strong> references exactly one unique <strong>Book</strong>. A <strong>Librarian</strong> systematically manages and processes those loans.
+        </p>
+
+        <div class="vector-canvas">
+            <svg width="850" height="300" viewBox="0 0 850 300" xmlns="http://www.w3.org/2000/svg">
+                <rect width="850" height="300" rx="12" fill="#11121a" stroke="rgba(255,255,255,0.05)" stroke-width="2"/>
+                
+                <g transform="translate(30, 70)">
+                    <rect width="180" height="150" rx="8" fill="rgba(20, 20, 35, 0.8)" stroke="#00f0ff" stroke-width="2"/>
+                    <rect width="180" height="35" rx="6" fill="rgba(0, 240, 255, 0.1)" stroke="none"/>
+                    <text x="90" y="22" fill="#00f0ff" font-family="Segoe UI" font-size="14" font-weight="bold" text-anchor="middle">MEMBER</text>
+                    <text x="15" y="55" fill="#ff79c6" font-family="Segoe UI" font-size="12" font-weight="bold">PK  | MemberID</text>
+                    <line x1="5" y1="65" x2="175" y2="65" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                    <text x="15" y="85" fill="#ffffff" font-family="Segoe UI" font-size="12">       Name</text>
+                    <text x="15" y="110" fill="#ffffff" font-family="Segoe UI" font-size="12">       Email</text>
+                </g>
+
+                <g>
+                    <line x1="210" y1="145" x2="360" y2="145" stroke="#00f0ff" stroke-width="2"/>
+                    <line x1="220" y1="135" x2="220" y2="155" stroke="#00f0ff" stroke-width="2"/>
+                    <line x1="226" y1="135" x2="226" y2="155" stroke="#00f0ff" stroke-width="2"/>
+                    <line x1="340" y1="145" x2="360" y2="135" stroke="#00f0ff" stroke-width="2"/>
+                    <line x1="340" y1="145" x2="360" y2="155" stroke="#00f0ff" stroke-width="2"/>
+                    <line x1="340" y1="135" x2="340" y2="155" stroke="#00f0ff" stroke-width="2"/>
+                </g>
+
+                <g transform="translate(360, 40)">
+                    <rect width="180" height="200" rx="8" fill="rgba(20, 20, 35, 0.8)" stroke="#9d4edd" stroke-width="2"/>
+                    <rect width="180" height="35" rx="6" fill="rgba(157, 78, 221, 0.1)" stroke="none"/>
+                    <text x="90" y="22" fill="#9d4edd" font-family="Segoe UI" font-size="14" font-weight="bold" text-anchor="middle">LOAN</text>
+                    <text x="15" y="55" fill="#ff79c6" font-family="Segoe UI" font-size="12" font-weight="bold">PK  | LoanID</text>
+                    <line x1="5" y1="65" x2="175" y2="65" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                    <text x="15" y="85" fill="#bd93f9" font-family="Segoe UI" font-size="12" font-weight="bold">FK1 | BookID</text>
+                    <text x="15" y="110" fill="#bd93f9" font-family="Segoe UI" font-size="12" font-weight="bold">FK2 | MemberID</text>
+                    <text x="15" y="135" fill="#bd93f9" font-family="Segoe UI" font-size="12" font-weight="bold">FK3 | LibrarianID</text>
+                    <line x1="5" y1="145" x2="175" y2="145" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                    <text x="15" y="165" fill="#ffffff" font-family="Segoe UI" font-size="12">       LoanDate</text>
+                    <text x="15" y="185" fill="#ffffff" font-family="Segoe UI" font-size="12">       DueDate</text>
+                </g>
+
+                <g>
+                    <line x1="540" y1="145" x2="640" y2="145" stroke="#00f0ff" stroke-width="2"/>
+                    <line x1="630" y1="135" x2="630" y2="155" stroke="#00f0ff" stroke-width="2"/>
+                    <line x1="624" y1="135" x2="624" y2="155" stroke="#00f0ff" stroke-width="2"/>
+                    <line x1="560" y1="145" x2="540" y2="135" stroke="#00f0ff" stroke-width="2"/>
+                    <line x1="560" y1="145" x2="540" y2="155" stroke="#00f0ff" stroke-width="2"/>
+                    <line x1="560" y1="135" x2="560" y2="155" stroke="#00f0ff" stroke-width="2"/>
+                </g>
+
+                <g transform="translate(640, 70)">
+                    <rect width="180" height="150" rx="8" fill="rgba(20, 20, 35, 0.8)" stroke="#00f0ff" stroke-width="2"/>
+                    <rect width="180" height="35" rx="6" fill="rgba(0, 240, 255, 0.1)" stroke="none"/>
+                    <text x="90" y="22" fill="#00f0ff" font-family="Segoe UI" font-size="14" font-weight="bold" text-anchor="middle">BOOK</text>
+                    <text x="15" y="55" fill="#ff79c6" font-family="Segoe UI" font-size="12" font-weight="bold">PK  | BookID</text>
+                    <line x1="5" y1="65" x2="175" y2="65" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                    <text x="15" y="85" fill="#ffffff" font-family="Segoe UI" font-size="12">       Title</text>
+                    <text x="15" y="110" fill="#ffffff" font-family="Segoe UI" font-size="12">       ISBN</text>
+                </g>
+            </svg>
+        </div>
+
+        <h3 class="sub-heading"><i class="fa-brands fa-python"></i> Programmatic Blueprint Realisation</h3>
+        <p class="text-block">
+            Below is the full, clean Python code mapping this explicit database design into memory space using core OOP rules. It uses encapsulation to protect attribute values.
+        </p>
+
+        <div class="code-container">
+            <div class="code-header">
+                <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                <span>library_system.py</span>
+            </div>
+            <pre><code><span class="keyword">class</span> <span class="class-name">Book</span>:
+    <span class="keyword">def</span> <span class="method">__init__</span>(<span class="keyword">self</span>, book_id: <span class="method">str</span>, title: <span class="method">str</span>, isbn: <span class="method">str</span>):
+        <span class="keyword">self</span>._book_id = book_id  <span class="comment"># Protected matching database Primary Key</span>
+        <span class="keyword">self</span>._title = title
+        <span class="keyword">self</span>._isbn = isbn
+
+    <span class="keyword">def</span> <span class="method">get_title</span>(<span class="keyword">self</span>) -> <span class="method">str</span>:
+        <span class="keyword">return</span> <span class="keyword">self</span>._title
+
+
+<span class="keyword">class</span> <span class="class-name">Member</span>:
+    <span class="keyword">def</span> <span class="method">__init__</span>(<span class="keyword">self</span>, member_id: <span class="method">str</span>, name: <span class="method">str</span>):
+        <span class="keyword">self</span>._member_id = member_id
+        <span class="keyword">self</span>._name = name
+        <span class="keyword">self</span>._active_loans = []  <span class="comment"># Captures the 1..* ERD relationship flow via aggregation</span>
+
+    <span class="keyword">def</span> <span class="method">link_loan</span>(<span class="keyword">self</span>, loan_object):
+        <span class="keyword">self</span>._active_loans.append(loan_object)
+
+
+<span class="keyword">class</span> <span class="class-name">Loan</span>:
+    <span class="keyword">def</span> <span class="method">__init__</span>(<span class="keyword">self</span>, loan_id: <span class="method">str</span>, book_instance: <span class="class-name">Book</span>, member_instance: <span class="class-name">Member</span>):
+        <span class="keyword">self</span>._loan_id = loan_id
+        <span class="keyword">self</span>._book = book_instance      <span class="comment"># Direct object pointer tracking foreign link</span>
+        <span class="keyword">self</span>._member = member_instance  <span class="comment"># Injects object instance dependency cleanly</span>
+        
+        <span class="comment"># Synchronise the relationship bi-directionally</span>
+        <span class="keyword">self</span>._member.link_loan(<span class="keyword">self</span>)</code></pre>
+        </div>
+
+        <div class="checklist-container">
+            <h3 style="color: var(--neon-blue); margin-bottom: 15px;"><i class="fa-solid fa-clipboard-check"></i> Final Core Revision Checklist</h3>
+            <div class="checklist-item"><i class="fa-solid fa-square-check"></i> Can I fully separate a Primary Key from a Foreign Key descriptor?</div>
+            <div class="checklist-item"><i class="fa-solid fa-square-check"></i> Do I understand that a Many-to-Many relationship explicitly requires a Junction Table?</div>
+            <div class="checklist-item"><i class="fa-solid fa-square-check"></i> Can I draw a Crow’s Foot structure representing "Many" using three branch prongs?</div>
+            <div class="checklist-item"><i class="fa-solid fa-square-check"></i> Do I understand that Mandatory system validation fields use solid line tracks?</div>
+        </div>
+
+        <h2 class="section-heading"><i class="fa-solid fa-graduation-cap"></i> 6. Rigorous Examination Assessment Suite</h2>
+        <p class="text-block">
+            Review these exam-style short answer questions (SAQs). They are mapped directly to assessment rubrics to help you practice writing clear, professional technical explanations.
+        </p>
+
+        <div class="exam-panel">
+            <div class="exam-question">
+                <span class="marks-badge">4 Marks</span>
+                <h3 style="color: #ffffff; margin-bottom: 10px;">Short Answer Question 1: Resolving Relational Fragmentation</h3>
+                <p class="text-block" style="font-style: italic;">
+                    Explain why a direct Many-to-Many (*..*) relationship cannot be directly implemented within a relational database schema, and describe the systematic mechanism a software engineer must use to resolve this limitation.
+                </p>
+                <div class="sample-solution">
+                    <div class="solution-title"><i class="fa-solid fa-circle-check"></i> Sample Solution Guide (Full Marks Criteria)</div>
+                    <p class="text-block" style="color: #e6e6e6;">
+                        Direct Many-to-Many relationships cannot be implemented because they break relational integrity constraints, leading to severe data redundancy and update anomalies. If implemented directly, searching for records would require parsing non-atomic arrays within single cells, slowing query times.
+                    </p>
+                    <p class="text-block" style="color: #e6e6e6;">
+                        To fix this, an engineer uses a <strong>Junction Table</strong> (or Associative Entity). This table sits between the two original entities, breaking the Many-to-Many relationship into two clean One-to-Many (1..*) relationships. The Junction Table cross-references data by storing the Primary Keys of both connecting entities as <strong>Foreign Keys</strong>, ensuring clean data lookup and tracking.
+                    </p>
+                </div>
+            </div>
+
+            <div class="exam-question">
+                <span class="marks-badge">3 Marks</span>
+                <h3 style="color: #ffffff; margin-bottom: 10px;">Short Answer Question 2: Architectural Transition Analysis</h3>
+                <p class="text-block" style="font-style: italic;">
+                    A system design document shows a One-to-Many (1..*) relationship between a 'Company' entity and an 'Employee' entity. Describe how this relationship is structured when mapping the database schema into an object-oriented Python structure.
+                </p>
+                <div class="sample-solution">
+                    <div class="solution-title"><i class="fa-solid fa-circle-check"></i> Sample Solution Guide (Full Marks Criteria)</div>
+                    <p class="text-block" style="color: #e6e6e6;">
+                        When mapping a One-to-Many ERD relationship to Python, the entities are converted into independent, dedicated classes: a <code>Company</code> class and an <code>Employee</code> class. 
+                    </p>
+                    <p class="text-block" style="color: #e6e6e6;">
+                        To capture the "Many" side of the relationship, the <code>Company</code> class uses <strong>Aggregation</strong>, storing a list attribute (e.g., <code>self._employees = []</code>) to collect multiple employee references. On the "One" side, each instantiated employee object can optionally store a direct pointer reference back to its parent company instance, keeping the reference pathway clear.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-heading"><i class="fa-solid fa-code-branch"></i> 7. Practical Coding Practice: ERD Structural Parsing</h2>
+        <p class="text-block">
+            In software engineering exams, you are frequently required to inspect visual data diagrams and write clean code that implements that exact structure.
+        </p>
+        
+        <h3 class="sub-heading"><i class="fa-solid fa-eye"></i> Target Diagram to Interpret</h3>
+        <p class="text-block">
+            Review the modern Crow's Foot ERD below. It represents an e-commerce platform where customers place orders for warehouse products.
+        </p>
+
+        <div class="vector-canvas">
+            <svg width="800" height="260" viewBox="0 0 800 260" xmlns="http://www.w3.org/2000/svg">
+                <rect width="800" height="260" rx="12" fill="#141622" stroke="rgba(255,255,255,0.05)" stroke-width="2"/>
+                
+                <g transform="translate(30, 50)">
+                    <rect width="180" height="140" rx="6" fill="#1a1c2e" stroke="#00f0ff" stroke-width="2"/>
+                    <rect width="180" height="30" fill="rgba(0,240,255,0.1)"/>
+                    <text x="90" y="20" fill="#00f0ff" font-family="Segoe UI" font-size="13" font-weight="bold" text-anchor="middle">CUSTOMER</text>
+                    <text x="10" y="50" fill="#ff79c6" font-family="Segoe UI" font-size="11" font-weight="bold">PK | customer_id</text>
+                    <text x="10" y="75" fill="#ffffff" font-family="Segoe UI" font-size="11">     name</text>
+                    <text x="10" y="100" fill="#ffffff" font-family="Segoe UI" font-size="11">    email</text>
+                </g>
+
+                <g>
+                    <line x1="210" y1="120" x2="310" y2="120" stroke="#b4b7c5" stroke-width="2"/>
+                    <line x1="220" y1="110" x2="220" y2="130" stroke="#b4b7c5" stroke-width="2"/>
+                    <line x1="225" y1="110" x2="225" y2="130" stroke="#b4b7c5" stroke-width="2"/>
+                    <line x1="295" y1="120" x2="310" y2="110" stroke="#b4b7c5" stroke-width="2"/>
+                    <line x1="295" y1="120" x2="310" y2="130" stroke="#b4b7c5" stroke-width="2"/>
+                </g>
+
+                <g transform="translate(310, 30)">
+                    <rect width="180" height="180" rx="6" fill="#1a1c2e" stroke="#9d4edd" stroke-width="2"/>
+                    <rect width="180" height="30" fill="rgba(157,78,221,0.1)"/>
+                    <text x="90" y="20" fill="#9d4edd" font-family="Segoe UI" font-size="13" font-weight="bold" text-anchor="middle">ORDER_ITEM</text>
+                    <text x="10" y="55" fill="#ff79c6" font-family="Segoe UI" font-size="11" font-weight="bold">PK | order_item_id</text>
+                    <text x="10" y="80" fill="#bd93f9" font-family="Segoe UI" font-size="11" font-weight="bold">FK | customer_id</text>
+                    <text x="10" y="105" fill="#bd93f9" font-family="Segoe UI" font-size="11" font-weight="bold">FK | product_id</text>
+                    <text x="10" y="130" fill="#ffffff" font-family="Segoe UI" font-size="11">    quantity</text>
+                    <text x="10" y="155" fill="#ffffff" font-family="Segoe UI" font-size="11">    total_price</text>
+                </g>
+
+                <g>
+                    <line x1="490" y1="120" x2="590" y2="120" stroke="#b4b7c5" stroke-width="2"/>
+                    <line x1="580" y1="110" x2="580" y2="130" stroke="#b4b7c5" stroke-width="2"/>
+                    <line x1="575" y1="110" x2="575" y2="130" stroke="#b4b7c5" stroke-width="2"/>
+                    <line x1="505" y1="120" x2="490" y2="110" stroke="#b4b7c5" stroke-width="2"/>
+                    <line x1="505" y1="120" x2="490" y2="130" stroke="#b4b7c5" stroke-width="2"/>
+                </g>
+
+                <g transform="translate(590, 50)">
+                    <rect width="180" height="140" rx="6" fill="#1a1c2e" stroke="#00f0ff" stroke-width="2"/>
+                    <rect width="180" height="30" fill="rgba(0,240,255,0.1)"/>
+                    <text x="90" y="20" fill="#00f0ff" font-family="Segoe UI" font-size="13" font-weight="bold" text-anchor="middle">PRODUCT</text>
+                    <text x="10" y="50" fill="#ff79c6" font-family="Segoe UI" font-size="11" font-weight="bold">PK | product_id</text>
+                    <text x="10" y="75" fill="#ffffff" font-family="Segoe UI" font-size="11">     sku_code</text>
+                    <text x="10" y="100" fill="#ffffff" font-family="Segoe UI" font-size="11">    unit_cost</text>
+                </g>
+            </svg>
+        </div>
+
+        <h3 class="sub-heading"><i class="fa-solid fa-square-terminal"></i> Executable Code Solution</h3>
+        <p class="text-block">
+            Here is the complete object-oriented layout matching this pattern. It uses clean encapsulation parameters and tracks cross-entity links seamlessly.
+        </p>
+
+        <div class="code-container">
+            <div class="code-header">
+                <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                <span>ecommerce_model.py</span>
+            </div>
+            <pre><code><span class="keyword">class</span> <span class="class-name">Product</span>:
+    <span class="keyword">def</span> <span class="method">__init__</span>(<span class="keyword">self</span>, product_id: <span class="method">str</span>, sku_code: <span class="method">str</span>, unit_cost: <span class="method">float</span>):
+        <span class="keyword">self</span>._product_id = product_id
+        <span class="keyword">self</span>._sku_code = sku_code
+        <span class="keyword">self</span>._unit_cost = unit_cost
+
+    <span class="keyword">def</span> <span class="method">get_cost</span>(<span class="keyword">self</span>) -> <span class="method">float</span>:
+        <span class="keyword">return</span> <span class="keyword">self</span>._unit_cost
+
+
+<span class="keyword">class</span> <span class="class-name">Customer</span>:
+    <span class="keyword">def</span> <span class="method">__init__</span>(<span class="keyword">self</span>, customer_id: <span class="method">str</span>, name: <span class="method">str</span>, email: <span class="method">str</span>):
+        <span class="keyword">self</span>._customer_id = customer_id
+        <span class="keyword">self</span>._name = name
+        <span class="keyword">self</span>._email = email
+        <span class="keyword">self</span>._order_history = []  <span class="comment"># Maps Customer (1) to Order_Item (*) ERD link</span>
+
+    <span class="keyword">def</span> <span class="method">add_to_history</span>(<span class="keyword">self</span>, order_item):
+        <span class="keyword">self</span>._order_history.append(order_item)
+
+
+<span class="keyword">class</span> <span class="class-name">OrderItem</span>:
+    <span class="keyword">def</span> <span class="method">__init__</span>(<span class="keyword">self</span>, order_item_id: <span class="method">str</span>, customer: <span class="class-name">Customer</span>, product: <span class="class-name">Product</span>, quantity: <span class="method">int</span>):
+        <span class="keyword">self</span>._order_item_id = order_item_id
+        <span class="keyword">self</span>._customer = customer      <span class="comment"># Resolves customer foreign key association</span>
+        <span class="keyword">self</span>._product = product        <span class="comment"># Resolves product foreign key association</span>
+        <span class="keyword">self</span>._quantity = quantity
+        
+        <span class="comment"># Calculate total dynamically using attribute encapsulation paths</span>
+        <span class="keyword">self</span>._total_price = <span class="keyword">self</span>._quantity * <span class="keyword">self</span>._product.get_cost()
+        
+        <span class="comment"># Automatically register the order item within the customer's history list</span>
+        <span class="keyword">self</span>._customer.add_to_history(<span class="keyword">self</span>)</code></pre>
+        </div>
+
+        <footer class="flow-footer">
+            <a href="week4.html" class="nav-btn prev"><i class="fa-solid fa-arrow-left"></i> Back to Week 4</a>
+            <a href="week52.html" class="nav-btn next">Continue to Module Part 2 (UML Diagrams) <i class="fa-solid fa-arrow-right"></i></a>
+        </footer>
+    </main>
+
+</body>
+</html>

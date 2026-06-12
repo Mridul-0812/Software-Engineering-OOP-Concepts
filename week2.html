@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOP Learning Portal | Week 2: Deep Core Pillars</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0d0e15;
+            --bg-card: rgba(20, 20, 35, 0.6);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b4b7c5;
+            --neon-blue: #00f0ff;
+            --neon-purple: #9d4edd;
+            --neon-green: #39ff14;
+            --neon-amber: #ffb703;
+            --sidebar-width: 260px;
+            --code-bg: #050508;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #12131c;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: var(--neon-blue);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-menu li a:hover {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .sidebar-menu li a.active {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.1);
+            border-left-color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        .header-banner {
+            margin-bottom: 40px;
+            position: relative;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .header-banner h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-banner p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* --- ARCHITECTURAL CONTENT BLOCKS --- */
+        .section-container {
+            margin-bottom: 60px;
+            background: rgba(15, 16, 28, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--neon-blue);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px solid rgba(0, 240, 255, 0.2);
+            padding-bottom: 8px;
+        }
+
+        .section-title i {
+            color: var(--neon-purple);
+        }
+
+        .subsection-title {
+            font-size: 1.3rem;
+            color: var(--neon-purple);
+            margin: 24px 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        p.theory-text {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+
+        ul.theory-list {
+            margin-left: 24px;
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        ul.theory-list li {
+            margin-bottom: 8px;
+        }
+
+        strong.keyword {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        /* --- DEEP ARCHITECTURAL LABELS --- */
+        .label-box {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        .label-general { background: rgba(157, 78, 221, 0.2); color: #c8b6ff; border: 1px solid var(--neon-purple); }
+        .label-python { background: rgba(0, 240, 255, 0.15); color: var(--neon-blue); border: 1px solid var(--neon-blue); }
+        .label-extended { background: rgba(57, 255, 20, 0.15); color: #70e000; border: 1px solid var(--neon-green); }
+
+        /* --- CODE COMPONENT INTERFACES --- */
+        .code-block-container {
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            background: var(--code-bg);
+        }
+
+        .code-header {
+            background: #161722;
+            padding: 10px 16px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .code-header span i {
+            color: #3776ab;
+            margin-right: 6px;
+        }
+
+        pre {
+            padding: 18px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #e2e4f0;
+        }
+
+        /* Basic syntax highlighting simulation styles via standard output colors */
+        .c-comment { color: #6272a4; font-style: italic; }
+        .c-keyword { color: #ff79c6; font-weight: bold; }
+        .c-builtin { color: #8be9fd; }
+        .c-string { color: #f1fa8c; }
+        .c-decorator { color: #50fa7b; }
+        .c-number { color: #bd93f9; }
+
+        /* --- DATA TABLES --- */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 24px 0;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background-color: #161722;
+            color: var(--neon-blue);
+            padding: 14px 16px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 14px 16px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(20, 21, 33, 0.4);
+            line-height: 1.5;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* --- EXAM PREPARATION INTERFACES --- */
+        .exam-card {
+            background: rgba(255, 183, 3, 0.04);
+            border-left: 4px solid var(--neon-amber);
+            padding: 24px;
+            border-radius: 0 12px 12px 0;
+            margin-top: 24px;
+        }
+
+        .exam-title {
+            color: var(--neon-amber);
+            font-weight: bold;
+            font-size: 1.15rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .solution-box {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 16px;
+            margin-top: 14px;
+        }
+
+        .solution-title {
+            color: var(--neon-green);
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .practise-container {
+            background: rgba(0, 240, 255, 0.02);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 30px;
+        }
+
+        /* Responsive Design Rules */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-code"></i> SWE Portal
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Home Overview</a></li>
+            <li><a href="week1.html"><i class="fa-solid fa-cube"></i> Week 1: Core Blueprint</a></li>
+            <li><a href="week2.html" class="active"><i class="fa-solid fa-sitemap"></i> Week 2: Inheritance</a></li>
+            <li><a href="week3.html"><i class="fa-solid fa-arrows-split-up-and-left"></i> Week 3: Generalisation</a></li>
+            <li><a href="week4.html"><i class="fa-solid fa-crosshairs"></i> Week 4: Target Systems</a></li>
+            <li><a href="week5.html"><i class="fa-solid fa-database"></i> Week 5: Database & ERDs</a></li>
+            <li><a href="week6.html"><i class="fa-solid fa-vector-square"></i> Week 6: 3D Meshes & Relationships</a></li>
+            <li><a href="week8.html"><i class="fa-solid fa-vial-circle-check"></i> Week 8: Testing Frameworks</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header class="header-banner">
+            <h1>Week 2: Paradigm Architecture & Deep Foundations</h1>
+            <p>Comprehensive Master Study Suite: Inheritance Hierarchies, Encapsulation Protocols, and Structural Abstraction Contracts. Explanations match core curriculum boundaries with advanced architectural validation mechanisms.</p>
+        </header>
+
+        <section class="section-container">
+            <h2 class="section-title"><i class="fa-solid fa-sitemap"></i> Summary Notes – Term 2 | Week 2</h2>
+            
+            <h3 class="subsection-title">I. Core Definitions: The Inheritance Hierarchy</h3>
+            <p class="theory-text">
+                Inheritance is a fundamental pillar of OOP that allows a class to derive properties and behaviours from another class, establishing a <strong class="keyword">"is-a" relationship</strong> (e.g., a SniperRifle <strong class="keyword">is a</strong> Weapon).
+            </p>
+            <ul class="theory-list">
+                <li><strong class="keyword">Base Class (Superclass / Parent):</strong> The generalised class that contains common attributes and methods. It serves as a blueprint for more specific versions.</li>
+                <li><strong class="keyword">Derived Class (Subclass / Child):</strong> The specialised class that inherits from the Base Class. It can add unique features or modify inherited ones.</li>
+            </ul>
+
+            <p class="theory-text"><strong>Why Use Inheritance?</strong></p>
+            <ul class="theory-list" style="list-style-type: decimal;">
+                <li><strong class="keyword">Reusability:</strong> Write code once in the parent class; all children use it automatically.</li>
+                <li><strong class="keyword">Extensibility:</strong> Add new features to a child class without touching the parent class code.</li>
+                <li><strong class="keyword">Clarity:</strong> Organises code into a logical hierarchy, reducing redundancy.</li>
+            </ul>
+
+            <h3 class="subsection-title">II. Key Technical Mechanisms</h3>
+            <p class="theory-text"><strong>1. Method Overriding</strong><br>
+            This occurs when a Derived Class provides a specific implementation of a method that is already defined in its Base Class.</p>
+            <ul class="theory-list">
+                <li><strong class="keyword">Purpose:</strong> To allow a subclass to perform a general action (like fire()) in a way that is specific to its unique characteristics (e.g., a Sniper uses a scope, while an Assault Rifle handles rate of fire).</li>
+            </ul>
+
+            <p class="theory-text"><strong>2. The super() Function</strong><br>
+            The super() function is a built-in Python tool used to call methods from the Parent class inside the Child class.</p>
+            <ul class="theory-list">
+                <li><strong class="keyword">In Constructors (__init__):</strong> It ensures the parent’s attributes (like name or damage) are properly initialised before the child adds its own specific attributes.</li>
+                <li><strong class="keyword">In Methods:</strong> It allows a child to execute the parent's logic first and then add extra behaviour afterwards.</li>
+            </ul>
+
+            <h3 class="subsection-title">III. Practical Implementation (Python Syntax)</h3>
+            <p class="theory-text">Base Class Structure:</p>
+            <div class="code-block-container">
+                <div class="code-header"><span><i class="fa-brands fa-python"></i> Python (Base Class)</span></div>
+                <pre><span class="c-keyword">class</span> <span class="c-builtin">Weapon</span>:
+    <span class="c-keyword">def</span> <span class="c-builtin">__init__</span>(<span class="c-sidebar-width">self</span>, name, damage):
+        <span class="c-sidebar-width">self</span>.name = name
+        <span class="c-sidebar-width">self</span>.damage = damage
+
+    <span class="c-keyword">def</span> <span class="c-builtin">reload</span>(<span class="c-sidebar-width">self</span>):
+        <span class="c-keyword">print</span>(<span class="c-string">f"Reloading {self.name}..."</span>)</pre>
+            </div>
+
+            <p class="theory-text">Derived Class with super() and Overriding:</p>
+            <div class="code-block-container">
+                <div class="code-header"><span><i class="fa-brands fa-python"></i> Python (Derived Class)</span></div>
+                <pre><span class="c-keyword">class</span> <span class="c-builtin">SniperRifle</span>(<span class="c-builtin">Weapon</span>): <span class="c-comment"># Inheritance defined in parentheses</span>
+    <span class="c-keyword">def</span> <span class="c-builtin">__init__</span>(<span class="c-sidebar-width">self</span>, name, damage, scope_zoom):
+        <span class="c-comment"># Call the parent constructor to set name and damage</span>
+        <span class="c-builtin">super</span>().<span class="c-builtin">__init__</span>(name, damage)
+        <span class="c-comment"># Add a unique attribute</span>
+        <span class="c-sidebar-width">self</span>.scope_zoom = scope_zoom
+
+    <span class="c-keyword">def</span> <span class="c-builtin">reload</span>(<span class="c-sidebar-width">self</span>):
+        <span class="c-comment"># Extend parent reload logic</span>
+        <span class="c-builtin">super</span>().<span class="c-builtin">reload</span>()
+        <span class="c-keyword">print</span>(<span class="c-string">"Calibrating scope lens."</span>) <span class="c-comment"># Unique child behaviour</span></pre>
+            </div>
+
+            <div class="label-box label-extended">Architectural Extensions & Analysis</div>
+            <p class="theory-text">
+                Inheritance creates a unified memory configuration structure. When an object instance of <code style="color:var(--neon-blue)">SniperRifle</code> is declared, it contains fields dedicated to base-level state configuration values (<code style="color:var(--neon-purple)">name</code>, <code style="color:var(--neon-purple)">damage</code>) as well as child-specific offsets (<code style="color:var(--neon-purple)">scope_zoom</code>). Method resolution relies on an internal resolution hierarchy lookup. If a method does not exist on the child, runtime search falls back automatically to the ancestral definition.
+            </p>
+
+            <div class="label-box label-general">General Real-World Analogy</div>
+            <p class="theory-text">
+                Think of an automated transport registry system. A generic template "Vehicle" handles the core characteristics like engine type, registration number, and fuel capacity. Specific structural layout manifestations such as "Truck" or "Motorcycle" inherit all tracking data models automatically while appending tailored variables (e.g., maximum towing tonnage or sidecar status configurations).
+            </p>
+
+            <div class="label-box label-python">Python Target Syntax Blueprint</div>
+            <div class="code-block-container">
+                <div class="code-header"><span><i class="fa-brands fa-python"></i> Vehicle Hierarchy Demonstration</span></div>
+                <pre><span class="c-keyword">class</span> <span class="c-builtin">Vehicle</span>:
+    <span class="c-keyword">def</span> <span class="c-builtin">__init__</span>(<span class="c-sidebar-width">self</span>, registration, capacity):
+        <span class="c-sidebar-width">self</span>.registration = registration
+        <span class="c-sidebar-width">self</span>.capacity = capacity
+
+    <span class="c-keyword">def</span> <span class="c-builtin">start_engine</span>(<span class="c-sidebar-width">self</span>):
+        <span class="c-keyword">print</span>(<span class="c-string">f"Vehicle {self.registration} ignition sequence verified."</span>)
+
+<span class="c-keyword">class</span> <span class="c-builtin">Truck</span>(<span class="c-builtin">Vehicle</span>):
+    <span class="c-keyword">def</span> <span class="c-builtin">__init__</span>(<span class="c-sidebar-width">self</span>, registration, capacity, max_cargo_weight):
+        <span class="c-builtin">super</span>().<span class="c-builtin">__init__</span>(registration, capacity)
+        <span class="c-sidebar-width">self</span>.max_cargo_weight = max_cargo_weight
+
+    <span class="c-keyword">def</span> <span class="c-builtin">start_engine</span>(<span class="c-sidebar-width">self</span>):
+        <span class="c-builtin">super</span>().<span class="c-builtin">start_engine</span>()
+        <span class="c-keyword">print</span>(<span class="c-string">f"Pneumatic brake lines pressure equalised to {self.max_cargo_weight}kg tolerance limit."</span>)</pre>
+            </div>
+
+            <h3 class="subsection-title">IV. Exam-Ready "Single-Look" Revision Notes</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Description</th>
+                            <th>Technical Note</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Inheritance</strong></td>
+                            <td>A "Child" class taking code from a "Parent" class.</td>
+                            <td>Defined as <code style="color:var(--neon-blue)">class Child(Parent):</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Base Class</strong></td>
+                            <td>The generic "Parent" (e.g., Animal).</td>
+                            <td>Holds shared data for all subclasses.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Derived Class</strong></td>
+                            <td>The specific "Child" (e.g., Dog).</td>
+                            <td>Enhances or modifies parent logic.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>super()</strong></td>
+                            <td>Link to the parent class.</td>
+                            <td>Prevents rewriting initialisation code.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Overriding</strong></td>
+                            <td>Replacing a parent method with a child version.</td>
+                            <td>The method names must be identical.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Attribute Init</strong></td>
+                            <td>Passing data up the chain.</td>
+                            <td><code style="color:var(--neon-purple)">super().__init__(args)</code> must come first.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="subsection-title">V. Essential Terminology for Written Answers</h3>
+            <ul class="theory-list">
+                <li><strong class="keyword">Hierarchy:</strong> The "Family Tree" structure of classes.</li>
+                <li><strong class="keyword">Generalisation:</strong> Moving common features to a Base Class.</li>
+                <li><strong class="keyword">Specialisation:</strong> Creating Derived Classes for specific needs.</li>
+                <li><strong class="keyword">Redundancy:</strong> Avoiding "copy-pasting" code by using Inheritance.</li>
+                <li><strong class="keyword">Protected Attribute:</strong> Attributes starting with an underscore (e.g., <code style="color:var(--neon-blue)">_name</code>) intended for use only within the class and its subclasses.</li>
+            </ul>
+            <p class="theory-text" style="border-left: 3px solid var(--neon-blue); padding-left: 12px; font-style: italic;">
+                <strong>Exam Tip:</strong> If asked to "Extend functionality," use super(). If asked to "Replace behaviour," simply write the method in the child class without calling super().
+            </p>
+        </section>
+
+        <section class="section-container">
+            <h2 class="section-title"><i class="fa-solid fa-lock"></i> The Concept of Encapsulation</h2>
+            <p class="theory-text">
+                Encapsulation is the process of bundling data (attributes) and the methods that operate on that data into a single unit (a class). It is often described as a "protective shield" for data.
+            </p>
+            
+            <h3 class="subsection-title">1. Core Objectives</h3>
+            <ul class="theory-list">
+                <li><strong class="keyword">Data Hiding:</strong> Concealing the internal state of an object from external interference.</li>
+                <li><strong class="keyword">Controlled Access:</strong> Ensuring that the only way to interact with an object's data is through a well-defined interface (methods).</li>
+                <li><strong class="keyword">Data Integrity:</strong> Preventing external code from setting "impossible" values (e.g., setting a bank balance to a negative number or a person's age to -5).</li>
+            </ul>
+
+            <h3 class="subsection-title">II. Implementing Encapsulation in Python</h3>
+            <p class="theory-text"><strong>1. Private Attributes</strong><br>
+            In Python, we signal that an attribute is "private" (intended for internal use only) by prefixing it with an underscore (_).<br>
+            • Example: <code style="color:var(--neon-purple)">self._balance = 100</code><br>
+            • Technical Note: While Python does not strictly block access to _ variables (it relies on a "gentleman’s agreement"), using this prefix informs other developers that they should use Getters and Setters instead of direct access.</p>
+
+            <p class="theory-text"><strong>2. Getter Methods (Accessors)</strong><br>
+            A getter is a method used to retrieve the value of a private attribute without accessing the variable directly.<br>
+            • Naming Convention: Usually get_ followed by the attribute name.<br>
+            • Purpose: Provides read-only access.</p>
+            <div class="code-block-container">
+                <pre><span class="c-keyword">def</span> <span class="c-builtin">get_balance</span>(<span class="c-sidebar-width">self</span>):
+    <span class="c-keyword">return</span> <span class="c-sidebar-width">self</span>._balance</pre>
+            </div>
+
+            <p class="theory-text"><strong>3. Setter Methods (Mutators)</strong><br>
+            A setter is a method used to modify the value of a private attribute.<br>
+            • Naming Convention: Usually set_ followed by the attribute name.<br>
+            • Validation Logic: The primary advantage of a setter is the ability to include validation. If the new data is invalid, the setter can raise an error instead of corrupting the object.</p>
+            <div class="code-block-container">
+                <pre><span class="c-keyword">def</span> <span class="c-builtin">set_balance</span>(<span class="c-sidebar-width">self</span>, amount):
+    <span class="c-keyword">if</span> amount &gt;= <span class="c-number">0</span>:
+        <span class="c-sidebar-width">self</span>._balance = amount
+    <span class="c-keyword">else</span>:
+        <span class="c-keyword">raise</span> <span class="c-builtin">ValueError</span>(<span class="c-string">"Balance cannot be negative."</span>)</pre>
+            </div>
+
+            <div class="label-box label-extended">Deep Memory Enforcement Analysis</div>
+            <p class="theory-text">
+                By sealing variables within private scopes, you safeguard components against illegal programmatic mutations. In large enterprise environments, allowing direct manipulation enables uncontrolled, external modifications that can bypass validation frameworks, resulting in unstable runtime exceptions or compromised configurations.
+            </p>
+
+            <div class="label-box label-general">General Real-World Analogy</div>
+            <p class="theory-text">
+                Consider a digital atmospheric climate chamber interface. You cannot manually reposition physical cooling compressor flaps from outside the sealed device. Instead, you change values using an external digital dial interface panel. This dashboard serves as the public method validation gatekeeper, blocking adjustments that exceed hardware limitations or safety tolerances.
+            </p>
+
+            <div class="label-box label-python">Python Target Syntax Blueprint</div>
+            <div class="code-block-container">
+                <div class="code-header"><span><i class="fa-brands fa-python"></i> ThermalChamber Class Verification</span></div>
+                <pre><span class="c-keyword">class</span> <span class="c-builtin">ThermalChamber</span>:
+    <span class="c-keyword">def</span> <span class="c-builtin">__init__</span>(<span class="c-sidebar-width">self</span>, target_temp):
+        <span class="c-sidebar-width">self</span>._target_temp = target_temp <span class="c-comment"># Protected state</span>
+
+    <span class="c-keyword">def</span> <span class="c-builtin">get_target_temp</span>(<span class="c-sidebar-width">self</span>):
+        <span class="c-keyword">return</span> <span class="c-sidebar-width">self</span>._target_temp
+
+    <span class="c-keyword">def</span> <span class="c-builtin">set_target_temp</span>(<span class="c-sidebar-width">self</span>, new_temp):
+        <span class="c-keyword">if</span> <span class="c-number">-50</span> &lt;= new_temp &lt;= <span class="c-number">100</span>:
+            <span class="c-sidebar-width">self</span>._target_temp = new_temp
+        <span class="c-keyword">else</span>:
+            <span class="c-keyword">raise</span> <span class="c-builtin">ValueError</span>(<span class="c-string">"Critical Error: Temperature target out of operational threshold safety limits."</span>)</pre>
+            </div>
+
+            <h3 class="subsection-title">III. Exam-Ready "Single-Look" Summary</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Technical Term</th>
+                            <th>Purpose in Exam Answers</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>_attribute</strong></td>
+                            <td>Private Attribute</td>
+                            <td>Signals data is "hidden" from external modification.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Getter</strong></td>
+                            <td>Accessor</td>
+                            <td>Controls how data is read.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Setter</strong></td>
+                            <td>Mutator</td>
+                            <td>Controls how data is written (includes validation).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Validation</strong></td>
+                            <td>Data Integrity</td>
+                            <td>Ensuring values meet specific criteria before saving.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Interface</strong></td>
+                            <td>Public Methods</td>
+                            <td>The "buttons" external code uses to talk to the object.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="subsection-title">IV. Practical Case Study: BankAccount Class</h3>
+            <p class="theory-text">If asked to implement an encapsulated class in the exam, use this structure:</p>
+            <div class="code-block-container">
+                <div class="code-header"><span><i class="fa-brands fa-python"></i> Python Case Study Implementation</span></div>
+                <pre><span class="c-keyword">class</span> <span class="c-builtin">BankAccount</span>:
+    <span class="c-keyword">def</span> <span class="c-builtin">__init__</span>(<span class="c-sidebar-width">self</span>, owner, initial_balance):
+        <span class="c-sidebar-width">self</span>._owner = owner <span class="c-comment"># Private</span>
+        <span class="c-sidebar-width">self</span>._balance = initial_balance <span class="c-comment"># Private</span>
+
+    <span class="c-comment"># Getter for Balance</span>
+    <span class="c-keyword">def</span> <span class="c-builtin">get_balance</span>(<span class="c-sidebar-width">self</span>):
+        <span class="c-keyword">return</span> <span class="c-sidebar-width">self</span>._balance
+
+    <span class="c-comment"># Setter for Balance (with Validation)</span>
+    <span class="c-keyword">def</span> <span class="c-builtin">set_balance</span>(<span class="c-sidebar-width">self</span>, amount):
+        <span class="c-keyword">if</span> amount &gt;= <span class="c-number">0</span>:
+            <span class="c-sidebar-width">self</span>._balance = amount
+        <span class="c-keyword">else</span>:
+            <span class="c-comment"># Important: Always mention 'Validation' in your theory answers</span>
+            <span class="c-keyword">print</span>(<span class="c-string">"Invalid transaction: Negative balance not allowed."</span>)
+
+<span class="c-comment"># Usage</span>
+account = BankAccount(<span class="c-string">"John Smith"</span>, <span class="c-number">500</span>)
+account.set_balance(<span class="c-number">600</span>) <span class="c-comment"># Correct way</span>
+<span class="c-keyword">print</span>(account.get_balance())</pre>
+            </div>
+
+            <h3 class="subsection-title">V. Why Encapsulation Matters (Exam Theory)</h3>
+            <ul class="theory-list">
+                <li><i class="fa-solid fa-shield-halved" style="color:var(--neon-blue); margin-right:6px;"></i> <strong class="keyword">Reduces Dependencies:</strong> If you change how the internal data is stored (e.g., changing a single balance variable to a list of transactions), you only need to update the Getter/Setter code. The external code using get_balance() doesn't need to change.</li>
+                <li><i class="fa-solid fa-bug" style="color:var(--neon-purple); margin-right:6px;"></i> <strong class="keyword">Easier Debugging:</strong> Because all changes to an attribute go through a single Setter method, you can easily track when and where a value was changed incorrectly.</li>
+                <li><i class="fa-solid fa-key" style="color:var(--neon-green); margin-right:6px;"></i> <strong class="keyword">Security:</strong> It prevents external "actors" from bypassing business rules (like withdraw limits).</li>
+            </ul>
+        </section>
+
+        <section class="section-container">
+            <h2 class="section-title"><i class="fa-solid fa-eye-slash"></i> The Concept of Abstraction</h2>
+            <p class="theory-text">
+                Abstraction is the process of hiding the internal implementation details of an object and showing only the essential features (the interface) to the outside world.
+            </p>
+            <ul class="theory-list">
+                <li><strong class="keyword">The "What" vs. the "How":</strong> Abstraction focuses on what an object does (e.g., a shape calculates its area) rather than how it does it (the specific mathematical formula).</li>
+                <li><strong class="keyword">The Interface:</strong> This is the "contract" that specifies the methods, parameters, and return types a class must have. Documentation for an interface acts as a user manual for other developers.</li>
+                <li><strong class="keyword">Key Benefit:</strong> It reduces complexity. A programmer can use a Shape object and call .get_area() without needing to know if the object is a circle, square, or triangle.</li>
+            </ul>
+
+            <h3 class="subsection-title">II. Abstract Base Classes (ABCs) in Python</h3>
+            <p class="theory-text">
+                Python uses the <code style="color:var(--neon-blue)">abc</code> module to enforce abstraction. An Abstract Base Class is a class that cannot be instantiated (you cannot create an object directly from it); it exists only to be a template for other classes.
+            </p>
+            <p class="theory-text"><strong>1. Technical Components</strong></p>
+            <ul class="theory-list">
+                <li><strong class="keyword">ABC:</strong> The helper class you inherit from to make your class abstract.</li>
+                <li><strong class="keyword">@abstractmethod:</strong> A decorator placed above a method to signal that any child class must provide its own version of this method.</li>
+                <li><strong class="keyword">pass:</strong> A placeholder used in the abstract method because the base class provides no actual code for it.</li>
+            </ul>
+
+            <h3 class="subsection-title">III. Practical Implementation (Python Syntax)</h3>
+            <div class="code-block-container">
+                <div class="code-header"><span><i class="fa-brands fa-python"></i> Abstract Enforcement Layout</span></div>
+                <pre><span class="c-keyword">from</span> abc <span class="c-keyword">import</span> ABC, abstractmethod
+
+<span class="c-comment"># 1. Define the Abstract Base Class (The Blueprint)</span>
+<span class="c-keyword">class</span> <span class="c-builtin">Shape</span>(ABC):
+    <span class="c-keyword">def</span> <span class="c-builtin">__init__</span>(<span class="c-sidebar-width">self</span>, name):
+        <span class="c-sidebar-width">self</span>._name = name
+
+    <span class="c-decorator">@abstractmethod</span>
+    <span class="c-keyword">def</span> <span class="c-builtin">get_area</span>(<span class="c-sidebar-width">self</span>):
+        <span class="c-keyword">pass</span> <span class="c-comment"># No code here; just a requirement for children</span>
+
+<span class="c-comment"># 2. Define a Concrete Class (The Implementation)</span>
+<span class="c-keyword">class</span> <span class="c-builtin">Square</span>(<span class="c-builtin">Shape</span>):
+    <span class="c-keyword">def</span> <span class="c-builtin">__init__</span>(<span class="c-sidebar-width">self</span>, name, side_length):
+        <span class="c-builtin">super</span>().__init__(name)
+        <span class="c-keyword">if</span> side_length &lt;= <span class="c-number">0</span>:
+            <span class="c-keyword">raise</span> <span class="c-builtin">ValueError</span>(<span class="c-string">"Side length must be positive."</span>)
+        <span class="c-sidebar-width">self</span>.side_length = side_length
+
+    <span class="c-keyword">def</span> <span class="c-builtin">get_area</span>(<span class="c-sidebar-width">self</span>):
+        <span class="c-comment"># Mandatory implementation of the abstract method</span>
+        <span class="c-keyword">return</span> <span class="c-sidebar-width">self</span>.side_length ** <span class="c-number">2</span></pre>
+            </div>
+
+            <div class="label-box label-extended">Polymorphic Abstraction Engineering</div>
+            <p class="theory-text">
+                Abstraction acts as the structural interface foundation for polymorphic logic frameworks. When structural layouts mandate abstract protocols, it ensures that diverse data structures can be processed uniformly. This architecture decouples code consumption blocks from precise lower-level implementation details, minimising system errors when introducing new subclasses.
+            </p>
+
+            <div class="label-box label-general">General Real-World Analogy</div>
+            <p class="theory-text">
+                Think of an electronic payment transaction console terminal. The system handles processing configurations via a unified "process_transaction()" protocol request command. The system does not need to know the specific communication routing methods for Visa, Mastercard, or electronic crypto gateways. It simply sends the instruction to the abstract payment interface wrapper, which handles the specialised execution routes behind the scenes.
+            </p>
+
+            <div class="label-box label-python">Python Target Syntax Blueprint</div>
+            <div class="code-block-container">
+                <div class="code-header"><span><i class="fa-brands fa-python"></i> Abstract Database Network Node Connection</span></div>
+                <pre><span class="c-keyword">from</span> abc <span class="c-keyword">import</span> ABC, abstractmethod
+
+<span class="c-keyword">class</span> <span class="c-builtin">DatabaseConnector</span>(ABC):
+    <span class="c-decorator">@abstractmethod</span>
+    <span class="c-keyword">def</span> <span class="c-builtin">connect_data_node</span>(<span class="c-sidebar-width">self</span>):
+        <span class="c-keyword">pass</span>
+
+<span class="c-keyword">class</span> <span class="c-builtin">SQLConnector</span>(<span class="c-builtin">DatabaseConnector</span>):
+    <span class="c-keyword">def</span> <span class="c-builtin">__init__</span>(<span class="c-sidebar-width">self</span>, address):
+        <span class="c-sidebar-width">self</span>.address = address
+
+    <span class="c-keyword">def</span> <span class="c-builtin">connect_data_node</span>(<span class="c-sidebar-width">self</span>):
+        <span class="c-keyword">print</span>(<span class="c-string">f"SQL node stream handshaking established with {self.address} address line."</span>)</pre>
+            </div>
+
+            <h3 class="subsection-title">IV. Exam-Ready "Single-Look" Summary</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Technical Definition</th>
+                            <th>Exam Application</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Abstraction</strong></td>
+                            <td>Hiding complexity/implementation.</td>
+                            <td>Separates "What" from "How".</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Interface</strong></td>
+                            <td>The set of public methods available.</td>
+                            <td>Includes method names, parameters, and return types.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Abstract Method</strong></td>
+                            <td>A method with no body in the base class.</td>
+                            <td>Forces subclasses to implement specific logic.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Decorator</strong></td>
+                            <td>@abstractmethod</td>
+                            <td>Tells Python to prevent instantiation if methods are missing.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Concrete Class</strong></td>
+                            <td>A subclass that implements all abstract methods.</td>
+                            <td>Can be used to create actual objects (instances).</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="subsection-title">V. Error Handling in Abstraction</h3>
+            <p class="theory-text">
+                When implementing derived classes (like Square or Circle), professional code requires validation.<br>
+                • <strong class="keyword">Validation Check:</strong> Inside the __init__, check if the inputs (radius, side, height) are logical (e.g., greater than zero).<br>
+                • <strong class="keyword">Exception Handling:</strong> Use <code style="color:var(--neon-purple)">raise ValueError("Message")</code> to stop the program if invalid data is provided. This ensures the "Data Integrity" mentioned in the Encapsulation unit.
+            </p>
+
+            <h3 class="subsection-title">VI. Essential Vocabulary for Written Answers</h3>
+            <ul class="theory-list">
+                <li><strong class="keyword">Contractual Requirement:</strong> Subclasses are "contractually obligated" to implement methods marked with @abstractmethod.</li>
+                <li><strong class="keyword">Instantiation Error:</strong> What happens if you try to create an object from an Abstract Base Class (Python will raise a TypeError).</li>
+                <li><strong class="keyword">Polymorphic Interface:</strong> Using abstraction allows different objects to be used interchangeably because they all share the same method names.</li>
+            </ul>
+            <p class="theory-text" style="border-left: 3px solid var(--neon-purple); padding-left: 12px; font-style: italic;">
+                <strong>Exam Tip:</strong> If you see a question asking why we use pass in a base class, the answer is: "Because the method is abstract; the base class defines the requirement, but the specific logic is left to the derived classes."
+            </p>
+        </section>
+
+        <section class="section-container" style="border: 1px solid var(--neon-amber);">
+            <h2 class="section-title" style="color:var(--neon-amber); border-bottom: 2px solid rgba(255,183,3,0.2);">
+                <i class="fa-solid fa-graduation-cap"></i> High-Tier Short Answer Questions (SAQs)
+            </h2>
+            
+            <div class="exam-card">
+                <div class="exam-title"><i class="fa-solid fa-circle-question"></i> Question 1: Method Overriding and super() Execution Dynamics [4 Marks]</div>
+                <p class="theory-text" style="color:#ffffff; font-weight: 500;">
+                    Distinguish between method overriding and method extension using the <code style="color:var(--neon-blue)">super()</code> function. Explain how these mechanisms operate within an inheritance hierarchy to minimise code redundancy while supporting specialisation.
+                </p>
+                <div class="solution-box">
+                    <div class="solution-title"><i class="fa-solid fa-square-check"></i> Sample Solution Scheme</div>
+                    <p class="theory-text" style="font-size:0.95rem; margin-bottom:0;">
+                        <strong>Method overriding</strong> completely replaces a base class method with a new implementation in the derived child class using an identical signature. 
+                        Conversely, <strong>method extension</strong> utilises the <code style="color:var(--neon-blue)">super()</code> function to invoke the base class's logic first, before executing additional child-specific logic. 
+                        Within a structural hierarchy, inheritance eliminates code redundancy by allowing common behaviours to be defined once in the base parent blueprint. Children then use method extension or overriding to implement specialised logic only where needed, maintaining clean architectural boundaries.
+                    </p>
+                </div>
+            </div>
+
+            <div class="exam-card">
+                <div class="exam-title"><i class="fa-solid fa-circle-question"></i> Question 2: Data Integrity and Interface Contracts [4 Marks]</div>
+                <p class="theory-text" style="color:#ffffff; font-weight: 500;">
+                    An engineering spec sheet outlines a system requiring data validation and strict architectural separation. Explain how combining encapsulation (via protected state controls) and abstract interfaces safeguards data integrity and establishes structural contracts.
+                </p>
+                <div class="solution-box">
+                    <div class="solution-title"><i class="fa-solid fa-square-check"></i> Sample Solution Scheme Scheme</div>
+                    <p class="theory-text" style="font-size:0.95rem; margin-bottom:0;">
+                        <strong>Encapsulation</strong> safeguards data integrity by hiding data behind protected attributes (prefixed with an underscore) and restricting access to public mutators (setters). These setters validate inputs before modifying state, preventing invalid data values. 
+                        <strong>Abstraction</strong> complements this by defining an interface contract via an Abstract Base Class (ABC). This contract forces child classes to implement required methods (using the <code style="color:var(--neon-purple)">@abstractmethod</code> decorator), ensuring consistent method names and parameters across variations. Together, they decouple implementation details from the public interface, creating an adaptable and resilient software architecture.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-container" style="border: 1px solid var(--neon-green);">
+            <h2 class="section-title" style="color:var(--neon-green); border-bottom: 2px solid rgba(57,255,20,0.2);">
+                <i class="fa-solid fa-dumbbell"></i> Practical Coding Exercise Workspace
+            </h2>
+            <div class="practise-container">
+                <p class="theory-text" style="color:#ffffff; font-weight: 600;">
+                    Problem Specification: Construct a validated, abstract inheritance structure for system component sensors.
+                </p>
+                <p class="theory-text">
+                    1. Create an Abstract Base Class named <code style="color:var(--neon-blue)">Sensor</code> that inherits from <code style="color:var(--neon-purple)">ABC</code>.<br>
+                    2. Implement a protected initialiser attribute <code style="color:var(--neon-blue)">_model_id</code>. Include a getter method for it.<br>
+                    3. Declare an abstract method called <code style="color:var(--neon-purple)">read_telemetry(self)</code>.<br>
+                    4. Create a concrete subclass named <code style="color:var(--neon-blue)">RadiationSensor</code>. It should initialise <code style="color:var(--neon-blue)">_model_id</code> using <code style="color:var(--neon-purple)">super()</code> and track a private <code style="color:var(--neon-blue)">_rad_level</code> value.<br>
+                    5. Implement a setter for <code style="color:var(--neon-blue)">_rad_level</code> that raises a <code style="color:var(--neon-purple)">ValueError</code> if the reading is negative, protecting data integrity.
+                </p>
+
+                <div class="code-block-container" style="border-color: rgba(57,255,20,0.3);">
+                    <div class="code-header" style="background:#0f1a12;"><span style="color:var(--neon-green);"><i class="fa-solid fa-terminal"></i> Verified Implementation Code Blueprint</span></div>
+                    <pre><span class="c-keyword">from</span> abc <span class="c-keyword">import</span> ABC, abstractmethod
+
+<span class="c-keyword">class</span> <span class="c-builtin">Sensor</span>(ABC):
+    <span class="c-keyword">def</span> <span class="c-builtin">__init__</span>(<span class="c-sidebar-width">self</span>, model_id):
+        <span class="c-sidebar-width">self</span>._model_id = model_id <span class="c-comment"># Encapsulated attribute</span>
+
+    <span class="c-keyword">def</span> <span class="c-builtin">get_model_id</span>(<span class="c-sidebar-width">self</span>):
+        <span class="c-keyword">return</span> <span class="c-sidebar-width">self</span>._model_id
+
+    <span class="c-decorator">@abstractmethod</span>
+    <span class="c-keyword">def</span> <span class="c-builtin">read_telemetry</span>(<span class="c-sidebar-width">self</span>):
+        <span class="c-keyword">pass</span> <span class="c-comment"># Contractual obligation template</span>
+
+<span class="c-keyword">class</span> <span class="c-builtin">RadiationSensor</span>(<span class="c-builtin">Sensor</span>):
+    <span class="c-keyword">def</span> <span class="c-builtin">__init__</span>(<span class="c-sidebar-width">self</span>, model_id, initial_rad):
+        <span class="c-builtin">super</span>().<span class="c-builtin">__init__</span>(model_id) <span class="c-comment"># Upward constructor linking</span>
+        <span class="c-sidebar-width">self</span>.set_rad_level(initial_rad)
+
+    <span class="c-keyword">def</span> <span class="c-builtin">get_rad_level</span>(<span class="c-sidebar-width">self</span>):
+        <span class="c-keyword">return</span> <span class="c-sidebar-width">self</span>._rad_level
+
+    <span class="c-keyword">def</span> <span class="c-builtin">set_rad_level</span>(<span class="c-sidebar-width">self</span>, value):
+        <span class="c-comment"># Input validation gate guarding data integrity bounds</span>
+        <span class="c-keyword">if</span> value &lt; <span class="c-number">0</span>:
+            <span class="c-keyword">raise</span> <span class="c-builtin">ValueError</span>(<span class="c-string">"Data Integrity Violation: Radiation values cannot be negative."</span>)
+        <span class="c-sidebar-width">self</span>._rad_level = value
+
+    <span class="c-keyword">def</span> <span class="c-builtin">read_telemetry</span>(<span class="c-sidebar-width">self</span>):
+        <span class="c-comment"># Concrete implementation meeting the interface contract</span>
+        <span class="c-keyword">return</span> <span class="c-string">f"Sensor {self.get_model_id()} Output: {self._rad_level} mSv/h"</span>
+
+<span class="c-comment"># Operational Validation Run</span>
+<span class="c-keyword">try</span>:
+    sensor_node = RadiationSensor(<span class="c-string">"RAD-700"</span>, <span class="c-number">5.4</span>)
+    <span class="c-keyword">print</span>(sensor_node.read_telemetry())
+    <span class="c-comment"># Triggering verification throw</span>
+    sensor_node.set_rad_level(<span class="c-number">-1.2</span>)
+<span class="c-keyword">except</span> <span class="c-builtin">ValueError</span> <span class="c-keyword">as</span> error_msg:
+    <span class="c-keyword">print</span>(<span class="c-string">f"Intercepted Expected Exception: {error_msg}"</span>)</pre>
+                </div>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>

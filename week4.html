@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOP Learning Portal | Week 4: Target Systems</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0d0e15;
+            --bg-card: rgba(20, 20, 35, 0.6);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b4b7c5;
+            --neon-blue: #00f0ff;
+            --neon-purple: #9d4edd;
+            --sidebar-width: 260px;
+            --terminal-bg: #090a0f;
+            --success-green: #39ff14;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #12131c;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: var(--neon-blue);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-menu li a:hover {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .sidebar-menu li a.active {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.1);
+            border-left-color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        .header-banner {
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .header-banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-banner p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* --- ARCHITECTURAL CONTENT BLOCKS --- */
+        .content-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .content-section h2 {
+            font-size: 1.6rem;
+            color: var(--neon-blue);
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .content-section h3 {
+            font-size: 1.25rem;
+            color: var(--neon-purple);
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .content-section p {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        .content-section ul, .content-section ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+            color: var(--text-secondary);
+        }
+
+        .content-section li {
+            margin-bottom: 8px;
+        }
+
+        .highlight-box {
+            background: rgba(157, 78, 221, 0.08);
+            border-left: 4px solid var(--neon-purple);
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .highlight-box p {
+            margin-bottom: 0;
+            font-style: italic;
+        }
+
+        /* --- REVISION TABLE --- */
+        .table-container {
+            overflow-x: auto;
+            margin: 25px 0;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background-color: #12131c;
+            color: var(--neon-blue);
+            padding: 14px 16px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 14px 16px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--text-primary);
+        }
+
+        /* --- EXAM / QUIZ ARCHITECTURE --- */
+        .saq-card {
+            background: #090a0f;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .saq-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+            padding-bottom: 8px;
+        }
+
+        .saq-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .saq-marks {
+            color: var(--neon-purple);
+            font-size: 0.9rem;
+            font-weight: 600;
+            background: rgba(157, 78, 221, 0.15);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .solution-btn {
+            background: transparent;
+            border: 1px solid var(--neon-purple);
+            color: var(--neon-purple);
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .solution-btn:hover {
+            background: var(--neon-purple);
+            color: var(--text-primary);
+            box-shadow: 0 0 10px rgba(157, 78, 221, 0.4);
+        }
+
+        .solution-content {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid var(--success-green);
+            border-radius: 0 4px 4px 0;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* --- ACTION CONTAINER FOR PAGINATION --- */
+        .action-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background: linear-gradient(45deg, var(--neon-purple), #7b2cbf);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(157, 78, 221, 0.3);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(157, 78, 221, 0.5);
+            filter: brightness(1.1);
+        }
+
+        /* Responsive Design Rules */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-code"></i> SWE Portal
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Home Overview</a></li>
+            <li><a href="week1.html"><i class="fa-solid fa-cube"></i> Week 1: Core Blueprint</a></li>
+            <li><a href="week2.html"><i class="fa-solid fa-sitemap"></i> Week 2: Inheritance</a></li>
+            <li><a href="week3.html"><i class="fa-solid fa-arrows-split-up-and-left"></i> Week 3: Generalisation</a></li>
+            <li><a href="week4.html" class="active"><i class="fa-solid fa-crosshairs"></i> Week 4: Target Systems</a></li>
+            <li><a href="week5.html"><i class="fa-solid fa-database"></i> Week 5: Database & ERDs</a></li>
+            <li><a href="week6.html"><i class="fa-solid fa-vector-square"></i> Week 6: 3D Meshes & Relationships</a></li>
+            <li><a href="week8.html"><i class="fa-solid fa-vial-circle-check"></i> Week 8: Testing Frameworks</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header class="header-banner">
+            <h1>Week 4: Target Systems (Part 1)</h1>
+            <p>Explore architectural design mechanics, structural patterns, and adaptive lifecycle strategies within the Object-Oriented Paradigm.</p>
+        </header>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-bullseye"></i> I. Task Definition: The Foundation</h2>
+            <p>Task definition is the initial phase where software requirements are precisely defined. It acts as the "North Star" for the entire development process.</p>
+            
+            <h3>The Process</h3>
+            <ol>
+                <li><strong>Requirement Gathering:</strong> Collecting detailed information from stakeholders (what must the software do?).</li>
+                <li><strong>Specification Creation:</strong> Converting those needs into a detailed document outlining functionality and constraints.</li>
+            </ol>
+
+            <h3>Role in OOAD</h3>
+            <ul>
+                <li><strong>Goal Alignment:</strong> Ensures that modelled objects and interactions actually solve the user's business goals.</li>
+                <li><strong>Relation to OOA:</strong> 
+                    <ul>
+                        <li><em>Information Domain:</em> It clarifies which entities (like players or bank accounts) are relevant to the problem.</li>
+                        <li><em>Describing Function:</em> It defines the "To-Do" list that determines what methods a class needs.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="highlight-box">
+                <h3>Extended Pedagogical Commentary</h3>
+                <p>From an architectural point of view, skipping formal Task Definition causes scope creep. In Object-Oriented Analysis (OOA), raw requirements are translated into classes and relationships. Without accurate software requirement collection, system engineers risk writing bloated APIs that do not serve real business scenarios.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-layer-group"></i> II. Top-Down vs. Bottom-Up Approaches</h2>
+            <p>These are general strategies for tackling complexity. They are not exclusive to OOP but are essential tools for structuring a design.</p>
+            
+            <h3>1. Top-Down Approach (Decomposition)</h3>
+            <ul>
+                <li><strong>Process:</strong> Starts with the highest level of the system (the "Big Picture") and progressively breaks it down into smaller, detailed sub-parts.</li>
+                <li><strong>OOD Role:</strong> Helps define the overall system architecture and major classes first.</li>
+                <li><strong>OOA Link:</strong> Relates to <em>Dividing Models for Detail</em>. You start with the most general system and refine it.</li>
+            </ul>
+
+            <h3>2. Bottom-Up Approach (Integration)</h3>
+            <ul>
+                <li><strong>Process:</strong> Starts with the most fundamental, specific parts (basic classes) and combines them to form higher-level components.</li>
+                <li><strong>OOD Role:</strong> Useful when specifications aren't fully defined; allows for testing small parts immediately.</li>
+                <li><strong>OOA Link:</strong> Relates to <em>Starting Simple, Getting Detailed</em>. You build and test the core "behaviours" before worrying about the massive system framework.</li>
+            </ul>
+
+            <div class="highlight-box">
+                <h3>Systemic Contrast</h3>
+                <p>Top-Down decomposition relies on abstract structural patterns and system layout maps, while Bottom-Up software strategies are highly iterative, relying on the unit testing of modular concrete classes before assembling them into a broader system application layer.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-window-restore"></i> III. The Facade Pattern (A Structural Design Pattern)</h2>
+            <p>This is a critical Object-Oriented Design (OOD) feature used to manage complexity.</p>
+            
+            <h3>Definition</h3>
+            <p>A Facade is a "wrapper" class that provides a simplified interface to a large, complex body of code (a subsystem).</p>
+
+            <h3>Purpose</h3>
+            <ul>
+                <li><strong>Ease of Use:</strong> It provides a high-level interface so external code doesn't have to deal with dozens of complex internal classes.</li>
+                <li><strong>Reduced Dependency:</strong> External modules only need to know how to talk to the Facade, not the internal "guts" of the subsystem.</li>
+            </ul>
+
+            <h3>OOAD Application</h3>
+            <ul>
+                <li><strong>Representing Behaviour:</strong> It hides complex internal behaviours behind a simple "button" or method call.</li>
+                <li><strong>Dividing Models:</strong> It helps separate complex sections, keeping internal complexities hidden from outer modules.</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-person-running"></i> IV. Agility: The Adaptive Philosophy</h2>
+            <p>Agility is the ability to respond to change and unpredictability. It is a philosophy, not a technical feature of OOD.</p>
+            
+            <h3>Characteristics</h3>
+            <ul>
+                <li><strong>Iterative Development:</strong> Developing software in small, frequent increments rather than one massive release.</li>
+                <li><strong>Feedback Loops:</strong> Revisiting and revising decisions based on user feedback.</li>
+            </ul>
+
+            <h3>Relation to OOAD</h3>
+            <ul>
+                <li><strong>OOD Link:</strong> Supports the iterative refinement of object systems.</li>
+                <li><strong>OOA Link (Starting Simple, Getting Detailed):</strong> Agile development perfectly matches the OOA principle of starting with a simple model and adding complexity only when needed.</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-table"></i> V. Technical Revision Table (Exam Preparation)</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Methodology</th>
+                            <th>Definition/Key Focus</th>
+                            <th>OOA/OOD Relation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Task Definition</strong></td>
+                            <td>Precise requirements gathering.</td>
+                            <td>Defines the Information Domain.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Top-Down</strong></td>
+                            <td>High-level &rarr; Detailed.</td>
+                            <td>Useful for Dividing Models.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bottom-Up</strong></td>
+                            <td>Detailed parts &rarr; Integrated System.</td>
+                            <td>Useful for Starting Simple.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Facade Pattern</strong></td>
+                            <td>Simplified interface for complex guts.</td>
+                            <td>A structural feature of OOD.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Agility</strong></td>
+                            <td>Iterative, flexible, and responsive.</td>
+                            <td>Philosophy of Continuous Refinement.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-network-wired"></i> VI. Synergy: How they work together</h2>
+            <p>In a real project, these are not isolated. A developer might:</p>
+            <ol>
+                <li>Use <strong>Agility</strong> to plan short bursts of work.</li>
+                <li>Use <strong>Task Definition</strong> to decide what that work is.</li>
+                <li>Use a <strong>Top-Down</strong> approach to sketch the classes.</li>
+                <li>Use a <strong>Facade</strong> to make sure that new, complex code doesn't break the rest of the system.</li>
+            </ol>
+
+            <div class="highlight-box">
+                <p><strong>Exam Theory Tip:</strong> If asked to differentiate between Top-Down and Bottom-Up, remember: Top-Down is about breaking the system apart to understand it, while Bottom-Up is about building pieces together to create it.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-graduation-cap"></i> VII. Analytical Exam Assessment Suite</h2>
+            <p>Review these highly targeted short answer questions to verify your technical understanding of the theoretical systems concepts taught in Week 4.</p>
+
+            <div class="saq-card">
+                <div class="saq-meta">
+                    <span class="saq-title">Question 1: Architectural Comparison</span>
+                    <span class="saq-marks">4 Marks</span>
+                </div>
+                <p><strong>Differentiate between Top-Down decomposition and Bottom-Up integration during the software engineering design phase. Explain how each approach uniquely affects Object-Oriented Analysis (OOA).</strong></p>
+                <button class="solution-btn" onclick="toggleSolution('sol1')">Reveal Official Marking Guideline</button>
+                <div id="sol1" class="solution-content">
+                    <p><strong>Detailed Sample Solution:</strong></p>
+                    <p>Top-Down decomposition and Bottom-Up integration are distinct architectural pathways for managing system complexity:</p>
+                    <ul>
+                        <li><strong>Top-Down Approach:</strong> Starts with the highest macro level of the software system (the "Big Picture") and systematically decomposes it into small, granular modular components. In OOA, this directly aligns with <em>Dividing Models for Detail</em>, where engineers conceptualise the foundational system framework first before mapping individual subclasses.</li>
+                        <li><strong>Bottom-Up Approach:</strong> Commences at the micro level, implementing fundamental, highly specific components (individual low-level classes) and integrating them upwards into complex high-level structures. In OOA, this supports <em>Starting Simple, Getting Detailed</em>, allowing developers to implement and test core object behaviours immediately without waiting for global architectural parameters to be finalised.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="saq-card">
+                <div class="saq-meta">
+                    <span class="saq-title">Question 2: Design Patterns</span>
+                    <span class="saq-marks">3 Marks</span>
+                </div>
+                <p><strong>Explain how the structural Facade Pattern supports structural encapsulation and simplifies dependency management within an object-oriented application.</strong></p>
+                <button class="solution-btn" onclick="toggleSolution('sol2')">Reveal Official Marking Guideline</button>
+                <div id="sol2" class="solution-content">
+                    <p><strong>Detailed Sample Solution:</strong></p>
+                    <p>The Facade Pattern acts as an architectural wrapper class that exposes a simplified, clean public interface to an underlying complex network of subsystem components. It minimises system coupling in two distinct ways:</p>
+                    <ol>
+                        <li><strong>Encapsulation of Behaviour:</strong> It wraps internal, intricate multi-class execution logic within an isolated uniform method, preventing client applications from interacting directly with internal logic.</li>
+                        <li><strong>Dependency Mitigation:</strong> Client models only establish a contract with the unified Facade class rather than maintaining complex references to dozens of discrete inner utility models, reducing global system vulnerabilities.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="saq-card">
+                <div class="saq-meta">
+                    <span class="saq-title">Question 3: System Lifecycles</span>
+                    <span class="saq-marks">3 Marks</span>
+                </div>
+                <p><strong>Analyse the intersection of Agility and Object-Oriented Analysis (OOA). How does an adaptive philosophy influence class blueprint design cycles?</strong></p>
+                <button class="solution-btn" onclick="toggleSolution('sol3')">Reveal Official Marking Guideline</button>
+                <div id="sol3" class="solution-content">
+                    <p><strong>Detailed Sample Solution:</strong></p>
+                    <p>Agility is an evolutionary development philosophy focusing on iterative design adjustments, continuous user deployment, and rapid adaptation to stakeholder shifts. Within OOA, Agility corresponds directly to the principle of <em>Starting Simple, Getting Detailed</em>. Rather than forcing developers to produce completely finalized class schemas during initial project setup, an agile methodology expects software layouts to mature dynamically. Object models are continuously refactored through brief development increments based on incoming validation data, ensuring functional structures match changing business logic.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="action-container">
+            <a href="week42.html" class="nav-btn">
+                Proceed to Part 2: Target Systems Systemic Logic <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+    </main>
+
+    <script>
+        function toggleSolution(id) {
+            const element = document.getElementById(id);
+            if (element.style.display === "block") {
+                element.style.display = "none";
+            } else {
+                element.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>

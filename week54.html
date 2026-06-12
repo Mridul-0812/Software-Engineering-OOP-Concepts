@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOP Learning Portal | Week 5: Class Diagrams</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0d0e15;
+            --bg-card: rgba(20, 20, 35, 0.6);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b4b7c5;
+            --neon-blue: #00f0ff;
+            --neon-purple: #9d4edd;
+            --sidebar-width: 260px;
+            --diagram-bg: #161925;
+            --diagram-accent: #00f0ff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #12131c;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: var(--neon-blue);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-menu li a:hover {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .sidebar-menu li a.active {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.1);
+            border-left-color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        .header-banner {
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .header-banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-banner p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* --- EPITOME DESIGN LAYOUTS --- */
+        .section-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--neon-blue);
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(0, 240, 255, 0.2);
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sub-title {
+            font-size: 1.3rem;
+            color: var(--neon-purple);
+            margin-top: 24px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 16px;
+            font-size: 1rem;
+        }
+
+        ul, ol {
+            margin-left: 24px;
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+        }
+
+        li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        /* --- TABLES --- */
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 0.95rem;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .styled-table th {
+            background-color: rgba(157, 78, 221, 0.2);
+            color: var(--neon-blue);
+            text-align: left;
+            padding: 14px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .styled-table td {
+            padding: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+        }
+
+        .styled-table tr:hover {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        /* --- CODE BLOCKS --- */
+        pre {
+            background: #06070a;
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        code {
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            color: #e2e4f0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .keyword { color: #ff79c6; font-weight: bold; }
+        .class-name { color: #8be9fd; font-weight: bold; }
+        .method-name { color: #50fa7b; }
+        .string { color: #f1fa8c; }
+        .comment { color: #6272a4; font-style: italic; }
+        .decorator { color: #ffb86c; }
+
+        /* --- VISUAL DIAGRAMS (CSS/SVG Rendered) --- */
+        .diagram-wrapper {
+            background: var(--diagram-bg);
+            border: 1px dashed var(--neon-blue);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 24px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .uml-class-box {
+            background: #1c2035;
+            border: 2px solid var(--neon-blue);
+            border-radius: 6px;
+            width: 280px;
+            box-shadow: 0 4px 15px rgba(0, 240, 255, 0.15);
+        }
+
+        .uml-class-box.abstract-box {
+            border-color: var(--neon-purple);
+            box-shadow: 0 4px 15px rgba(157, 78, 221, 0.15);
+        }
+
+        .uml-header {
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .uml-header.italic {
+            font-style: italic;
+            color: var(--neon-purple);
+        }
+
+        .uml-attributes, .uml-methods {
+            padding: 10px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .uml-attributes {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* UML Connectors */
+        .uml-connector {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 50px;
+        }
+
+        .connector-line {
+            width: 2px;
+            height: 40px;
+            background: var(--neon-blue);
+            position: relative;
+        }
+
+        .connector-line.dashed {
+            background: transparent;
+            border-left: 2px dashed var(--neon-purple);
+        }
+
+        .arrow-up-hollow {
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 12px solid var(--bg-main);
+            position: absolute;
+            top: -12px;
+            left: -7px;
+        }
+
+        .arrow-up-hollow::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 10px solid var(--neon-blue);
+            top: 1px;
+            left: -6px;
+        }
+
+        .arrow-up-hollow.purple::after {
+            border-bottom-color: var(--neon-purple);
+        }
+
+        .diagram-row {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+            justify-content: center;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        /* --- EXAM & QA BLOCKS --- */
+        .exam-block {
+            background: rgba(157, 78, 221, 0.05);
+            border-left: 4px solid var(--neon-purple);
+            padding: 20px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .exam-tag {
+            background: var(--neon-purple);
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border-radius: 4px;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .sample-solution {
+            background: rgba(0, 240, 255, 0.03);
+            border: 1px solid rgba(0, 240, 255, 0.1);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 6px;
+        }
+
+        /* Responsive Design Rules */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-code"></i> SWE Portal
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Home Overview</a></li>
+            <li><a href="week1.html"><i class="fa-solid fa-cube"></i> Week 1: Core Blueprint</a></li>
+            <li><a href="week2.html"><i class="fa-solid fa-sitemap"></i> Week 2: Inheritance</a></li>
+            <li><a href="week3.html"><i class="fa-solid fa-arrows-split-up-and-left"></i> Week 3: Generalisation</a></li>
+            <li><a href="week4.html"><i class="fa-solid fa-crosshairs"></i> Week 4: Target Systems</a></li>
+            <li><a href="week5.html" class="active"><i class="fa-solid fa-database"></i> Week 5: Database & ERDs</a></li>
+            <li><a href="week6.html"><i class="fa-solid fa-vector-square"></i> Week 6: 3D Meshes & Relationships</a></li>
+            <li><a href="week8.html"><i class="fa-solid fa-vial-circle-check"></i> Week 8: Testing Frameworks</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header class="header-banner">
+            <h1>Week 5, Lesson 4: Class Diagram Components & Advanced Modelling</h1>
+            <p>Comprehensive pedagogical notes, standard UML architectural specifications, and technical implementations mapping out the foundations of structural object design.</p>
+        </header>
+
+        <div class="section-container" style="background: rgba(0, 240, 255, 0.02); border-color: rgba(0, 240, 255, 0.2);">
+            <p><strong>Learning Intention:</strong> To understand how to use class diagrams to model objects in Object-Oriented Programming (OOP).</p>
+            <p><strong>Success Criteria:</strong></p>
+            <ul>
+                <li>Explain the purpose of class diagrams in OOP.</li>
+                <li>Identify and define classes, attributes, methods, and relationships.</li>
+                <li>Create a basic class diagram to model objects for a given scenario.</li>
+            </ul>
+            <p><strong>Homework Assignment:</strong> For a new scenario identify the main classes, create a class diagram, and then describe the attributes, methods, and relationships.</p>
+        </div>
+
+        <section class="section-container">
+            <h2 class="section-title"><i class="fa-solid fa-gears"></i> I. Class Diagram Design Principles</h2>
+            <p>A professional class diagram isn't just a sketch; it must adhere to three core software engineering principles:</p>
+            
+            <div class="sub-title">1. Encapsulation</div>
+            <p>Encapsulation is a cornerstone of object-oriented programming (OOP) that focuses on hiding the internal state of an object and restricting access to it through well-defined methods. When drawing class diagrams, encapsulation is represented by using visibility indicators (public, private, protected) for attributes and methods. This ensures that the internal data of a class is protected from direct access by other classes, preventing unintended interference and preserving the integrity of the data.</p>
+            <p>In a class diagram, encapsulation is depicted by marking attributes as private (using the minus sign '-') and methods that control access to these attributes as public (using the plus sign '+'). This systematically prevents internal corruption and forces modular communication across clear boundaries.</p>
+
+            <div class="sub-title">2. Modularity</div>
+            <p>Modularity refers to dividing a software system into smaller, manageable pieces or modules, each responsible for a specific part of the system's functionality. Well-designed class diagrams promote modularity by clearly defining the responsibilities and boundaries of each class. This separation of concerns makes it easier to understand, develop, test, and maintain each module independently.</p>
+            <p>In a class diagram, modularity is achieved by identifying distinct classes for different parts of the system and ensuring that each class has a single, well-defined responsibility (The Single Responsibility Principle).</p>
+
+            <div class="sub-title">3. Reusability</div>
+            <p>Reusability is the practice of designing classes and modules that can be used in different parts of a system or in different projects with minimal modification. Well-structured class diagrams promote reusability by defining generic, flexible classes that can be easily adapted and extended.</p>
+            <p>In a class diagram, reusability is achieved by designing classes with clear interfaces and minimal dependencies on specific implementations.</p>
+        </section>
+
+        <section class="section-container">
+            <h2 class="section-title"><i class="fa-solid fa-pen-ruler"></i> II. Standard UML Notations</h2>
+            <p>In Unified Modeling Language (UML), class diagrams are used to visually represent the structure of a system by showing its classes, their attributes, methods, and the relationships between them. Understanding the standard notation for these elements is crucial for designing and communicating software architectures.</p>
+            <p>A UML class diagram consists of classes, each represented as a rectangular box divided into three horizontal compartments:</p>
+            <ol>
+                <li><strong>Top Compartment: Class Name.</strong> Contains the class name, typically centred and in bold. It uniquely identifies the structural blueprint type.</li>
+                <li><strong>Middle Compartment: Attributes.</strong> Lists the fields or variables of the class. Format: <code>visibility name: type</code> (e.g., <code>- balance: float</code>). Attributes define the properties or data held by the class instances.</li>
+                <li><strong>Bottom Compartment: Methods.</strong> Lists the methods (also known as operations or functions) of the class. Format: <code>visibility name(parameters): return_type</code> (e.g., <code>+ deposit(amount: float): void</code>). Methods define the behaviours or operational capabilities of the class.</li>
+            </ol>
+
+            <div class="sub-title">Visibility Indicators Summary</div>
+            <p>Visibility indicators in UML class diagrams show the access level of class members (attributes and methods). They indicate who can access these members, ensuring proper encapsulation and information hiding.</p>
+            
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>UML Indicator</th>
+                        <th>Access Level Keyword</th>
+                        <th>Architectural Description & Context</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>-</strong></td>
+                        <td>Private</td>
+                        <td>Members marked as private can only be accessed within the class itself. Use this for almost all attributes to guard object state.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>+</strong></td>
+                        <td>Public</td>
+                        <td>Members marked as public can be accessed by any other class. Use this for methods acting as open system interfaces.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>#</strong></td>
+                        <td>Protected</td>
+                        <td>Members marked as protected can be accessed within the class itself and by derived subclasses (children).</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="sub-title">Multiplicity Specifier Parameters</div>
+            <p>Multiplicity in UML class diagrams shows how many instances of one class can be associated with instances of another class. It is represented by numerical notations placed near the association lines between classes. Multiplicity provides clarity on the nature of relationships and ensures proper design of class interactions.</p>
+
+            <div class="sub-title">Rendered Notation Showcase</div>
+            <div class="diagram-wrapper">
+                <div class="uml-class-box">
+                    <div class="uml-header">BankAccount</div>
+                    <div class="uml-attributes">
+                        - accountNo: String<br>
+                        - balance: float
+                    </div>
+                    <div class="uml-methods">
+                        + deposit(amount: float): void<br>
+                        + withdraw(amount: float): bool
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-container">
+            <h2 class="section-title"><i class="fa-solid fa-layer-group"></i> III. Abstract Classes vs. Interfaces</h2>
+            <p>These are "blueprint" tools used to enforce structural uniformity and strict polymorphism rules across multiple distinct subclasses.</p>
+            
+            <div class="sub-title">1. Abstract Classes (The "Partial Blueprint")</div>
+            <p>In object-oriented programming (OOP), an abstract class serves as a blueprint for other classes. Abstract classes are designed to be inherited by subclasses that provide implementations for the abstract methods defined in the abstract class.</p>
+            <ul>
+                <li><strong>Key Rule:</strong> One of the key characteristics of abstract classes is that they cannot be instantiated on their own. This means you cannot create an object directly from an abstract class. Instead, you must create objects from its subclasses that implement the abstract methods.</li>
+                <li><strong>Purpose:</strong> To provide a common base with shared attributes and methods that can be utilised by multiple subclasses, ensuring a consistent interface and promoting code reuse. Abstract classes allow you to define methods that must be implemented by all subclasses, enforcing a certain structure and behaviour across different subclasses.</li>
+                <li><strong>Notation:</strong> The Class Name is italicised or annotated with <code>&lt;&lt;abstract&gt;&gt;</code>.</li>
+                <li><strong>UML Link:</strong> Represented by a <strong>solid line with a hollow arrowhead</strong> pointing up to the parent (Inheritance relationship).</li>
+            </ul>
+
+            <div class="sub-title">2. Interfaces (The "Contractual Obligation")</div>
+            <p>In OOP, an interface defines a contract that implementing classes must follow.</p>
+            <ul>
+                <li><strong>Key Rule:</strong> Unlike abstract classes, interfaces do not contain any concrete methods or state (attributes). They are purely abstract, serving as a blueprint for what a class must do but not how it does it. They contain zero structural implementation code or internal data fields.</li>
+                <li><strong>Purpose:</strong> Interfaces are particularly useful in ensuring that different classes adhere to a specific structure, allowing for consistent behaviour across different classes. This promotes polymorphism, where different classes can be used interchangeably if they implement the same interface.</li>
+                <li><strong>UML Link:</strong> Represented by a <strong>dashed line with a hollow arrowhead</strong> pointing up to the interface block (Implementation / Realization relationship).</li>
+            </ul>
+
+            <div class="sub-title">Structural Comparison Matrix</div>
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Architectural Metric</th>
+                        <th>Abstract Classes (Partial Blueprint)</th>
+                        <th>Interfaces (Strict Structural Contract)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>State Storage (Attributes)</strong></td>
+                        <td>Allowed. Can manage common state fields natively.</td>
+                        <td>Forbidden. Contains no properties/state attributes.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Method Implementations</strong></td>
+                        <td>Mixed. Can have both concrete methods and abstract methods.</td>
+                        <td>Strictly abstract. Only declares method signatures.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>UML Line Formatting</strong></td>
+                        <td>Solid Line with Hollow Triangle Arrow.</td>
+                        <td>Dashed Line with Hollow Triangle Arrow.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Logical Modeling Angle</strong></td>
+                        <td>Models strict taxonomic identity ("is-a" taxonomy).</td>
+                        <td>Models operational capability constraints ("can-do").</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="section-container">
+            <h2 class="section-title"><i class="fa-solid fa-shapes"></i> IV. Modelling Polymorphism</h2>
+            <p>Polymorphism allows different classes to be treated as instances of a common parent but respond with their own unique behaviours.</p>
+            
+            <div class="sub-title">1. Method Overriding</div>
+            <p>In object-oriented programming (OOP), method overriding allows a derived class to provide a specific implementation of a method that is already defined in its base class. This is a powerful feature that enables polymorphism, allowing subclasses to tailor inherited methods to fit their own needs.</p>
+            <p>When a method in a subclass has the same name, return type, and parameters as a method in its base class, the method in the subclass overrides the one in the base class. This means that when the overridden method is called on an object of the subclass, the implementation in the subclass is executed instead of the one in the base class.</p>
+            <p>Method overriding is commonly used when a subclass needs to extend or modify the behaviour of a method inherited from a base class. This helps in achieving more specific and refined functionality in subclasses while maintaining a common interface defined by the base class.</p>
+
+            <div class="sub-title">2. Dynamic Binding (Late Binding)</div>
+            <p>Dynamic binding, also known as late binding, is a concept where the method to be invoked is determined at runtime rather than at compile-time. This is essential for achieving polymorphism in OOP. With dynamic binding, the code that calls the method does not need to know the exact type of the object it is dealing with; it just calls the method, and the appropriate method for the actual object type is executed.</p>
+            <p>Dynamic binding allows objects to be treated as instances of their base class rather than their actual class, enabling flexibility and extensibility in code. This is especially useful in scenarios where the exact type of the object may not be known until runtime, but the operations to be performed are defined by the base class.</p>
+        </section>
+
+        <section class="section-container">
+            <h2 class="section-title"><i class="fa-solid fa-diagram-project"></i> V. Advanced Relationships Summary</h2>
+            <p>The structural connections linking your object modules must be precisely categorized according to standard software modeling schemas:</p>
+            
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Concept Name</th>
+                        <th>UML Line Style</th>
+                        <th>Arrow Style</th>
+                        <th>Definitive Relationship Nature</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Inheritance</strong></td>
+                        <td>Solid Line</td>
+                        <td>Hollow Triangle (Hollow Arrowhead)</td>
+                        <td>Subclass derives from Super/Abstract class. ("is-a")</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Implementation</strong></td>
+                        <td>Dashed Line</td>
+                        <td>Hollow Triangle (Hollow Arrowhead)</td>
+                        <td>Class fulfills the contract of an Interface.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dependency</strong></td>
+                        <td>Dashed Line</td>
+                        <td>Open Arrow</td>
+                        <td>Class uses another class temporarily as a parameter.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="exam-block">
+                <span class="exam-tag">Section II Revision Tip</span>
+                <p>If an exam question asks why software designers utilize <strong>Interfaces</strong>, your answer should match the standard criteria word-for-word: <em>"To promote polymorphism and ensure different classes adhere to a specific structure, allowing them to be used interchangeably."</em></p>
+            </div>
+        </section>
+
+        <section class="section-container">
+            <h2 class="section-title"><i class="fa-solid fa-laptop-code"></i> Python Code Architectures</h2>
+            
+            <div class="sub-title">1. Abstract Class Blueprint Implementation</div>
+            <p>To implement an abstract base class pattern in Python, developers leverage the native <code>abc</code> (Abstract Base Classes) library module explicitly.</p>
+<pre><code><span class="keyword">from</span> abc <span class="keyword">import</span> ABC, abstractmethod
+
+<span class="keyword">class</span> <span class="class-name">Animal</span>(ABC): <span class="comment"># Abstract Class definition</span>
+    <span class="keyword">def</span> <span class="method-name">__init__</span>(<span class="keyword">self</span>, name):
+        <span class="keyword">self</span>.name = name <span class="comment"># Concrete protected instance data state</span>
+
+    <span class="decorator">@abstractmethod</span>
+    <span class="keyword">def</span> <span class="method-name">make_sound</span>(<span class="keyword">self</span>): <span class="comment"># Abstract Method (no execution code)</span>
+        <span class="keyword">pass</span>
+
+<span class="keyword">class</span> <span class="class-name">Dog</span>(Animal): <span class="comment"># Concrete class inheritance path</span>
+    <span class="keyword">def</span> <span class="method-name">make_sound</span>(<span class="keyword">self</span>):
+        <span class="keyword">return</span> <span class="string">"Bark"</span>
+
+<span class="keyword">class</span> <span class="class-name">Cat</span>(Animal): <span class="comment"># Concrete class inheritance path</span>
+    <span class="keyword">def</span> <span class="method-name">make_sound</span>(<span class="keyword">self</span>):
+        <span class="keyword">return</span> <span class="string">"Meow"</span>
+
+<span class="comment"># Instantiating active memory entities from subclasses</span>
+dog = Dog(<span class="string">"Buddy"</span>)
+cat = Cat(<span class="string">"Whiskers"</span>)
+print(f<span class="string">"{dog.name} says {dog.make_sound()}"</span>)
+print(f<span class="string">"{cat.name} says {cat.make_sound()}"</span>)</code></pre>
+
+            <div class="sub-title">2. Interface Contract Implementation</div>
+            <p>Interfaces are handled in Python by defining an abstract class containing exclusively abstract method protocols, housing absolutely no concrete fields, data state definitions, or constructors.</p>
+<pre><code><span class="keyword">from</span> abc <span class="keyword">import</span> ABC, abstractmethod
+
+<span class="keyword">class</span> <span class="class-name">AnimalInterface</span>(ABC): <span class="comment"># Pure Interface Configuration Contract</span>
+    <span class="decorator">@abstractmethod</span>
+    <span class="keyword">def</span> <span class="method-name">make_sound</span>(<span class="keyword">self</span>):
+        <span class="keyword">pass</span>
+
+<span class="keyword">class</span> <span class="class-name">Dog</span>(AnimalInterface): <span class="comment"># Implementation of the structural interface</span>
+    <span class="keyword">def</span> <span class="method-name">make_sound</span>(<span class="keyword">self</span>):
+        <span class="keyword">return</span> <span class="string">"Bark"</span>
+
+<span class="keyword">class</span> <span class="class-name">Cat</span>(AnimalInterface):
+    <span class="keyword">def</span> <span class="method-name">make_sound</span>(<span class="keyword">self</span>):
+        <span class="keyword">return</span> <span class="string">"Meow"</span>
+
+dog = Dog()
+cat = Cat()
+print(dog.make_sound())
+print(cat.make_sound())</code></pre>
+        </section>
+
+        <section class="section-container">
+            <h2 class="section-title"><i class="fa-solid fa-graduation-cap"></i> Theoretical Short Answer Questions (SAQs)</h2>
+            
+            <div class="exam-block">
+                <div class="exam-tag">Question 1 (3 Marks)</div>
+                <p><strong>Explain the precise design difference between an Abstract Class and an Interface inside a UML Class Diagram framework. Refer explicitly to the structural notations and the line variations used to depict them.</strong></p>
+                
+                <div class="sample-solution">
+                    <p><strong>Sample Solution Response:</strong></p>
+                    <p>An abstract class represents a partial software blueprint that can store common data attributes and concrete code definitions alongside abstract methods. In a UML class diagram, it is designated by italics or the <code>&lt;&lt;abstract&gt;&gt;</code> stereotype, and linked via a <strong>solid line with a hollow arrowhead</strong> to signify inheritance. Conversely, an interface represents a pure behavioral contract containing zero internal data fields or functional code statements. In a UML diagram, an interface is linked to its implementing classes using a <strong>dashed line with a hollow arrowhead</strong>, representing realization.</p>
+                </div>
+            </div>
+
+            <div class="exam-block">
+                <div class="exam-tag">Question 2 (4 Marks)</div>
+                <p><strong>Define the mechanism of Dynamic Binding (Late Binding) within Object-Oriented systems and outline how it works in conjunction with Method Overriding to support true Polymorphism during code execution.</strong></p>
+                
+                <div class="sample-solution">
+                    <p><strong>Sample Solution Response:</strong></p>
+                    <p>Dynamic binding is an execution framework where the selection of which exact method to invoke is deferred to runtime rather than decided at compilation. When subclasses employ method overriding, they specify a unique version of a method that exists within their base class. When a polymorphic system executes a call against an abstract type, dynamic binding inspects the absolute concrete object instance residing in system memory at that exact moment. It routes the call to the overridden version matching that specific instance, enabling diverse behaviors via an identical interface structure.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-container">
+            <h2 class="section-title"><i class="fa-solid fa-diagram-next"></i> Practical Diagram-to-Code Blueprint Challenge</h2>
+            <p><strong>Scenario Constraints:</strong> Analyze the professionally rendered UML specification below. Translate its entities, visibility profiles, abstract constraints, and inheritance boundaries directly into an operational Python module layout utilizing the <code>abc</code> engine components perfectly.</p>
+            
+            <div class="sub-title">Target UML Structural Blueprint View</div>
+            
+            <div class="diagram-wrapper">
+                <div class="uml-class-box abstract-box">
+                    <div class="uml-header italic">&lt;&lt;Abstract&gt;&gt;<br>Vehicle</div>
+                    <div class="uml-attributes">
+                        - registration: String<br>
+                        # baseSpeed: float
+                    </div>
+                    <div class="uml-methods">
+                        + __init__(reg: String, speed: float)<br>
+                        + calculateVelocity(): float {abstract}
+                    </div>
+                </div>
+
+                <div class="uml-connector">
+                    <div class="connector-line">
+                        <div class="arrow-up-hollow purple"></div>
+                    </div>
+                </div>
+
+                <div class="diagram-row">
+                    <div class="uml-class-box">
+                        <div class="uml-header">CombatJet</div>
+                        <div class="uml-attributes">
+                            - afterburnerMultiplier: float
+                        </div>
+                        <div class="uml-methods">
+                            + __init__(reg: String, spd: float, mult: float)<br>
+                            + calculateVelocity(): float
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sub-title">Executable Structural Solution Code</div>
+<pre><code><span class="keyword">from</span> abc <span class="keyword">import</span> ABC, abstractmethod
+
+<span class="keyword">class</span> <span class="class-name">Vehicle</span>(ABC):
+    <span class="keyword">def</span> <span class="method-name">__init__</span>(<span class="keyword">self</span>, registration: <span class="class-name">str</span>, base_speed: <span class="class-name">float</span>):
+        <span class="keyword">self</span>.__registration = registration   <span class="comment"># Map of private visibility indicator '-'</span>
+        <span class="keyword">self</span>._base_speed = base_speed         <span class="comment"># Map of protected visibility indicator '#'</span>
+
+    <span class="decorator">@abstractmethod</span>
+    <span class="keyword">def</span> <span class="method-name">calculate_velocity</span>(<span class="keyword">self</span>) -> <span class="class-name">float</span>:
+        <span class="keyword">pass</span>
+
+<span class="keyword">class</span> <span class="class-name">CombatJet</span>(Vehicle):
+    <span class="keyword">def</span> <span class="method-name">__init__</span>(<span class="keyword">self</span>, registration: <span class="class-name">str</span>, base_speed: <span class="class-name">float</span>, afterburner_multiplier: <span class="class-name">float</span>):
+        <span class="comment"># Invocation via the super() constructor connection path</span>
+        <span class="class-name">super</span>().__init__(registration, base_speed)
+        <span class="keyword">self</span>.__afterburner_multiplier = afterburner_multiplier <span class="comment"># Private state attribute</span>
+
+    <span class="keyword">def</span> <span class="method-name">calculate_velocity</span>(<span class="keyword">self</span>) -> <span class="class-name">float</span>:
+        <span class="comment"># Explicit execution of method overriding rules</span>
+        <span class="keyword">return</span> <span class="keyword">self</span>._base_speed * <span class="keyword">self</span>.__afterburner_multiplier
+
+<span class="comment"># Verification Execution Script Routine</span>
+if __name__ == <span class="string">"__main__"</span>:
+    jet_instance = CombatJet(<span class="string">"F22-RAPTOR"</span>, 450.0, 2.5)
+    print(f<span class="string">"Computed Target Velocity: {jet_instance.calculate_velocity()} knots"</span>)
+</code></pre>
+        </section>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOP Learning Portal | Week 8: White Box & Black Box Testing</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0d0e15;
+            --bg-card: rgba(20, 20, 35, 0.6);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b4b7c5;
+            --neon-blue: #00f0ff;
+            --neon-purple: #9d4edd;
+            --neon-green: #390099;
+            --neon-emerald: #00f5d4;
+            --neon-rose: #ff007f;
+            --sidebar-width: 260px;
+            --terminal-bg: #05050a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR NAVIGATION (EXACTLY AS PROVIDED) --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #12131c;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: var(--neon-blue);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-menu li a:hover {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .sidebar-menu li a.active {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.1);
+            border-left-color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        .header-banner {
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .header-banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-banner p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* --- STUDY SECTIONS AND ARCHITECTURE --- */
+        h2.section-heading {
+            font-size: 1.8rem;
+            color: var(--neon-blue);
+            margin-top: 40px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px solid rgba(0, 240, 255, 0.2);
+            padding-bottom: 8px;
+        }
+
+        h3.subsection-heading {
+            font-size: 1.3rem;
+            color: var(--neon-purple);
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        p.theory-text {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .highlight-box {
+            background: rgba(157, 78, 221, 0.1);
+            border-left: 4px solid var(--neon-purple);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            color: var(--text-primary);
+            font-style: italic;
+        }
+
+        /* --- THE NOTATION FLOWCHART GRID --- */
+        .flowchart-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: #11121a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .flow-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .flow-split {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .flow-node {
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            text-align: center;
+            min-width: 180px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .node-start { background: #3a86ff; border: 2px solid #00f0ff; color: white; border-radius: 20px; }
+        .node-decision { background: #ffbe0b; border: 2px solid #ff007f; color: #000; transform: rotate(0deg); border-radius: 8px; }
+        .node-process { background: #8338ec; border: 2px solid #9d4edd; color: white; }
+        .node-terminal { background: #ff006e; border: 2px solid #ff007f; color: white; border-radius: 20px; }
+
+        .flow-arrow {
+            color: var(--neon-blue);
+            font-size: 1.5rem;
+            margin: 8px 0;
+            text-shadow: 0 0 8px rgba(0,240,255,0.5);
+        }
+
+        /* --- TABLES --- */
+        .table-responsive {
+            overflow-x: auto;
+            margin: 25px 0;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        table.content-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        table.content-table th {
+            background-color: #161722;
+            color: var(--neon-blue);
+            padding: 14px 16px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        table.content-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            vertical-align: top;
+        }
+
+        table.content-table tr:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .badge-pass { background: rgba(0, 245, 212, 0.15); color: var(--neon-emerald); padding: 4px 8px; border-radius: 4px; font-weight: bold; border: 1px solid var(--neon-emerald); }
+        .badge-fail { background: rgba(255, 0, 127, 0.15); color: var(--neon-rose); padding: 4px 8px; border-radius: 4px; font-weight: bold; border: 1px solid var(--neon-rose); }
+
+        /* --- CODE CONTAINERS --- */
+        .code-wrapper {
+            margin: 25px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .code-header {
+            background: #161722;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .code-lang {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            font-weight: bold;
+        }
+
+        pre.code-block {
+            background: var(--terminal-bg);
+            padding: 20px;
+            overflow-x: auto;
+            margin: 0;
+        }
+
+        code {
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #e6e6e6;
+        }
+
+        .c-keyword { color: #ff79c6; }
+        .c-string { color: #f1fa8c; }
+        .c-comment { color: #6272a4; font-style: italic; }
+        .c-func { color: #50fa7b; }
+        .c-self { color: #bd93f9; font-style: italic; }
+
+        /* --- QA BLOCK / EXAM ANSWERS --- */
+        .exam-question-box {
+            background: #131420;
+            border: 1px solid rgba(157, 78, 221, 0.3);
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .question-meta {
+            font-size: 0.85rem;
+            color: var(--neon-purple);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .question-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .sample-answer {
+            background: rgba(0, 240, 255, 0.02);
+            border-left: 3px solid var(--neon-blue);
+            padding: 15px 20px;
+            margin-top: 15px;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .sample-answer strong {
+            color: var(--neon-blue);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        /* --- INTERACTIVE BUTTON AT BOTTOM --- */
+        .btn-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .next-page-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(157, 78, 221, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .next-page-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(0, 240, 255, 0.5);
+        }
+
+        /* Responsive Design Rules */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-code"></i> SWE Portal
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Home Overview</a></li>
+            <li><a href="week1.html"><i class="fa-solid fa-cube"></i> Week 1: Core Blueprint</a></li>
+            <li><a href="week2.html"><i class="fa-solid fa-sitemap"></i> Week 2: Inheritance</a></li>
+            <li><a href="week3.html"><i class="fa-solid fa-arrows-split-up-and-left"></i> Week 3: Generalisation</a></li>
+            <li><a href="week4.html"><i class="fa-solid fa-crosshairs"></i> Week 4: Target Systems</a></li>
+            <li><a href="week5.html"><i class="fa-solid fa-database"></i> Week 5: Database & ERDs</a></li>
+            <li><a href="week6.html"><i class="fa-solid fa-vector-square"></i> Week 6: 3D Meshes & Relationships</a></li>
+            <li><a href="week8.html" class="active"><i class="fa-solid fa-vial-circle-check"></i> Week 8: Testing Frameworks</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header class="header-banner">
+            <h1>Week 8, Lesson 2: Advanced Software Testing Architectures</h1>
+            <p>Comprehensive analytical synthesis of White Box logic parsing strategies, structural control pipelines, functional validation grids, and edge-case engineering criteria.</p>
+        </header>
+
+        <h2 class="section-heading"><i class="fa-solid fa-glasses"></i> 1. Theoretical Foundations of White Box Testing</h2>
+        <p class="theory-text">
+            White Box Testing (also formally designated as clear box, glass box, structural, or open-box testing) is a software verification methodology where test cases are designed with full internal visibility of the application's source code, control structures, and architectural implementation. Unlike structural abstractions that treat entities as isolated execution boundaries, White Box analysis requires the verification engineer to explicitly chart mathematical data configurations and paths.
+        </p>
+        
+        <h3 class="subsection-heading">Core Objectives</h3>
+        <p class="theory-text">
+            • <strong>Internal Logic Verification:</strong> Ensuring that internal loops, conditional statements, and system branches execute precisely as designed.<br>
+            • <strong>Path Coverage Optimisation:</strong> Guaranteeing that every discrete structural route through a block of code can be forced to execute under specific test parameters.<br>
+            • <strong>OOP Component Validation:</strong> Verifying structural mechanisms unique to Object-Oriented Analysis and Design (OOAD), such as subclass constructor delegation (<code>super()</code>), method overriding correctness, visibility access boundaries (public vs. private), and polymorphism execution boundaries.
+        </p>
+
+        <div class="highlight-box">
+            <p><strong>Slide 22231 Rule:</strong> White box testing involves examining the internal structure, design, and coding of the software to ensure that all pathways, logic, and conditions are functioning as intended. Testers use this structural data layout to isolate unreachable/dead segments and resolve hidden logical defects.</p>
+        </div>
+
+        <h2 class="section-heading"><i class="fa-solid fa-code-compare"></i> 2. White Box vs. Black Box Testing: Direct Comparison</h2>
+        <p class="theory-text">
+            When evaluating system testing protocols, examinations frequently check your ability to contrast structural and functional verification. Below is the comparative operational breakdown:
+        </p>
+
+        <div class="table-responsive">
+            <table class="content-table">
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Black Box Testing (Functional)</th>
+                        <th>White Box Testing (Structural)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Code Visibility</strong></td>
+                        <td>Zero visibility; treated as an opaque system container.</td>
+                        <td>Absolute visibility; clear view of algorithms and architecture.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Primary Focus</strong></td>
+                        <td>What the system does (Functional requirements vs. Outputs).</td>
+                        <td>How the system behaves internally (Control flows and pathways).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Derived From</strong></td>
+                        <td>Requirements specifications and Use Cases.</td>
+                        <td>Raw source code syntax, branch logic, and flowcharts.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Target Errors</strong></td>
+                        <td>Missing capabilities, interface design flaws, performance limits.</td>
+                        <td>Unreachable/dead code, logic branch bugs, off-by-one loop errors.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="section-heading"><i class="fa-solid fa-diagram-project"></i> 3. Structural Path Coverage & Logic Flows</h2>
+        <p class="theory-text">
+            To systematically audit an internal codebase, white box engineers translate sequential programming statements into a spatial layout called a Control Flow Graph (CFG) or Logic Flowchart. This conversion charts out structural code decisions.
+        </p>
+
+        <h3 class="subsection-heading">The Three Levels of Execution Coverage</h3>
+        <p class="theory-text">
+            1. <strong>Statement Coverage:</strong> Evaluating input data configurations to ensure that every individual line of code is executed at least once during a test lifecycle.<br>
+            2. <strong>Branch/Decision Coverage:</strong> Ensuring that every decision statement containing conditional options (e.g., an <code>if</code> statement) is forced to evaluate to both True and False paths across the testing sequence.<br>
+            3. <strong>Path Coverage:</strong> The most comprehensive tracking criteria. It maps out and tests every possible combination of sequential routes through a method from start to finish.
+        </p>
+
+        <h3 class="subsection-heading">Visual Logic Mapping: The Flowchart Symbols Matrix</h3>
+        <p class="theory-text">
+            To standardise architectural flow diagramming, the following formal geometric primitives must be utilized:
+        </p>
+
+        <div class="table-responsive">
+            <table class="content-table">
+                <thead>
+                    <tr>
+                        <th>Geometric Symbol</th>
+                        <th>Formal Architecture Name</th>
+                        <th>Exact Purpose / Meaning in White Box Mapping</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Oval / Rounded Rectangle</strong></td>
+                        <td>Terminal Node</td>
+                        <td>Indicates the explicit starting point or exiting point (return statement) of an operation block.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Rectangle</strong></td>
+                        <td>Process Command</td>
+                        <td>Represents an internal structural modification, state assignment, or arithmetic calculation (e.g., variable assignment).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Diamond</strong></td>
+                        <td>Decision Point</td>
+                        <td>Evaluates an underlying conditional branch evaluation. Always splits the flow into distinct True and False tracking vectors.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 class="subsection-heading">Functional Control Flow Graph: The <code>withdraw()</code> Method Logic</h3>
+        <p class="theory-text">
+            The flowchart below visually charts the structural pathways hidden inside the target account validation engine method.
+        </p>
+
+        <div class="flowchart-container">
+            <div class="flow-row">
+                <div class="flow-node node-start">START: Enter withdraw(amount)</div>
+                <div class="flow-arrow"><i class="fa-solid fa-arrow-down"></i></div>
+                <div class="flow-node node-decision">DECISION:<br>0 &lt; amount &le; self.balance</div>
+            </div>
+            <div class="flow-split">
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div style="color: #00f0ff; font-weight: bold; margin-bottom: 5px;">[TRUE PATH]</div>
+                    <div class="flow-node node-process">PROCESS:<br>self.balance -= amount</div>
+                    <div class="flow-arrow"><i class="fa-solid fa-arrow-down"></i></div>
+                    <div class="flow-node node-terminal">TERMINAL: return True</div>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div style="color: #ff007f; font-weight: bold; margin-bottom: 5px;">[FALSE PATH]</div>
+                    <div class="flow-node node-terminal" style="margin-top: 45px;">TERMINAL: return False</div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-heading"><i class="fa-solid fa-triangle-exclamation"></i> 4. Edge-Case Engineering Criteria</h2>
+        <p class="theory-text">
+            An <strong>Edge Case</strong> defines an operational scenario or data payload that occurs at the absolute limits (minimum or maximum boundaries) of a system's parameter constraints. White box testing relies heavily on edge-case testing because boundary checks are where conditional logical errors frequently appear.
+        </p>
+
+        <div class="table-responsive">
+            <table class="content-table">
+                <thead>
+                    <tr>
+                        <th>Target Boundary</th>
+                        <th>Specific Input Payload Example</th>
+                        <th>Technical Risk Factors (What breaks if untested?)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Zero/Negative Value Injection</strong></td>
+                        <td><code>account.deposit(-100)</code></td>
+                        <td>If branch validation parameters are missing, negative injection values will decrement the internal tracker balance variable state, triggering an unintended withdrawal.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Precision Balance Depletion</strong></td>
+                        <td><code>account.withdraw(100)</code> when balance is 100</td>
+                        <td>Tests exact lower bounds. A relational check mistakenly implemented as strictly less-than (<code>&lt;</code>) instead of less-than-or-equal (<code>&le;</code>) will fail a valid request to clear out the account balance.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Overdraft Volatility Bounds</strong></td>
+                        <td><code>account.withdraw(100.01)</code> when balance is 100.00</td>
+                        <td>Verifies that precision bounds (+0.01 margin errors) safely redirect the flow to the alternate failure statement block without dropping variable data into illegal negative states.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Structural Key Collisions</strong></td>
+                        <td><code>bank.create_account("12345", "Bob")</code> when "12345" exists</td>
+                        <td>Unlike list structures that append using positional indices, Python dictionaries map unique key-value pairs directly. Overwriting an existing key replaces its memory object data. A structural check (<code>if account_number not in self.accounts</code>) is mandatory to prevent silent record eradication.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="section-heading"><i class="fa-solid fa-laptop-code"></i> 5. Comprehensive White Box Test Suite</h2>
+        <p class="theory-text">
+            To construct automated validation architectures, object-oriented concepts are applied to testing blocks. By subclassing <code>unittest.TestCase</code>, we inherit execution wrappers and assertion pipelines. Below is the fully correct, compilable code mapping every statement branch and boundary condition.
+        </p>
+
+        <div class="code-wrapper">
+            <div class="code-header">
+                <div class="code-lang">Python 3 (Object-Oriented Validation Suite)</div>
+                <div style="color: var(--neon-blue); font-size: 0.85rem;"><i class="fa-solid fa-circle-check"></i> Standard Compliant</div>
+            </div>
+            <pre class="code-block"><code><span class="c-keyword">import</span> unittest
+
+<span class="c-comment"># ==========================================</span>
+<span class="c-comment"># TARGET SOURCE CODE UNITS UNDER VALIDATION</span>
+<span class="c-comment"># ==========================================</span>
+<span class="c-keyword">class</span> <span class="c-func">Account</span>:
+    <span class="c-keyword">def</span> <span class="c-func">__init__</span>(<span class="c-self">self</span>, account_number, account_holder):
+        <span class="c-self">self</span>.account_number = account_number
+        <span class="c-self">self</span>.account_holder = account_holder
+        <span class="c-self">self</span>.balance = 0.0
+
+    <span class="c-keyword">def</span> <span class="c-func">deposit</span>(<span class="c-self">self</span>, amount):
+        <span class="c-keyword">if</span> amount > 0:
+            <span class="c-self">self</span>.balance += amount
+            <span class="c-keyword">return</span> <span class="c-keyword">True</span>
+        <span class="c-keyword">return</span> <span class="c-keyword">False</span>
+
+    <span class="c-keyword">def</span> <span class="c-func">withdraw</span>(<span class="c-self">self</span>, amount):
+        <span class="c-keyword">if</span> 0 &lt; amount &lt;= <span class="c-self">self</span>.balance:
+            <span class="c-self">self</span>.balance -= amount
+            <span class="c-keyword">return</span> <span class="c-keyword">True</span>
+        <span class="c-keyword">return</span> <span class="c-keyword">False</span>
+
+<span class="c-keyword">class</span> <span class="c-func">Bank</span>:
+    <span class="c-keyword">def</span> <span class="c-func">__init__</span>(<span class="c-self">self</span>):
+        <span class="c-self">self</span>.accounts = {} <span class="c-comment"># Unordered unique Key-Value hash mapping</span>
+
+    <span class="c-keyword">def</span> <span class="c-func">create_account</span>(<span class="c-self">self</span>, account_number, account_holder):
+        <span class="c-comment"># Structural condition check to block key-overwrite errors in memory</span>
+        <span class="c-keyword">if</span> account_number <span class="c-keyword">not in</span> <span class="c-self">self</span>.accounts:
+            <span class="c-self">self</span>.accounts[account_number] = Account(account_number, account_holder)
+            <span class="c-keyword">return</span> <span class="c-keyword">True</span>
+        <span class="c-keyword">return</span> <span class="c-keyword">False</span>
+
+<span class="c-comment"># ==========================================</span>
+<span class="c-comment"># AUTOMATED WHITE BOX STRUCTURAL TEST SUITE</span>
+<span class="c-comment"># ==========================================</span>
+<span class="c-keyword">class</span> <span class="c-func">TestBankSystemWhiteBox</span>(unittest.TestCase):
+    
+    <span class="c-keyword">def</span> <span class="c-func">setUp</span>(<span class="c-self">self</span>):
+        <span class="c-comment">"""Runs before each test method to establish system bounds."""</span>
+        <span class="c-self">self</span>.bank = Bank()
+        <span class="c-self">self</span>.test_acc_num = <span class="c-string">"44556"</span>
+        <span class="c-self">self</span>.bank.create_account(<span class="c-self">self</span>.test_acc_num, <span class="c-string">"Alice"</span>)
+        <span class="c-self">self</span>.account = <span class="c-self">self</span>.bank.accounts[<span class="c-self">self</span>.test_acc_num]
+
+    <span class="c-keyword">def</span> <span class="c-func">test_deposit_positive_statement_path</span>(<span class="c-self">self</span>):
+        <span class="c-comment">"""Path 1: Verifies positive payload triggers statement update sequence."""</span>
+        status = <span class="c-self">self</span>.account.deposit(250.0)
+        <span class="c-self">self</span>.assertTrue(status)
+        <span class="c-self">self</span>.assertEqual(<span class="c-self">self</span>.account.balance, 250.0)
+
+    <span class="c-keyword">def</span> <span class="c-func">test_deposit_negative_edge_branch</span>(<span class="c-self">self</span>):
+        <span class="c-comment">"""Path 2: Verifies branch condition failure cleanly blocks execution."""</span>
+        status = <span class="c-self">self</span>.account.deposit(-50.0)
+        <span class="c-self">self</span>.assertFalse(status)
+        <span class="c-self">self</span>.assertEqual(<span class="c-self">self</span>.account.balance, 0.0)
+
+    <span class="c-keyword">def</span> <span class="c-func">test_withdraw_exact_depletion_boundary</span>(<span class="c-self">self</span>):
+        <span class="c-comment">"""Boundary Case: Assures relational bounds manage state smoothly."""</span>
+        <span class="c-self">self</span>.account.deposit(100.0)
+        status = <span class="c-self">self</span>.account.withdraw(100.0)
+        <span class="c-self">self</span>.assertTrue(status)
+        <span class="c-self">self</span>.assertEqual(<span class="c-self">self</span>.account.balance, 0.0)
+
+    <span class="c-keyword">def</span> <span class="c-func">test_withdraw_exceeding_overdraft_block</span>(<span class="c-self">self</span>):
+        <span class="c-comment">"""Branch Case: Verifies overdraft attempts trigger the alternative flow."""</span>
+        <span class="c-self">self</span>.account.deposit(100.0)
+        status = <span class="c-self">self</span>.account.withdraw(100.01)
+        <span class="c-self">self</span>.assertFalse(status)
+        <span class="c-self">self</span>.assertEqual(<span class="c-self">self</span>.account.balance, 100.0)
+
+    <span class="c-keyword">def</span> <span class="c-func">test_account_collision_key_overwrite_protection</span>(<span class="c-self">self</span>):
+        <span class="c-comment">"""Structural Case: Assures existing data stores reject duplicate keys."""</span>
+        <span class="c-self">self</span>.account.deposit(500.0) <span class="c-comment"># Target account sets foundational data</span>
+        
+        <span class="c-comment"># Attempt to inject a secondary account block onto the identical key pointer</span>
+        collision_status = <span class="c-self">self</span>.bank.create_account(<span class="c-self">self</span>.test_acc_num, <span class="c-string">"Bob"</span>)
+        
+        <span class="c-self">self</span>.assertFalse(collision_status)
+        <span class="c-self">self</span>.assertEqual(<span class="c-self">self</span>.bank.accounts[<span class="c-self">self</span>.test_acc_num].account_holder, <span class="c-string">"Alice"</span>)
+        <span class="c-self">self</span>.assertEqual(<span class="c-self">self</span>.bank.accounts[<span class="c-self">self</span>.test_acc_num].balance, 500.0)
+
+<span class="c-keyword">if</span> __name__ == <span class="c-string">"__main__"</span>:
+    <span class="c-comment"># Instantiate suite and print a clean diagnostic output wrapper trace map</span>
+    print(<span class="c-string">"[SYSTEM ARCHITECTURE LOG]: Initialising White Box Path Matrix Hooks..."</span>)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestBankSystemWhiteBox)
+    runner = unittest.TextTestRunner(verbosity=2)
+    result = runner.run(suite)
+    
+    <span class="c-keyword">if</span> result.wasSuccessful():
+        print(<span class="c-string">"\n+-------------------------------------------------------+"</span>)
+        print(<span class="c-string">"| STATUS CHECK: ALL 5 STRUCTURAL PATH TESTS PASS PASSED  |"</span>)
+        print(<span class="c-string">"+-------------------------------------------------------+"</span>)
+    <span class="c-keyword">else</span>:
+        print(<span class="c-string">"\n[EXCUTION ERROR]: Critical Logical Trace Exception Located."</span>)</code></pre>
+        </div>
+
+        <h3 class="subsection-heading">Code Architectural Breakdown Line-by-Line</h3>
+        <p class="theory-text">
+            • <strong>Line 23:</strong> <code>self.accounts = {}</code> allocates an associative array (hashmap/dictionary) within class scope to leverage O(1) identifier seek mechanics.<br>
+            • <strong>Line 26:</strong> <code>if account_number not in self.accounts:</code> implements the white box structural shield to block structural memory overwrites.<br>
+            • <strong>Line 36:</strong> <code>class TestBankSystemWhiteBox(unittest.TestCase):</code> builds an execution testing boundary via OOP structural inheritance links.<br>
+            • <strong>Line 38:</strong> The <code>setUp(self)</code> framework method overrides the base configuration layout to build identical fresh state objects prior to every individual test pathway evaluation run.<br>
+            • <strong>Line 70:</strong> <code>self.assertFalse(collision_status)</code> explicitly catches tracking parameters to guarantee code structural pathways reject corrupt overlapping transactions cleanly.
+        </p>
+
+
+        <h2 class="section-heading"><i class="fa-solid fa-box-archive"></i> 6. Black Box Functional Verification Suites</h2>
+        <p class="theory-text">
+            <strong>Black Box Testing</strong> is a method of software validation where the internal structural architecture, system mechanics, and programming lines of the application are completely hidden from the tester. Instead of inspecting data fields, test design focuses entirely on converting requirements boundaries into explicit input-output relationship checks.
+        </p>
+
+        <h3 class="subsection-heading">Formal Matrix Template Definition</h3>
+        <p class="theory-text">
+            A professional test architecture translates operational criteria specifications into structured rows. In order to capture all required tracing contexts for testing execution, the layout must contain the following columns:
+        </p>
+
+        <div class="table-responsive">
+            <table class="content-table">
+                <thead>
+                    <tr>
+                        <th>Test Case ID</th>
+                        <th>Test Scenario</th>
+                        <th>Preconditions</th>
+                        <th>Execution Test Steps</th>
+                        <th>Test Data Input</th>
+                        <th>Expected System Result</th>
+                        <th>Actual System Result</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>TC_ACC_01</td>
+                        <td>Validate positive deposit balance update tracking.</td>
+                        <td>Account object exists in system memory. Balance initialized to 0.0.</td>
+                        <td>1. Call deposit method with valid positive integer.<br>2. Verify updated internal state balance.</td>
+                        <td><code>amount = 150.00</code></td>
+                        <td>Method returns True. Balance field internal state updates to 150.00.</td>
+                        <td>Method returned True. Balance field holds 150.00 data state.</td>
+                        <td><span class="badge-pass">PASS</span></td>
+                    </tr>
+                    <tr>
+                        <td>TC_ACC_02</td>
+                        <td>Validate system blocks unauthorized negative input values.</td>
+                        <td>Account entity exists in system memory. Balance initialized to 50.00.</td>
+                        <td>1. Execute deposit method with negative double payload.<br>2. Query balance field tracking.</td>
+                        <td><code>amount = -20.00</code></td>
+                        <td>Method returns False. Internal data field remains isolated at 50.00.</td>
+                        <td>Method returned False. System balance fields holds 50.00 state data.</td>
+                        <td><span class="badge-pass">PASS</span></td>
+                    </tr>
+                    <tr>
+                        <td>TC_ACC_03</td>
+                        <td>Validate system rejects overdraft execution parameters.</td>
+                        <td>Account created. Starting balance allocated at 100.00 data state.</td>
+                        <td>1. Call withdraw routine with value greater than structural limits.<br>2. Evaluate return feedback flags.</td>
+                        <td><code>amount = 100.01</code></td>
+                        <td>Method returns False. Structural withdrawal sequence fails balance modification.</td>
+                        <td>Method returned True. Account balance altered to -0.01 data fields.</td>
+                        <td><span class="badge-fail">FAIL</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <h2 class="section-heading"><i class="fa-solid fa-graduation-cap"></i> 7. Short Answer Examination Assessment Matrix</h2>
+        
+        <div class="exam-question-box">
+            <div class="question-meta">Question 1 — Short Answer Question (3 Marks)</div>
+            <div class="question-title">
+                An engineering group modifies a financial platform's database container from a structural sequence array list to an unordered dictionary hash tracking map. Explain the architectural importance of incorporating structural containment membership boundaries (e.g., checking <code>if key not in mapping</code>) inside a White Box structural validation pathway.
+            </div>
+            <div class="sample-answer">
+                <strong>Sample Solution Response (Exam Standard):</strong>
+                Unlike standard index-based sequential lists that allow multiple duplicate records to append safely into contiguous memory locations, an associative key-value map (dictionary) enforces item uniqueness based on its key hash. Attempting to assign data to an existing key directly overwrites the pointer address value in memory, permanently losing the original object profile data. 
+                <br><br>
+                Therefore, in White Box structural pathway design, verifying the presence of an absolute guard condition check is required. It ensures that any branch attempting a duplicate injection path is rejected early, preventing unexpected memory record erasure and protecting data integrity.
+            </div>
+        </div>
+
+        <div class="exam-question-box">
+            <div class="question-meta">Question 2 — Short Answer Question (4 Marks)</div>
+            <div class="question-title">
+                Distinguish between Statement Coverage and Path Coverage inside structural testing frameworks, and explain why achieving 100% statement execution fails to guarantee robust control state protection.
+            </div>
+            <div class="sample-answer">
+                <strong>Sample Solution Response (Exam Standard):</strong>
+                Statement Coverage acts as a line validation check, confirming that every single programmed instruction block fires at least once within an environment trace lifecycle. Conversely, Path Coverage tracks all possible sequential combinations of routes and logic forks from the entry point to the final return statement.
+                <br><br>
+                Achieving total statement coverage does not ensure system robustness because a line can be executed while leaving alternative control paths unassessed. For example, an <code>if</code> block without an explicit <code>else</code> alternative can be verified under a condition that evaluates to True, fulfilling statement coverage for that block. However, if an alternate input triggers the hidden False pathway and contains an edge-case logic error, the defect remains hidden, leaving the system exposed to runtime failures.
+            </div>
+        </div>
+
+
+        <h2 class="section-heading"><i class="fa-solid fa-feather-pointed"></i> 8. Advanced Programming Application Practice</h2>
+        <p class="theory-text">
+            Review the code implementation pattern below demonstrating rigorous test suite management. This architecture implements custom logging structures using strict validation rules to capture logical faults.
+        </p>
+
+        <div class="code-wrapper">
+            <div class="code-header">
+                <div class="code-lang">Python 3 (Custom Automated Structural Test Suite)</div>
+                <div style="color: var(--neon-purple); font-size: 0.85rem;"><i class="fa-solid fa-gears"></i> Engine Ready</div>
+            </div>
+            <pre class="code-block"><code><span class="c-keyword">class</span> <span class="c-func">SystemExecutionEngine</span>:
+    <span class="c-keyword">def</span> <span class="c-func">__init__</span>(<span class="c-self">self</span>):
+        <span class="c-self">self</span>.passed_runs = 0
+        <span class="c-self">self</span>.failed_runs = 0
+        <span class="c-self">self</span>.error_trace_logs = []
+
+    <span class="c-keyword">def</span> <span class="c-func">execute_assertion_check</span>(<span class="c-self">self</span>, identification, objective, statement_evaluation):
+        <span class="c-keyword">try</span>:
+            <span class="c-keyword">assert</span> statement_evaluation == <span class="c-keyword">True</span>
+            <span class="c-self">self</span>.passed_runs += 1
+            print(f<span class="c-string">" [PASS CONFIRMED]: '{identification}' -> {objective}"</span>)
+        <span class="c-keyword">except</span> AssertionError:
+            <span class="c-self">self</span>.failed_runs += 1
+            failure_message = f<span class="c-string">" [CRITICAL PATH FAULT]: '{identification}' failed route matching tracking."</span>
+            <span class="c-self">self</span>.error_trace_logs.append(failure_message)
+            print(failure_message)
+
+    <span class="c-keyword">def</span> <span class="c-func">display_diagnostic_summary</span>(<span class="c-self">self</span>):
+        print(<span class="c-string">"\n=== ARCHITECTURAL VALIDATION RUN COMPLETE ==="</span>)
+        print(f<span class="c-string">" SUCCESSFUL PATHS VALIDATED : {self.passed_runs}"</span>)
+        print(f<span class="c-string">" DETECTED DEFECT ENCOUNTERS : {self.failed_runs}"</span>)
+        <span class="c-keyword">if</span> <span class="c-self">self</span>.error_trace_logs:
+            print(<span class="c-string">"\n--- DETAILED FAULT DUMP ---"</span>)
+            <span class="c-keyword">for</span> log <span class="c-keyword">in</span> <span class="c-self">self</span>.error_trace_logs:
+                print(log)
+        <span class="c-keyword">else</span>:
+            print(<span class="c-string">"\n>>> SYSTEM STATUS CLEAR: STRUCTURAL COMPONENT COVERAGE STABLE."</span>)
+
+<span class="c-comment"># Execution setup to simulate environment engine run</span>
+<span class="c-keyword">if</span> __name__ == <span class="c-string">"__main__"</span>:
+    validator = SystemExecutionEngine()
+    test_account = Account(<span class="c-string">"999"</span>, <span class="c-string">"Charlie"</span>)
+    
+    <span class="c-comment"># Pathway validation execution sequences</span>
+    validator.execute_assertion_check(<span class="c-string">"TS_01"</span>, <span class="c-string">"Valid deposit routing"</span>, test_account.deposit(50.0))
+    validator.execute_assertion_check(<span class="c-string">"TS_02"</span>, <span class="c-string">"Block illegal value parameters"</span>, test_account.deposit(-5.0) == <span class="c-keyword">False</span>)
+    
+    <span class="c-comment"># Intentional deployment of an expected edge error checking parameter</span>
+    <span class="c-comment"># Simulating a system component failure context mapping to our broken spreadsheet model</span>
+    validator.execute_assertion_check(<span class="c-string">"TS_03"</span>, <span class="c-string">"Overdraft restriction boundary test"</span>, test_account.withdraw(60.01) == <span class="c-keyword">True</span>)
+    
+    validator.display_diagnostic_summary()</code></pre>
+        </div>
+
+
+        <div class="btn-container">
+            <a href="week83.html" class="next-page-btn">
+                Proceed to Lesson 3: Advanced CI/CD Pipelines <i class="fa-solid fa-circle-arrow-right"></i>
+            </a>
+        </div>
+    </main>
+
+</body>
+</html>

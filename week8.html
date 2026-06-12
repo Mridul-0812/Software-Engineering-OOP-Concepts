@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOP Learning Portal | Week 8: Validation Frameworks (Part 1)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0d0e15;
+            --bg-card: rgba(20, 20, 35, 0.6);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b4b7c5;
+            --neon-blue: #00f0ff;
+            --neon-purple: #9d4edd;
+            --neon-green: #39ff14;
+            --neon-red: #ff3131;
+            --sidebar-width: 260px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #12131c;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: var(--neon-blue);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-menu li a:hover {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .sidebar-menu li a.active {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.1);
+            border-left-color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        .header-banner {
+            margin-bottom: 40px;
+            position: relative;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .header-banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-banner p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* --- STUDY MATERIAL CONTENT STYLING --- */
+        .section-block {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section-block h2 {
+            font-size: 1.8rem;
+            color: var(--neon-blue);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+            padding-bottom: 8px;
+        }
+
+        .section-block h3 {
+            font-size: 1.3rem;
+            color: var(--neon-purple);
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
+
+        .section-block p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .bullet-list {
+            list-style: none;
+            margin-bottom: 20px;
+            padding-left: 10px;
+        }
+
+        .bullet-list li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .bullet-list li::before {
+            content: "\f105";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: var(--neon-purple);
+        }
+
+        /* --- EXAM TIPS & CALLOUTS --- */
+        .callout-box {
+            border-left: 4px solid var(--neon-purple);
+            background: rgba(157, 78, 221, 0.05);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .callout-box h4 {
+            color: var(--neon-purple);
+            margin-bottom: 8px;
+            font-size: 1.05rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- TABLES --- */
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+            background: rgba(10, 11, 18, 0.5);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .styled-table th {
+            background-color: rgba(149, 78, 221, 0.15);
+            color: var(--neon-blue);
+            text-align: left;
+            padding: 14px 16px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .styled-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            vertical-align: top;
+            line-height: 1.5;
+        }
+
+        .styled-table tr:hover {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        /* --- CODE CONTAINERS --- */
+        .code-container {
+            background: #07080d;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-header {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 12px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            border-radius: 0 8px 0 8px;
+            border-left: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .code-container pre {
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            color: #e0e0e0;
+            line-height: 1.5;
+        }
+
+        /* --- DIAGRAM PLACEHOLDERS (ASCII / CSS) --- */
+        .diagram-box {
+            background: #020205;
+            border: 1px solid rgba(157, 78, 221, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .diagram-box pre {
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            color: var(--neon-purple);
+            font-size: 0.9rem;
+            display: inline-block;
+            text-align: left;
+            line-height: 1.3;
+        }
+
+        /* --- BUTTONS --- */
+        .page-nav-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .next-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 28px;
+            background: transparent;
+            border: 1px solid var(--neon-purple);
+            color: var(--neon-purple);
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .next-btn:hover {
+            background: var(--neon-purple);
+            color: #ffffff;
+            box-shadow: 0 0 20px rgba(157, 78, 221, 0.5);
+            transform: translateX(5px);
+        }
+
+        .badge {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .badge-pass { background: rgba(57, 255, 20, 0.15); color: var(--neon-green); border: 1px solid var(--neon-green); }
+        .badge-fail { background: rgba(255, 49, 49, 0.15); color: var(--neon-red); border: 1px solid var(--neon-red); }
+
+        /* Responsive Design Rules */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-code"></i> SWE Portal
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Home Overview</a></li>
+            <li><a href="week1.html"><i class="fa-solid fa-cube"></i> Week 1: Core Blueprint</a></li>
+            <li><a href="week2.html"><i class="fa-solid fa-sitemap"></i> Week 2: Inheritance</a></li>
+            <li><a href="week3.html"><i class="fa-solid fa-arrows-split-up-and-left"></i> Week 3: Generalisation</a></li>
+            <li><a href="week4.html"><i class="fa-solid fa-crosshairs"></i> Week 4: Target Systems</a></li>
+            <li><a href="week5.html"><i class="fa-solid fa-database"></i> Week 5: Database & ERDs</a></li>
+            <li><a href="week6.html"><i class="fa-solid fa-vector-square"></i> Week 6: 3D Meshes & Relationships</a></li>
+            <li><a href="week8.html" class="active"><i class="fa-solid fa-vial-circle-check"></i> Week 8: Testing Frameworks</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header class="header-banner">
+            <h1>Week 8, Lesson 1: Black Box Software Testing & Automated Testing Frameworks</h1>
+            <p>Comprehensive Theory Study Guide & Relational Analysis — Part 1: Verification Principles & Core Manual Implementations</p>
+        </header>
+
+        <section class="section-block">
+            <h2><i class="fa-solid fa-vial"></i> 1. Fundamentals of Software Testing</h2>
+            <p>
+                Software testing is the systematic process of validating and verifying that a software application matches its functional requirements, runs free of bugs, and handles edge-case errors reliably. It is designed to evaluate both <strong>correctness</strong> (providing the expected output) and <strong>robustness</strong> (handling invalid states smoothly).
+            </p>
+            <p>
+                The software testing process isn't limited to finding faults but also focuses on identifying efficiency, usability, and accuracy measures to upgrade the software.
+            </p>
+
+            <h3>Manual Test Case Architecture</h3>
+            <p>
+                A <strong>Test Case</strong> is a formal, repeatable script written by engineers to verify a specific software requirement. It represents a specific scenario that testers use to verify that the software behaves as expected. Every professional test case must contain these eight standardised parameters:
+            </p>
+
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Component</th>
+                        <th style="width: 80%;">Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Test Case ID</strong></td>
+                        <td>A unique string identifier for traceability (e.g., TC001, TC_ACC_04).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Description</strong></td>
+                        <td>A clear, brief summary of the exact functional goal being verified.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Preconditions</strong></td>
+                        <td>Any conditions or state the system must be in <em>before</em> execution begins (e.g., user is logged in, account balance is non-zero).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Test Steps</strong></td>
+                        <td>The detailed sequence of physical steps, operations, or inputs executed by the tester.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Test Data</strong></td>
+                        <td>The specific variables, parameters, or values used during the test execution.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Expected Result</strong></td>
+                        <td>The precise, anticipated system output or final state required to consider the test a "Pass".</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Actual Result</strong></td>
+                        <td>The real system output or state changes observed at runtime (filled out post-execution).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Status</strong></td>
+                        <td>The evaluation mark indicating whether the test passed or failed based on comparison: <strong>Pass</strong> (Expected = Actual) or <strong>Fail</strong> (Expected &ne; Actual).</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="section-block">
+            <h2><i class="fa-solid fa-box"></i> 2. Black Box Testing Principles</h2>
+            <p>
+                <strong>Black Box Testing</strong> (also called behavioural or functional testing) treats software as an opaque box. Testers evaluate system functionality entirely from an end-user perspective, without visibility into internal code structures, logic, or algorithms. Testers apply inputs and observe outputs without considering how the software processes those inputs to produce the outcomes.
+            </p>
+            
+            <div class="diagram-box">
+                <p style="color: var(--neon-blue); margin-bottom: 10px; font-weight: bold;"></p>
+                <pre>
++------------------+       +-------------------------+       +-------------------+
+|      INPUT       | ----> |     BLACK BOX           | ----> |  EXPECTED OUTPUT  |
+|  (Method Args /  |       | (Internal Code Hidden / |       |  (Returned State  |
+|   User Actions)  |       |  Encapsulated Boundary) |       |   VS Actual State)|
++------------------+       +-------------------------+       +-------------------+
+                </pre>
+            </div>
+
+            <ul class="bullet-list">
+                <li><strong>The Input/Output Contract:</strong> Inputs are applied to an interface, and the output is compared against the business requirements. If the output matches expectations, the test passes—even if the underlying code is structurally inefficient.</li>
+                <li><strong>OOP Application:</strong> In Object-Oriented Programming, Black Box testing validates the <em>public interface</em> of a class (its public methods) while strictly respecting <strong>Encapsulation</strong>. It checks if invoking a method alters an object's state correctly without manually inspecting its private variables, mangled fields, or internal helper functions.</li>
+            </ul>
+
+            <div class="callout-box">
+                <h4>Core OOP Concept Connection: Encapsulation</h4>
+                <p>
+                    Black box testing is the definitive testing approach that maps directly to OOP Encapsulation. Because encapsulation protects data security by sealing properties behind public method gates, black box tests treat the class boundary as impenetrable, proving that the system functions correctly using only exposed operational contracts.
+                </p>
+            </div>
+
+            <h3>Structured Workflow for Black Box Verification</h3>
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">Workflow Step</th>
+                        <th style="width: 75%;">Architectural Action Required</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. Identify Scenarios</strong></td>
+                        <td>Analyze explicit business specifications and requirements to identify functional paths.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. Define Test Cases</strong></td>
+                        <td>Draft formal structural criteria containing the 8 key test components defined above.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. Execute Test Cases</strong></td>
+                        <td>Inject specific test data arrays into the exposed class interfaces and log execution trends.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. Compare Results</strong></td>
+                        <td>Cross-examine actual return objects against your expected result design layouts.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>5. Report Issues</strong></td>
+                        <td>Isolate failure states and log specific system exceptions to the engineering core.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="section-block">
+            <h2><i class="fa-solid fa-sitemap"></i> 3. Applied Case Study: System Architecture</h2>
+            <p>
+                To illustrate these testing concepts in practice, we model a basic banking application containing an orchestration class (<code>Bank</code>) and a structural component parts class (<code>Account</code>).
+            </p>
+            
+            <div class="callout-box">
+                <h4>Class Diagram & Structural Dependency Note</h4>
+                <p>
+                    The type of connector between the <code>Bank</code> class and the <code>Account</code> class is a structural <strong>Association</strong>. Specifically, this association forms a <strong>Composition</strong> relationship, indicating a strict lifetime dependency between the systems.
+                </p>
+                <p>
+                    <strong>Composition</strong> is a "whole-part" relationship where the parts cannot exist independently outside the parent lifecycle framework. If the <code>Bank</code> instance is destroyed, all nested <code>Account</code> instances contained within it are instantly purged from memory.
+                </p>
+            </div>
+
+            <div class="diagram-box">
+                <p style="color: var(--neon-purple); margin-bottom: 10px; font-weight: bold;"></p>
+                <pre>
++------------------------------------------+               +----------------------------------+
+|                  Bank                    |               |             Account              |
++------------------------------------------+               +----------------------------------+
+| - accounts: dict {acc_num: Account}      | ◆------------ | - account_number: str            |
++------------------------------------------+ (Composition) | - account_holder: str            |
+| + create_account(acc_num, holder): bool  |               | - balance: float                 |
+| + get_account(acc_num): Account          |               +----------------------------------+
++------------------------------------------+               | + deposit(amount): bool          |
+                                                           | + withdraw(amount): bool         |
+                                                           | + get_balance(): float           |
+                                                           +----------------------------------+
+                </pre>
+            </div>
+        </section>
+
+        <section class="section-block">
+            <h2><i class="fa-solid fa-table"></i> 4. Formal Black Box Manual Test Ledger</h2>
+            <p>
+                Below is the comprehensive operational test blueprint for checking compliance inside the application methods, ensuring edge-case scenarios fail safely while normal pathways run smoothly.
+            </p>
+
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th style="font-size: 0.85rem;">ID</th>
+                        <th style="font-size: 0.85rem;">Scenario</th>
+                        <th style="font-size: 0.85rem;">Preconditions</th>
+                        <th style="font-size: 0.85rem;">Tested Mechanism</th>
+                        <th style="font-size: 0.85rem;">Input Data</th>
+                        <th style="font-size: 0.85rem;">Expected Result</th>
+                        <th style="font-size: 0.85rem;">Actual Result</th>
+                        <th style="font-size: 0.85rem;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>TC001</strong></td>
+                        <td>Valid Deposit Tracking</td>
+                        <td>Account initialized; balance = 0.0.</td>
+                        <td><code>deposit()</code> increases state balance value.</td>
+                        <td><code>amount = 50.0</code></td>
+                        <td>Return <code>True</code>; balance updates to 50.0.</td>
+                        <td>Return <code>True</code>; balance updates to 50.0.</td>
+                        <td><span class="badge badge-pass">Pass</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>TC002</strong></td>
+                        <td>Valid Withdrawal Tracking</td>
+                        <td>Account baseline established; balance = 100.0.</td>
+                        <td><code>withdraw()</code> reduces balance smoothly.</td>
+                        <td><code>amount = 40.0</code></td>
+                        <td>Return <code>True</code>; balance drops to 60.0.</td>
+                        <td>Return <code>True</code>; balance drops to 60.0.</td>
+                        <td><span class="badge badge-pass">Pass</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>TC003</strong></td>
+                        <td>Insufficient Balance Rejection</td>
+                        <td>Account baseline established; balance = 100.0.</td>
+                        <td><code>withdraw()</code> flags safety limits early.</td>
+                        <td><code>amount = 250.0</code></td>
+                        <td>Return <code>False</code>; balance stays 100.0.</td>
+                        <td>Return <code>False</code>; balance stays 100.0.</td>
+                        <td><span class="badge badge-pass">Pass</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>TC004</strong></td>
+                        <td>Duplicate Account Prevention</td>
+                        <td>Bank exists; account "12345" created during setup.</td>
+                        <td><code>create_account()</code> blocks index clashing.</td>
+                        <td><code>acc_num = "12345"</code>, name = "Bob"</td>
+                        <td>Return <code>False</code>; initial record unchanged.</td>
+                        <td>Return <code>False</code>; initial record unchanged.</td>
+                        <td><span class="badge badge-pass">Pass</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>TC005</strong></td>
+                        <td>Negative Entry Interception</td>
+                        <td>Account initialized; balance = 100.0.</td>
+                        <td><code>deposit()</code> bars sub-zero anomalies.</td>
+                        <td><code>amount = -50.0</code></td>
+                        <td>Return <code>False</code>; balance remains 100.0.</td>
+                        <td>Return <code>False</code>; balance remains 100.0.</td>
+                        <td><span class="badge badge-pass">Pass</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="section-block">
+            <h2><i class="fa-solid fa-graduation-cap"></i> 5. Exam-Ready Revision & Analysis (Short Answer Questions)</h2>
+            
+            <div style="margin-bottom: 25px;">
+                <p><strong>Question 1:</strong> Differentiate between software correctness and robustness, and explain how a manual test ledger addresses both criteria when verifying a class interface. <em>[4 Marks]</em></p>
+                <div class="callout-box" style="border-left-color: var(--neon-blue); background: rgba(0, 240, 255, 0.02);">
+                    <h4>Sample Solution Response:</h4>
+                    <p>
+                        <strong>Correctness</strong> refers to the ability of a software system to deliver expected outputs when fed with valid, conforming operational data matching the system prerequisites (e.g., executing a valid deposit successfully). Conversely, <strong>robustness</strong> measures the system's capacity to maintain architectural stability and prevent state degradation when exposed to invalid, out-of-bounds inputs or hostile actions (e.g., dropping a negative amount into a withdrawal method). 
+                    </p>
+                    <p>
+                        A manual test ledger maps out both attributes explicitly: testing paths like TC001 track correctness by verifying expected data updates system variables accurately, while edge-case test sequences like TC003 or TC005 directly evaluate robustness by verifying that the class handles illegal operations cleanly and returns failure codes instead of freezing or writing corrupt data to state memory.
+                    </p>
+                </div>
+            </div>
+
+            <hr style="border: none; border-top: 1px solid var(--border-color); margin: 20px 0;">
+
+            <div>
+                <p><strong>Question 2:</strong> Analyze why an engineering team would prioritize Black Box methodology over testing internal logic configurations when verifying third-party service dependencies, making explicit reference to OOP Encapsulation. <em>[3 Marks]</em></p>
+                <div class="callout-box" style="border-left-color: var(--neon-blue); background: rgba(0, 240, 255, 0.02);">
+                    <h4>Sample Solution Response:</h4>
+                    <p>
+                        Black Box validation evaluates execution purely from an external viewpoint through the exposed public methods interface of a module. Teams choose this approach because it directly aligns with the rules of <strong>Encapsulation</strong>, which state that internal properties, class fields, and structural helpers must remain hidden away from outside components. 
+                    </p>
+                    <p>
+                        By focusing strictly on an input-output contract, tests stay independent of changes in underlying data logic or algorithms. This ensures that as long as the module outputs match specifications, the test suite passes, avoiding fragile test breaks if internal code layout changes during updates.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-block">
+            <h2><i class="fa-solid fa-code-branch"></i> 6. Applied OOP Test Script Practice</h2>
+            <p>
+                Here is the implementation of our testing scenario. This framework monitors verification checkpoints using structural OOP workflows, outputting confirmation metrics to the workspace.
+            </p>
+
+            <div class="code-container">
+                <div class="code-header">Python (manual_test_runner.py)</div>
+                <pre>
+# =====================================================================
+# Target Source Code Modules
+# =====================================================================
+
+class Account:
+    def __init__(self, account_number, account_holder):
+        self.account_number = account_number
+        self.account_holder = account_holder
+        self.balance = 0.0
+        
+    def deposit(self, amount):
+        if amount > 0:
+            self.balance += amount
+            return True
+        return False
+        
+    def withdraw(self, amount):
+        if 0 < amount <= self.balance:
+            self.balance -= amount
+            return True
+        return False
+        
+    def get_balance(self):
+        return self.balance
+
+
+class Bank:
+    def __init__(self):
+        # Composition relationship container
+        self.accounts = {}
+        
+    def create_account(self, account_number, account_holder):
+        if account_number not in self.accounts:
+            self.accounts[account_number] = Account(account_number, account_holder)
+            return True
+        return False
+        
+    def get_account(self, account_number):
+        return self.accounts.get(account_number, None)
+
+
+# =====================================================================
+# Programmatic OOP Test Verification Engine
+# =====================================================================
+
+class SystemTestOrchestrator:
+    def __init__(self):
+        self.passed_count = 0
+        self.failed_count = 0
+        self.error_logs = []
+
+    def assert_equals(self, test_id, actual, expected):
+        if actual == expected:
+            self.passed_count += 1
+            print(f" Check: [PASSED] -> {test_id}")
+        else:
+            self.failed_count += 1
+            err_msg = f"Assertion failure at {test_id}: Received {actual}, Expected {expected}"
+            self.error_logs.append(err_msg)
+            print(f" ERROR:  [FAILED] -> {test_id}")
+
+    def execute_suite(self):
+        print("=" * 60)
+        print("INITIALIZING STRUCTURAL BLACK BOX TEST SUITE LOOP")
+        print("=" * 60)
+
+        # -------------------------------------------------------------
+        # TC001: Valid Deposit Test Sequence
+        # -------------------------------------------------------------
+        acc_tc001 = Account("771", "TestUser1")
+        res_tc001 = acc_tc001.deposit(50.0)
+        self.assert_equals("TC001_Deposit_Status", res_tc001, True)
+        self.assert_equals("TC001_Deposit_Balance", acc_tc001.get_balance(), 50.0)
+
+        # -------------------------------------------------------------
+        # TC002: Valid Withdrawal Test Sequence
+        # -------------------------------------------------------------
+        acc_tc002 = Account("772", "TestUser2")
+        acc_tc002.deposit(100.0)  # Precondition step
+        res_tc002 = acc_tc002.withdraw(40.0)
+        self.assert_equals("TC002_Withdraw_Status", res_tc002, True)
+        self.assert_equals("TC002_Withdraw_Balance", acc_tc002.get_balance(), 60.0)
+
+        # -------------------------------------------------------------
+        # TC003: Overdraft Rejection Security Check
+        # -------------------------------------------------------------
+        acc_tc003 = Account("773", "TestUser3")
+        acc_tc003.deposit(100.0)  # Precondition step
+        res_tc003 = acc_tc003.withdraw(250.0)
+        self.assert_equals("TC003_Overdraft_Status", res_tc003, False)
+        self.assert_equals("TC003_Overdraft_Balance", acc_tc003.get_balance(), 100.0)
+
+        # -------------------------------------------------------------
+        # TC004: Bank Composition Clashing Prevention Check
+        # -------------------------------------------------------------
+        bank_test = Bank()
+        bank_test.create_account("12345", "Alice") # Baseline state
+        res_tc004 = bank_test.create_account("12345", "Bob")
+        self.assert_equals("TC004_Duplicate_Acc_Status", res_tc004, False)
+
+        # -------------------------------------------------------------
+        # Compilation Reporting Layer
+        # -------------------------------------------------------------
+        print("=" * 60)
+        print("VERIFICATION RUN COMPLETE")
+        print(f"Total Successful Checkpoints: {self.passed_count}")
+        print(f"Total Discovered Error Anomalies: {self.failed_count}")
+        print("=" * 60)
+
+        if self.failed_count == 0:
+            print(">>> SUCCESS METRIC: Four distinct tests passed successfully! <<<")
+        else:
+            print(">>> RUN FAILURE: Error logs isolated below: <<<")
+            for error in self.error_logs:
+                print(f"[-] {error}")
+        print("=" * 60)
+
+
+if __name__ == "__main__":
+    runner = SystemTestOrchestrator()
+    runner.execute_suite()
+                </pre>
+            </div>
+        </section>
+
+        <footer class="page-nav-container">
+            <a href="week82.html" class="next-btn">
+                Proceed to White Box Testing (Part 2) <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </footer>
+    </main>
+
+</body>
+</html>

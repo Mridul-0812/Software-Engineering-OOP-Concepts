@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOP Learning Portal | Week 6.3: Abstraction</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0d0e15;
+            --bg-card: rgba(20, 20, 35, 0.6);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b4b7c5;
+            --neon-blue: #00f0ff;
+            --neon-purple: #9d4edd;
+            --neon-green: #39ff14;
+            --sidebar-width: 260px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #12131c;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: var(--neon-blue);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-menu li a:hover {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .sidebar-menu li a.active {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.1);
+            border-left-color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        .header-banner {
+            margin-bottom: 40px;
+            position: relative;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .header-banner h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-banner p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* --- CONTENT TEXT DESIGNS --- */
+        h2 {
+            font-size: 1.8rem;
+            color: var(--neon-blue);
+            margin: 35px 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 4px solid var(--neon-purple);
+            padding-left: 15px;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: var(--neon-purple);
+            margin: 25px 0 10px 0;
+        }
+
+        p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+        }
+
+        li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        /* --- CODE & SYNTAX HIGHLIGHTING --- */
+        pre {
+            background: #06070a;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-left: 4px solid var(--neon-green);
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+        }
+
+        code {
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            color: #e0e0e0;
+        }
+
+        .keyword { color: #ff79c6; font-weight: bold; }
+        .builtin { color: #8be9fd; font-style: italic; }
+        .class-name { color: #50fa7b; text-decoration: underline; }
+        .method-name { color: #50fa7b; }
+        .string { color: #f1fa8c; }
+        .comment { color: #6272a4; font-style: italic; }
+        .number { color: #bd93f9; }
+        .decorator { color: #ffb86c; font-weight: bold; }
+
+        /* --- TEXT CONTAINER CARDS --- */
+        .info-box {
+            background: rgba(157, 78, 221, 0.05);
+            border: 1px solid rgba(157, 78, 221, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .alert-box {
+            background: rgba(0, 240, 255, 0.05);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        /* --- EXAM WRAPPER --- */
+        .exam-section {
+            background: rgba(20, 20, 35, 0.8);
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 50px;
+        }
+
+        .exam-card {
+            background: #111219;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .badge {
+            background: var(--neon-purple);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .badge.easy { background: #2ecc71; }
+        .badge.medium { background: #f1c40f; color: #000; }
+        .badge.hard { background: #e74c3c; }
+
+        /* --- ERD GRAPHICAL BOX --- */
+        .erd-container {
+            background: #161824;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.05);
+        }
+
+        .erd-title {
+            text-align: center;
+            color: var(--neon-blue);
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .erd-layout {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .erd-box {
+            background: #0f1016;
+            border: 2px solid var(--neon-purple);
+            border-radius: 6px;
+            width: 240px;
+            box-shadow: 5px 5px 0px rgba(157, 78, 221, 0.3);
+        }
+
+        .erd-box.abstract-erd {
+            border-color: var(--neon-blue);
+            box-shadow: 5px 5px 0px rgba(0, 240, 255, 0.3);
+        }
+
+        .erd-header {
+            background: var(--neon-purple);
+            color: #fff;
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .erd-box.abstract-erd .erd-header {
+            background: var(--neon-blue);
+            color: #000;
+        }
+
+        .erd-fields {
+            padding: 10px;
+            font-size: 0.85rem;
+            list-style: none;
+            margin: 0;
+        }
+
+        .erd-fields li {
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-family: monospace;
+        }
+
+        .erd-arrow {
+            color: var(--neon-blue);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Responsive Design Rules */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            .erd-layout {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-code"></i> SWE Portal
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Home Overview</a></li>
+            <li><a href="week1.html"><i class="fa-solid fa-cube"></i> Week 1: Core Blueprint</a></li>
+            <li><a href="week2.html"><i class="fa-solid fa-sitemap"></i> Week 2: Inheritance</a></li>
+            <li><a href="week3.html"><i class="fa-solid fa-arrows-split-up-and-left"></i> Week 3: Generalisation</a></li>
+            <li><a href="week4.html"><i class="fa-solid fa-crosshairs"></i> Week 4: Target Systems</a></li>
+            <li><a href="week5.html"><i class="fa-solid fa-database"></i> Week 5: Database & ERDs</a></li>
+            <li><a href="week6.html" class="active"><i class="fa-solid fa-vector-square"></i> Week 6: 3D Meshes & Relationships</a></li>
+            <li><a href="week8.html"><i class="fa-solid fa-vial-circle-check"></i> Week 8: Testing Frameworks</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header class="header-banner">
+            <h1>Pillar 4: Abstraction (Practical Code Mastery)</h1>
+            <p>An absolute baseline, deep-dive examination guide to implementing and reading programmatic Abstraction schemas in Python. No prior coding experience required.</p>
+        </header>
+
+        <section class="content-body">
+            
+            <div class="alert-box">
+                <p><strong>Welcome absolute beginner!</strong> Before looking at Abstraction, let's establish fundamental software vocabulary used throughout this guide:</p>
+                <ul>
+                    <li><strong>Class / Blueprint:</strong> A template code block defining the structure of an object.</li>
+                    <li><strong>Instance / Object:</strong> The active, concrete thing created in computer memory from a Class blueprint.</li>
+                    <li><strong>Attributes / Variables / Fields:</strong> Pieces of data held inside an object (e.g., age, score, name).</li>
+                    <li><strong>Methods / Functions / Behaviours:</strong> Action blocks of code inside a class that execute operations or calculations when triggered.</li>
+                </ul>
+            </div>
+
+            <h2>1. Identifying Abstraction in Core Theory</h2>
+            <p>
+                As established across structural architectural paradigms, <strong>Abstraction</strong> is the system layout design concept where you isolate essential functional characteristics while hiding unnecessary structural complexities. The foundational rule of abstraction is ensuring that a high-level template describes <em>what</em> a system component executes without declaring or forcing exactly <em>how</em> it processes its structural math internally.
+            </p>
+            <p>
+                This acts directly as a security and architecture template. In large systems, you prevent developers from instantiating generic entities directly. For instance, you should never be able to create a generic <code>Animal</code> object or a generic <code>Weapon</code> object in memory. Instead, you create concrete entities like a <code>Dog</code> or a <code>SniperRifle</code> that implement those interfaces safely.
+            </p>
+
+            <h2>2. Understanding Python Syntax from Scratch</h2>
+            <p>
+                If you have never written a line of Python, you must understand how a basic class is structured before enforcing abstraction rules. Let's study how a basic class processes internal properties safely:
+            </p>
+
+            <pre><code><span class="keyword">class</span> <span class="class-name">BankAccount</span>:
+    <span class="keyword">def</span> <span class="method-name">__init__</span>(<span class="keyword">self</span>, initial_balance):
+        <span class="keyword">self</span>.<span class="attribute">__balance</span> = initial_balance
+        
+    <span class="keyword">def</span> <span class="method-name">get_balance</span>(<span class="keyword">self</span>):
+        <span class="keyword">return</span> <span class="keyword">self</span>.<span class="attribute">__balance</span>
+        
+    <span class="keyword">def</span> <span class="method-name">set_balance</span>(<span class="keyword">self</span>, new_amount):
+        <span class="keyword">if</span> new_amount >= <span class="number">0</span>:
+            <span class="keyword">self</span>.<span class="attribute">__balance</span> = new_amount
+        <span class="keyword">else</span>:
+            <span class="keyword">raise</span> <span class="builtin">ValueError</span>(<span class="string">"Balance cannot be negative!"</span>)</code></pre>
+
+            <h3>Line-by-Line Beginner Breakdown:</h3>
+            <ul>
+                <li><strong><code>class BankAccount:</code></strong> Defines a new software blueprint named BankAccount. Notice the colon (<code>:</code>) which explicitly alerts Python that a structured block of nested lines follows.</li>
+                <li><strong><code>def __init__(self, initial_balance):</code></strong> This is the <em>Constructor</em>. It runs automatically whenever an object instance is created in memory. The <code>self</code> variable represents the individual object currently being modified.</li>
+                <li><strong><code>self.__balance = initial_balance</code></strong> The double underscore prefix (<code>__</code>) marks this field as <em>Private</em>. This prevents any code outside this block from viewing or overriding data directly, locking state variables securely.</li>
+                <li><strong><code>def get_balance(self):</code></strong> This is a <em>Getter Method</em>. It simply reads and passes back the hidden data using the <code>return</code> command.</li>
+                <li><strong><code>def set_balance(self, new_amount):</code></strong> This is a <em>Setter Method</em>. It intercepts adjustments to validate data integrity using structural <code>if</code> statements.</li>
+                <li><strong><code>raise ValueError(...)</code></strong> An immediate error termination mechanism that crashes execution safely if data parameters violate code validation rules.</li>
+            </ul>
+
+            <h2>3. The Architecture of Abstraction: ABC and @abstractmethod</h2>
+            <p>
+                To enforce Abstraction practically in Python, we rely on a dedicated built-in core layout tracking module known as <strong><code>abc</code> (Abstract Base Classes)</strong>. By default, Python does not natively lock classes from instantiating unless they inherit from the <code>ABC</code> framework class container.
+            </p>
+            <p>
+                Let's inspect how to structure a completely locked abstract parent layout using explicit definitions:
+            </p>
+
+            <pre><code><span class="keyword">from</span> abc <span class="keyword">import</span> <span class="class-name">ABC</span>, <span class="method-name">abstractmethod</span>
+
+<span class="keyword">class</span> <span class="class-name">Vehicle</span>(<span class="class-name">ABC</span>):
+    
+    <span class="keyword">def</span> <span class="method-name">__init__</span>(<span class="keyword">self</span>, model_name):
+        <span class="keyword">self</span>.model_name = model_name
+        
+    <span class="decorator">@abstractmethod</span>
+    <span class="keyword">def</span> <span class="method-name">calculate_max_range</span>(<span class="keyword">self</span>):
+        <span class="keyword">pass</span></code></pre>
+
+            <h3>How to Implement and Write this Code:</h3>
+            <ol>
+                <li><strong><code>from abc import ABC, abstractmethod</code></strong>: Instructs the system compiler to import the tools required to secure structural classes.</li>
+                <li><strong><code>class Vehicle(ABC):</code></strong>: Placing <code>ABC</code> in parentheses states that <code>Vehicle</code> is an <em>Abstract Class</em>. It can no longer be instantiated directly via standard declarations.</li>
+                <li><strong><code>@abstractmethod</code></strong>: A specialized syntax marker called a <em>Decorator</em>. It declares that the method immediately underneath it has no base operational body code.</li>
+                <li><strong><code>pass</code></strong>: A placeholder statement used in Python indicating "no execution logic goes here".</li>
+            </ol>
+
+            <div class="info-box">
+                <p><strong>Crucial Rule of Abstraction:</strong> Any child subclass that inherits from <code>Vehicle</code> <strong>must</strong> provide its own concrete execution code for <code>calculate_max_range()</code>. If it fails to do so, Python will raise a fatal runtime execution error, keeping your developer contracts secure.</p>
+            </div>
+
+            <h2>4. UML Class ERD Architecture Mapping & Code Realisation</h2>
+            <p>
+                In engineering assessments, you are frequently forced to translate visual class architectural diagrams into functional, clean code layouts. Let's trace an abstract data structure conversion:
+            </p>
+
+            <div class="erd-container">
+                <div class="erd-title">UML Abstract Inheritance Mapping Schema</div>
+                <div class="erd-layout">
+                    <div class="erd-box abstract-erd">
+                        <div class="erd-header">&lt;&lt;Abstract&gt;&gt;<br>CombatModifier</div>
+                        <ul class="erd-fields">
+                            <li>+ name: str</li>
+                            <li>+ @abstractmethod<br>+ apply_modifier(d)</li>
+                        </ul>
+                    </div>
+                    <div class="erd-arrow">
+                        <i class="fa-solid fa-arrow-left-long"></i><br>Inherits
+                    </div>
+                    <div class="erd-box">
+                        <div class="erd-header">CriticalHitModifier</div>
+                        <ul class="erd-fields">
+                            <li>+ multiplier: float</li>
+                            <li>+ apply_modifier(d)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Interpreting the Schema and Translating to Code:</h3>
+            <p>
+                The diagram states that <code>CombatModifier</code> is our base abstract class structure. It contains an abstract functional call <code>apply_modifier(d)</code> which forces any concrete children to accept a base damage calculation input and process a tailored calculation output.
+            </p>
+            <p>
+                Let's construct this entire layout in practical Python code, showing exactly how abstraction interfaces safely handle execution steps:
+            </p>
+
+            <pre><code><span class="keyword">from</span> abc <span class="keyword">import</span> <span class="class-name">ABC</span>, <span class="method-name">abstractmethod</span>
+
+<span class="comment"># Structural Abstract Class Mapping Template</span>
+<span class="keyword">class</span> <span class="class-name">CombatModifier</span>(<span class="class-name">ABC</span>):
+    <span class="keyword">def</span> <span class="method-name">__init__</span>(<span class="keyword">self</span>, name):
+        <span class="keyword">self</span>.name = name
+        
+    <span class="decorator">@abstractmethod</span>
+    <span class="keyword">def</span> <span class="method-name">apply_modifier</span>(<span class="keyword">self</span>, base_damage):
+        <span class="keyword">pass</span>
+
+<span class="comment"># Concrete Child Subclass Implementation</span>
+<span class="keyword">class</span> <span class="class-name">CriticalHitModifier</span>(<span class="class-name">CombatModifier</span>):
+    <span class="keyword">def</span> <span class="method-name">__init__</span>(<span class="keyword">self</span>, name, multiplier):
+        <span class="comment"># Use super() to pass name up to the parent constructor</span>
+        <span class="builtin">super</span>().<span class="method-name">__init__</span>(name)
+        <span class="keyword">self</span>.multiplier = multiplier
+        
+    <span class="comment"># Overriding the parent's abstract template method with absolute calculation logic</span>
+    <span class="keyword">def</span> <span class="method-name">apply_modifier</span>(<span class="keyword">self</span>, base_damage):
+        <span class="keyword">return</span> base_damage * <span class="keyword">self</span>.multiplier
+
+<span class="comment"># Demonstration of Execution</span>
+modifier_instance = CriticalHitModifier(<span class="string">"Double Damage Rune"</span>, <span class="number">2.0</span>)
+calculated_output = modifier_instance.apply_modifier(<span class="number">40.0</span>)
+<span class="builtin">print</span>(calculated_output) <span class="comment"># This will output exactly 80.0 in execution memory</span></code></pre>
+
+            <div class="exam-section">
+                <h2><i class="fa-solid fa-graduation-cap"></i> Term 2 Practice Examination Suite</h2>
+                <p>Complete these target questions to ensure you can independently design, structure, and evaluate abstract classes on your upcoming examination script. Each question is worth 5 marks.</p>
+                
+                <div class="exam-card">
+                    <h3>Question 1 <span class="badge easy">Easy</span></h3>
+                    <p><strong>Scenario:</strong> You are tasked with modeling a system framework for processing cloud reports. Create an Abstract Base Class named <code>CloudReport</code> using the <code>abc</code> module. The class must define an instance constructor that stores a public attribute string named <code>report_id</code>. It must enforce an abstract method contract named <code>generate_summary(self)</code> which contains no functional implementation block code. Include comments highlighting why this class cannot be directly instantiated.</p>
+                    <details>
+                        <summary style="color: var(--neon-blue); cursor: pointer; font-weight: bold; margin-top: 10px;">Show Exemplar Coding Solution</summary>
+                        <pre><code><span class="keyword">from</span> abc <span class="keyword">import</span> <span class="class-name">ABC</span>, <span class="method-name">abstractmethod</span>
+
+<span class="comment"># Vehicle for structural abstraction tracking</span>
+<span class="keyword">class</span> <span class="class-name">CloudReport</span>(<span class="class-name">ABC</span>):
+    <span class="keyword">def</span> <span class="method-name">__init__</span>(<span class="keyword">self</span>, report_id):
+        <span class="keyword">self</span>.report_id = report_id
+        
+    <span class="decorator">@abstractmethod</span>
+    <span class="keyword">def</span> <span class="method-name">generate_summary</span>(<span class="keyword">self</span>):
+        <span class="keyword">pass</span>
+
+<span class="comment"># Explanation Note for 5 Marks validation:</span>
+<span class="comment"># Attempting to run: my_obj = CloudReport("R-101") will raise a TypeError.</span>
+<span class="comment"># This is because any class possessing @abstractmethod calls is flagged as abstract</span>
+<span class="comment"># by the runtime system and completely blocked from independent object allocation.</span></code></pre>
+                    </details>
+                </div>
+
+                <div class="exam-card">
+                    <h3>Question 2 <span class="badge medium">Medium</span></h3>
+                    <p><strong>Scenario:</strong> Design a payment engine database connector layout. Create an abstract class called <code>PaymentGateway</code>. It must securely initialize a completely private structural state attribute string named <code>__merchant_key</code>, and provide a secure public Getter method to access it. It must declare an abstract method named <code>process_transaction(self, amount)</code>. Finally, implement a concrete subclass named <code>StripeGateway</code> that satisfies the parent abstract contract by returning a string confirmation token tracking the balance processed.</p>
+                    <details>
+                        <summary style="color: var(--neon-blue); cursor: pointer; font-weight: bold; margin-top: 10px;">Show Exemplar Coding Solution</summary>
+                        <pre><code><span class="keyword">from</span> abc <span class="keyword">import</span> <span class="class-name">ABC</span>, <span class="method-name">abstractmethod</span>
+
+<span class="keyword">class</span> <span class="class-name">PaymentGateway</span>(<span class="class-name">ABC</span>):
+    <span class="keyword">def</span> <span class="method-name">__init__</span>(<span class="keyword">self</span>, merchant_key):
+        <span class="comment"># Lock the state variable via private identifier conventions</span>
+        <span class="keyword">self</span>.__merchant_key = merchant_key
+        
+    <span class="keyword">def</span> <span class="method-name">get_merchant_key</span>(<span class="keyword">self</span>):
+        <span class="keyword">return</span> <span class="keyword">self</span>.__merchant_key
+        
+    <span class="decorator">@abstractmethod</span>
+    <span class="keyword">def</span> <span class="method-name">process_transaction</span>(<span class="keyword">self</span>, amount):
+        <span class="keyword">pass</span>
+
+<span class="keyword">class</span> <span class="class-name">StripeGateway</span>(<span class="class-name">PaymentGateway</span>):
+    <span class="keyword">def</span> <span class="method-name">__init__</span>(<span class="keyword">self</span>, merchant_key, api_endpoint):
+        <span class="builtin">super</span>().<span class="method-name">__init__</span>(merchant_key)
+        <span class="keyword">self</span>.api_endpoint = api_endpoint
+        
+    <span class="comment"># Fulfilling structural implementation responsibilities</span>
+    <span class="keyword">def</span> <span class="method-name">process_transaction</span>(<span class="keyword">self</span>, amount):
+        <span class="keyword">return</span> <span class="string">f"STRIPE_SUCCESS_VAL_{amount}"</span></code></pre>
+                    </details>
+                </div>
+
+                <div class="exam-card">
+                    <h3>Question 3 <span class="badge hard">Hard</span></h3>
+                    <p><strong>Scenario:</strong> Write a high-integrity simulation metrics processor class structure. Build an abstract class called <code>DataFilter</code> containing an abstract method <code>clean_metrics(self, raw_list)</code>. Implement a concrete subclass called <code>RangeFilter</code> which contains an independent verification constructor taking two bounds: <code>min_bound</code> and <code>max_bound</code>. The overridden method must process a list of numeric metric inputs and isolate values outside those borders by raising a custom <code>ValueError</code> exception statement block, protecting structural system boundaries cleanly.</p>
+                    <details>
+                        <summary style="color: var(--neon-blue); cursor: pointer; font-weight: bold; margin-top: 10px;">Show Exemplar Coding Solution</summary>
+                        <pre><code><span class="keyword">from</span> abc <span class="keyword">import</span> <span class="class-name">ABC</span>, <span class="method-name">abstractmethod</span>
+
+<span class="keyword">class</span> <span class="class-name">DataFilter</span>(<span class="class-name">ABC</span>):
+    <span class="decorator">@abstractmethod</span>
+    <span class="keyword">def</span> <span class="method-name">clean_metrics</span>(<span class="keyword">self</span>, raw_list):
+        <span class="keyword">pass</span>
+
+<span class="keyword">class</span> <span class="class-name">RangeFilter</span>(<span class="class-name">DataFilter</span>):
+    <span class="keyword">def</span> <span class="method-name">__init__</span>(<span class="keyword">self</span>, min_bound, max_bound):
+        <span class="keyword">self</span>.min_bound = min_bound
+        <span class="keyword">self</span>.max_bound = max_bound
+        
+    <span class="keyword">def</span> <span class="method-name">clean_metrics</span>(<span class="keyword">self</span>, raw_list):
+        validated_metrics = []
+        <span class="keyword">for</span> item <span class="keyword">in</span> raw_list:
+            <span class="keyword">if</span> item &lt; <span class="keyword">self</span>.min_bound <span class="keyword">or</span> item > <span class="keyword">self</span>.max_bound:
+                <span class="keyword">raise</span> <span class="builtin">ValueError</span>(<span class="string">f"Metric anomaly detected out of bounds: {item}"</span>)
+            validated_metrics.append(item)
+        <span class="keyword">return</span> validated_metrics</code></pre>
+                    </details>
+                </div>
+
+            </div>
+
+        </section>
+    </main>
+
+</body>
+</html>

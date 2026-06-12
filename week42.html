@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOP Learning Portal | Week 4: Target Systems</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0d0e15;
+            --bg-card: rgba(20, 20, 35, 0.6);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b4b7c5;
+            --neon-blue: #00f0ff;
+            --neon-purple: #9d4edd;
+            --sidebar-width: 260px;
+            --terminal-bg: #090a0f;
+            --success-green: #39ff14;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #12131c;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: var(--neon-blue);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-menu li a:hover {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .sidebar-menu li a.active {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.1);
+            border-left-color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        .header-banner {
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .header-banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-banner p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* --- ARCHITECTURAL CONTENT BLOCKS --- */
+        .content-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .content-section h2 {
+            font-size: 1.6rem;
+            color: var(--neon-blue);
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .content-section h3 {
+            font-size: 1.25rem;
+            color: var(--neon-purple);
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .content-section p {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        .content-section ul, .content-section ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+            color: var(--text-secondary);
+        }
+
+        .content-section li {
+            margin-bottom: 8px;
+        }
+
+        .highlight-box {
+            background: rgba(157, 78, 221, 0.08);
+            border-left: 4px solid var(--neon-purple);
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .highlight-box p {
+            margin-bottom: 0;
+            font-style: italic;
+        }
+
+        /* --- TABLES --- */
+        .table-container {
+            overflow-x: auto;
+            margin: 25px 0;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background-color: #12131c;
+            color: var(--neon-blue);
+            padding: 14px 16px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 14px 16px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--text-primary);
+        }
+
+        /* --- INTERACTIVE CODE SANDBOX --- */
+        .code-sandbox {
+            background: var(--terminal-bg);
+            border: 1px solid var(--neon-blue);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .sandbox-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .sandbox-title {
+            color: var(--neon-blue);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sandbox-lang {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        pre code {
+            font-family: 'Courier New', Courier, monospace;
+            color: #e2e4f0;
+            font-size: 0.9rem;
+            display: block;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+
+        .comment { color: #6272a4; font-style: italic; }
+        .keyword { color: #ff79c6; font-weight: bold; }
+        .class-name { color: #50fa7b; }
+        .method-name { color: #8be9fd; }
+        .string { color: #f1fa8c; }
+
+        /* --- EXAM PREPARATION ARCHITECTURE --- */
+        .saq-card {
+            background: #090a0f;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .saq-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+            padding-bottom: 8px;
+        }
+
+        .saq-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .saq-marks {
+            color: var(--neon-purple);
+            font-size: 0.9rem;
+            font-weight: 600;
+            background: rgba(157, 78, 221, 0.15);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .solution-btn {
+            background: transparent;
+            border: 1px solid var(--neon-purple);
+            color: var(--neon-purple);
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .solution-btn:hover {
+            background: var(--neon-purple);
+            color: var(--text-primary);
+            box-shadow: 0 0 10px rgba(157, 78, 221, 0.4);
+        }
+
+        .solution-content {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid var(--success-green);
+            border-radius: 0 4px 4px 0;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* --- ACTION CONTAINER FOR PAGINATION --- */
+        .action-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background: linear-gradient(45deg, var(--neon-purple), #7b2cbf);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(157, 78, 221, 0.3);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(157, 78, 221, 0.5);
+            filter: brightness(1.1);
+        }
+
+        /* Responsive Design Rules */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-code"></i> SWE Portal
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Home Overview</a></li>
+            <li><a href="week1.html"><i class="fa-solid fa-cube"></i> Week 1: Core Blueprint</a></li>
+            <li><a href="week2.html"><i class="fa-solid fa-sitemap"></i> Week 2: Inheritance</a></li>
+            <li><a href="week3.html"><i class="fa-solid fa-arrows-split-up-and-left"></i> Week 3: Generalisation</a></li>
+            <li><a href="week4.html" class="active"><i class="fa-solid fa-crosshairs"></i> Week 4: Target Systems</a></li>
+            <li><a href="week5.html"><i class="fa-solid fa-database"></i> Week 5: Database & ERDs</a></li>
+            <li><a href="week6.html"><i class="fa-solid fa-vector-square"></i> Week 6: 3D Meshes & Relationships</a></li>
+            <li><a href="week8.html"><i class="fa-solid fa-vial-circle-check"></i> Week 8: Testing Frameworks</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header class="header-banner">
+            <h1>Week 4: Target Systems (Part 2)</h1>
+            <p>Advanced Architectural Blueprints: Structural Design Patterns, Domain Modelling, Component Interaction Frameworks, and Python Paradigms.</p>
+        </header>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-cubes"></i> 1. The Facade Pattern: Definition and Purpose</h2>
+            <p>The Facade pattern is a structural design pattern that provides a simplified interface to a complex set of classes, library, or framework (a "subsystem").</p>
+            <ul>
+                <li><strong>The Problem:</strong> Large systems often have many moving parts (subsystems) that are difficult for a "client" (the user or external code) to use directly.</li>
+                <li><strong>The Solution:</strong> A "Facade" class acts as a single point of entry, bundling complex multi-step operations into simple, high-level methods.</li>
+                <li><strong>The Remote-Control Analogy:</strong>
+                    <ul>
+                        <li>A Home Theatre has a Projector, Amplifier, and DVD Player (Subsystems).</li>
+                        <li>To watch a movie, you'd usually have to turn each on, set resolutions, and adjust volumes manually.</li>
+                        <li>The Facade is the "Watch Movie" button on a universal remote. You press one button; it handles the internal complexity of talking to all three devices.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="highlight-box">
+                <h3>Pedagogical Insight: Managing Systemic Coupling</h3>
+                <p>In modern software engineering, code changes constantly. If your client code interacts directly with twenty individual subsystem classes, any internal modification within those subsystems triggers a catastrophic cascade of errors across your codebase. The Facade pattern establishes an architectural buffer layer, ensuring changes remain isolated behind a unified public interface contract.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-circle-nodes"></i> 2. Key Components of the Facade Pattern</h2>
+            <p>In any exam scenario (School, Library, Theatre), identify these three parts:</p>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>Role</th>
+                            <th>Example (School System)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Client</strong></td>
+                            <td>The code that needs a task done.</td>
+                            <td>The main() function or Admin UI.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Facade Class</strong></td>
+                            <td>The simplified "wrapper" that coordinates tasks.</td>
+                            <td>SchoolManagementFacade</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Subsystems</strong></td>
+                            <td>The complex classes that do the actual work.</td>
+                            <td>StudentRecords, TeacherRecords, Schedules.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-code-compare"></i> 3. Facade vs. Inheritance</h2>
+            <p>This is a high-probability exam comparison. While both involve hierarchy, their logical "relationships" are completely different.</p>
+            
+            <h3>Inheritance ("Is-A" Relationship)</h3>
+            <ul>
+                <li><strong>Focus:</strong> Extending functionality and code reuse.</li>
+                <li><strong>Structure:</strong> A Student is a Person.</li>
+                <li><strong>Purpose:</strong> The child class gains the attributes/methods of the parent.</li>
+            </ul>
+
+            <h3>Facade ("Has-A" Relationship)</h3>
+            <ul>
+                <li><strong>Focus:</strong> Simplification and encapsulation.</li>
+                <li><strong>Structure:</strong> A SchoolFacade has a StudentRecord subsystem.</li>
+                <li><strong>Purpose:</strong> The Facade coordinates the subsystems without inheriting from them. It doesn't "become" the subsystem; it just manages it.</li>
+            </ul>
+
+            <div class="highlight-box">
+                <p><strong>Design Rule of Thumb:</strong> Prefer composition (Has-A) over inheritance (Is-A) when creating structural boundaries to prevent fragile base class issues and keep architectural components loosely coupled.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-gears"></i> 4. Theory of Implementation (How it Works)</h2>
+            <p>You won't be asked to code, but you may be asked to describe the logic flow of a Facade method:</p>
+            <ol>
+                <li><strong>Initialisation:</strong> The Facade is created and "holds" instances of all the subsystems it needs to manage.</li>
+                <li><strong>Coordination:</strong> When a method like <code>enrol_student()</code> is called, the Facade:
+                    <ul>
+                        <li>Creates a new Student object.</li>
+                        <li>Calls the StudentRecords subsystem to save the data.</li>
+                        <li>Might call the ClassSchedules subsystem to assign a default class.</li>
+                    </ul>
+                </li>
+                <li><strong>Encapsulation:</strong> The Client never sees the StudentRecords or ClassSchedules logic; it only sees the success message from the Facade.</li>
+            </ol>
+            
+            <h3>Concrete Python Implementation Model</h3>
+            <p>Observe how the Facade class coordinates disparate subsystems behind a clean public interface layer:</p>
+
+            <div class="code-sandbox">
+                <div class="sandbox-header">
+                    <span class="sandbox-title"><i class="fa-solid fa-terminal"></i> Python Facade Pattern Blueprint</span>
+                    <span class="sandbox-lang">Python 3.x</span>
+                </div>
+                <pre><code><span class="keyword">class</span> <span class="class-name">StudentRecordsSubsystem</span>:
+    <span class="keyword">def</span> <span class="method-name">save_to_database</span>(self, student_name):
+        print(f<span class="string">"[Subsystem] Saving {student_name} to secure database records..."</span>)
+        <span class="keyword">return</span> <span class="keyword">True</span>
+
+<span class="keyword">class</span> <span class="class-name">ClassSchedulesSubsystem</span>:
+    <span class="keyword">def</span> <span class="method-name">assign_timetable</span>(self, student_name):
+        print(f<span class="string">"[Subsystem] Generating default academic timetable for {student_name}..."</span>)
+        <span class="keyword">return</span> <span class="string">"Timetable_v1.pdf"</span>
+
+<span class="keyword">class</span> <span class="class-name">SchoolManagementFacade</span>:
+    <span class="keyword">def</span> <span class="method-name">__init__</span>(self):
+        <span class="comment"># Composition: The Facade "Has-A" reference to subsystems</span>
+        self.records = StudentRecordsSubsystem()
+        self.schedules = ClassSchedulesSubsystem()
+
+    <span class="keyword">def</span> <span class="method-name">enrol_student</span>(self, name):
+        <span class="comment"># Encapsulating multi-step execution logic</span>
+        print(f<span class="string">"\n--- Facade Processing Enrolment for {name} ---"</span>)
+        success = self.records.save_to_database(name)
+        timetable = self.schedules.assign_timetable(name)
+        
+        <span class="keyword">if</span> success:
+            print(<span class="string">"--- Enrolment Operations Complete ---"</span>)
+            <span class="keyword">return</span> f<span class="string">"Success! {name} registered with {timetable}."</span>
+
+<span class="comment"># Client Code Block</span>
+<span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:
+    <span class="comment"># Client only interacts with the unified Facade class interface</span>
+    school_portal = SchoolManagementFacade()
+    status_msg = school_portal.enrol_student(<span class="string">"Alice Smith"</span>)
+    print(status_msg)</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-award"></i> 5. Benefits of the Facade Pattern (Exam Keywords)</h2>
+            <ul>
+                <li><strong>Simplified Interface:</strong> Users don't need to learn a complex API.</li>
+                <li><strong>Loose Coupling:</strong> The client code is not "tied" to the subsystems. If you change how StudentRecords works, you only update the Facade, not every piece of code in the school.</li>
+                <li><strong>Improved Readability:</strong> The code becomes more intuitive (e.g., <code>school.hire_teacher()</code> vs. five lines of manual database updates).</li>
+                <li><strong>Layering:</strong> It allows for a clean "Message Layer" in the OOD Pyramid.</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-clipboard-check"></i> 6. Exam-Ready Revision Table</h2>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Concept</th>
+                            <th>Theory to Remember</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Subsystem</strong></td>
+                            <td>A collection of classes that provide specific functionality.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Unified Interface</strong></td>
+                            <td>A single method call that triggers multiple internal actions.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Decoupling</strong></td>
+                            <td>Reducing the dependency between the user and the complex code.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Wrapper</strong></td>
+                            <td>Another term for a Facade class—it "wraps" the complex code.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="highlight-box">
+                <p><strong>Meticulous Revision Tip:</strong> If the exam asks you to design a Facade for a Library, the subsystems would be <code>BookInventory</code>, <code>MemberRecords</code>, and <code>FinesCalculator</code>. The Facade methods would be simple actions like <code>BorrowBook()</code> or <code>ReturnBook()</code>.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-gamepad"></i> I. The OOA Game Design Framework</h2>
+            <p>When designing a game, OOAD provides a structured process to ensure the system is scalable (easy to add levels/enemies later).</p>
+            
+            <h3>1. Model the Information Domain (The Entities)</h3>
+            <p>Identify the "nouns" in your game world.</p>
+            <ul>
+                <li><strong>Attributes:</strong> The static data an object holds (e.g., health, position, inventory, speed).</li>
+                <li><strong>Objects:</strong> Player, Enemies, NPCs, and the Environment (obstacles, terrain).</li>
+            </ul>
+
+            <h3>2. Represent Behaviour (The Interactions)</h3>
+            <p>Define how objects respond to internal logic or external triggers.</p>
+            <ul>
+                <li><strong>Player Behaviour:</strong> Moving based on input, jumping, or interacting with items.</li>
+                <li><strong>Enemy Behaviour:</strong> AI patterns like Patrolling (pre-set path), Chasing (moving toward player), or Fleeing.</li>
+                <li><strong>Physics Interaction:</strong> What happens during a Collision (stopping) or a Trigger (passing through a "finish line").</li>
+            </ul>
+
+            <h3>3. Describe Function (The Systems)</h3>
+            <p>The high-level "rules" and mechanics that manage the game state.</p>
+            <ul>
+                <li><strong>Scoring System:</strong> How points are calculated and stored.</li>
+                <li><strong>Health/Lives System:</strong> Logic for damage, respawning, and "Game Over" states.</li>
+                <li><strong>Quest Management:</strong> Tracking objectives and rewards.</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-diagram-project"></i> II. Dividing Models for Detail</h2>
+            <p>A crucial theoretical concept is separating your game code into three distinct "Models." This prevents a "spaghetti code" mess where one script does everything.</p>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Model Type</th>
+                            <th>Purpose</th>
+                            <th>Content Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Data Models</strong></td>
+                            <td>Store the "State" (Information).</td>
+                            <td>A class holding <code>int health</code> and <code>float speed</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Functional Models</strong></td>
+                            <td>Manage the "Logic" (Mechanics).</td>
+                            <td>Scripts for <code>GameManager</code>, <code>ScoreTracker</code>, or <code>InputHandler</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Behavioural Models</strong></td>
+                            <td>Define "Reactions" (AI/Physics).</td>
+                            <td>AI scripts for an enemy chasing a player.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-arrow-up-right-dots"></i> III. Incremental Development: Simple to Detailed</h2>
+            <p>OOAD logic dictates that you should never build a complex game all at once. Instead, you follow a Development Cycle:</p>
+            <ol>
+                <li><strong>Initial Setup (Prototype):</strong> Create basic shapes (cubes/spheres) with basic collision.</li>
+                <li><strong>Detail Addition:</strong> Add "juice"—animations, audio, and basic health.</li>
+                <li><strong>Expansion:</strong> Introduce complex AI (Finite State Machines) and varied player abilities (Power-ups/Weapons).</li>
+                <li><strong>Refinement:</strong> Implement persistent systems like Quest logs and multi-level difficulty scaling.</li>
+            </ol>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-table-list"></i> IV. Summary Table for Exam Revision</h2>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>OOA Step</th>
+                            <th>Exam Definition</th>
+                            <th>Practical Game Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Information Domain</strong></td>
+                            <td>Defining objects and their data properties.</td>
+                            <td>A Player has 100 health.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Represent Behaviour</strong></td>
+                            <td>Defining how entities react to events.</td>
+                            <td>An Enemy chases the Player when close.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Describe Function</strong></td>
+                            <td>Establishing the core mechanics/rules.</td>
+                            <td>Colliding with a hazard causes GameOver.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Divide Models</strong></td>
+                            <td>Grouping code by Data, Function, or Behaviour.</td>
+                            <td>Separating QuestData from the QuestManager.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Start Simple</strong></td>
+                            <td>Incremental addition of features.</td>
+                            <td>Getting movement working before adding a score.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-eye-slash"></i> V. Strategic Design: The "Stealth Game" Scenario</h2>
+            <p>If your exam asks you to design a Stealth Game using OOA:</p>
+            <ul>
+                <li><strong>Information Domain:</strong> Player (stealth meter, position), Guard (vision cone, patrol points), Environment (hiding spots, noise-making surfaces).</li>
+                <li><strong>Behaviour:</strong> Guards patrol until they see the player, then they switch to "Alert" status.</li>
+                <li><strong>Function:</strong> Detection system (if stealth meter reaches 0, player is caught), Hiding system (if player is in a "hiding spot," they are invisible to guards).</li>
+            </ul>
+
+            <div class="highlight-box">
+                <p><strong>Theory Tip:</strong> Remember that Raycasting is a functional tool used to detect hits (shooting) or sight (AI vision cones). It "shoots" an invisible line and returns data on what it hits. Even if you don't code it, knowing it is a "Function" is key.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-bolt"></i> I. Raycasting: The Invisible Interaction</h2>
+            <p>Raycasting is the primary "theoretical" tool for shooting mechanics. It is conceptually different from physical projectiles (like a bouncing ball).</p>
+            <ul>
+                <li><strong>Definition:</strong> Raycasting involves projecting an invisible line (a "ray") from a specific point (the camera) into the 3D scene.</li>
+                <li><strong>The Logic:</strong> The system checks if this ray intersects with any Colliders. If it hits something, it returns data about that object (its name, position, and components).</li>
+                <li><strong>Benefits (Theory):</strong>
+                    <ul>
+                        <li><em>Efficiency:</em> It is computationally "cheaper" than physics-based bullets because it calculates a straight line rather than a moving object with gravity.</li>
+                        <li><em>Precision:</em> It provides instant hit detection, which is ideal for "hitscan" weapons (like lasers or sniper rifles).</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-display"></i> II. The Canvas: The User Interface (UI) Layer</h2>
+            <p>In OOAD, the Canvas serves as the Message Layer for the player. It translates the internal state of the game (where the player is looking) into visual feedback (a crosshair).</p>
+            <ul>
+                <li><strong>Role of the Canvas:</strong> An overlay that sits "on top" of the game world. It hosts UI elements like health bars, crosshairs, and menus.</li>
+                <li><strong>Crosshair Logic:</strong> By placing an image (like a red dot) in the exact centre of the Canvas, you provide the player with a visual reference for where the Raycast will be fired.</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-shuffle"></i> III. OOAD Integration: The Shooting System</h2>
+            <p>To understand this for an exam, look at how the Weapon and the Target interact as separate classes.</p>
+            
+            <h3>1. The Weapon (The "Aggressor")</h3>
+            <p>The Weapon class handles Behaviour (checking for input) and Function (firing the raycast).</p>
+            <ul>
+                <li><strong>Attributes:</strong> damage, range, and a reference to the Camera.</li>
+                <li><strong>Logic:</strong> When the user clicks, the weapon "asks" the scene: "What did my ray hit?" If the hit object has a Target component, the weapon calls a method on that object: <code>target.TakeDamage(damage)</code>.</li>
+            </ul>
+
+            <h3>2. The Target (The "Receiver")</h3>
+            <p>The Target class handles Data (health) and Reaction (dying).</p>
+            <ul>
+                <li><strong>Attributes:</strong> health.</li>
+                <li><strong>Logic:</strong> It waits to be told it took damage. It manages its own state—once health hits zero, it triggers its own destruction (<code>Die()</code>).</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-list-check"></i> IV. Theory Summary: Hit Detection Logic</h2>
+            <p>If you are asked to describe the Targeting and Shooting System in an exam, use these steps:</p>
+            <ol>
+                <li><strong>Input Detection:</strong> The system listens for a "Fire" command from the player.</li>
+                <li><strong>Ray Generation:</strong> An invisible ray is projected forward from the centre of the camera view.</li>
+                <li><strong>Collision Check:</strong> The physics engine checks for any objects intersecting that ray within a specific range.</li>
+                <li><strong>Message Passing:</strong> If a target is hit, the weapon script sends a "message" (calls a function) to the target's script.</li>
+                <li><strong>State Change:</strong> The target updates its internal health data. If the data meets a condition (Health &le; 0), the object is removed from memory.</li>
+            </ol>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-key"></i> V. Key Terminology Table</h2>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Term</th>
+                            <th>Conceptual Meaning</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>RaycastHit</strong></td>
+                            <td>A data structure that stores info about what was hit (the "who" and "where").</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Physics.Raycast</strong></td>
+                            <td>The function that performs the actual mathematical intersection check.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Instantiate</strong></td>
+                            <td>(From previous lessons) Used for visual effects like muzzle flashes or impacts.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Canvas</strong></td>
+                            <td>The "flat" container for all 2D UI elements.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Crosshair/Reticle</strong></td>
+                            <td>A UI visual aid used to align the centre-point of the raycast.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="highlight-box">
+                <p><strong>Final Week 4 Review Tip:</strong> Since this is the end of the unit, notice how Encapsulation is used here: The Weapon doesn't directly change the Target's health variable. Instead, the Target has a method (TakeDamage) that handles the logic. This is a perfect exam configuration scenario!</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fa-solid fa-graduation-cap"></i> VI. Analytical Exam Assessment Suite</h2>
+            <p>Review these highly targeted short answer questions and coding evaluation workflows to verify your understanding of Week 4 system parameters.</p>
+
+            <div class="saq-card">
+                <div class="saq-meta">
+                    <span class="saq-title">Question 1: Structural Patterns & Architecture</span>
+                    <span class="saq-marks">4 Marks</span>
+                </div>
+                <p><strong>Explain the explicit differences between Inheritance and the Facade Pattern regarding their architectural relationships, focusing on how a Facade handles subsystem orchestration without code derivation.</strong></p>
+                <button class="solution-btn" onclick="toggleSolution('sol1')">Reveal Solution Schema</button>
+                <div id="sol1" class="solution-content">
+                    <p><strong>Detailed Sample Solution:</strong></p>
+                    <ul>
+                        <li><strong>Relationship Framework:</strong> Inheritance models an explicit <em>"Is-A" relationship</em> (e.g., a Student is a Person), focusing on code derivation and extending parental attributes. In contrast, the Facade Pattern leverages composition to model a <em>"Has-A" relationship</em> (e.g., a SchoolFacade has a StudentRecord subsystem), focusing strictly on interface simplification and structural encapsulation.</li>
+                        <li><strong>Orchestration Strategy:</strong> A Facade class does not inherit attributes or methods from underlying subsystem blocks. Instead, it aggregates instances of discrete subsystem modules internally as composition variables. When an external client issues a single message request to the Facade, it acts as a central coordinator, executing sequentially scoped methods across multiple autonomous subsystems while entirely hiding internal architectural intricacies from the client.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="saq-card">
+                <div class="saq-meta">
+                    <span class="saq-title">Question 2: Object-Oriented Analysis Systems</span>
+                    <span class="saq-marks">3 Marks</span>
+                </div>
+                <p><strong>Analyse how separating code into Data, Functional, and Behavioural models prevents the formation of "spaghetti code" and supports maintainable game architectures.</strong></p>
+                <button class="solution-btn" onclick="toggleSolution('sol2')">Reveal Solution Schema</button>
+                <div id="sol2" class="solution-content">
+                    <p><strong>Detailed Sample Solution:</strong></p>
+                    <p>Dividing a system layout into distinct data, functional, and behavioural modules isolates responsibilities cleanly:</p>
+                    <ol>
+                        <li><strong>Data Models</strong> isolate state tracking variables entirely from computational mechanics, ensuring an object's internal record (like health or coordinates) cannot be compromised by hidden side effects.</li>
+                        <li><strong>Functional Models</strong> manage top-level macro systems, rules, and global processing routines (such as scoring loops and input interpretation profiles).</li>
+                        <li><strong>Behavioural Models</strong> dictate localized active reactions and decision algorithms (such as an AI routine chasing targets or physical boundary responses).</li>
+                    </ol>
+                    <p>This distinct separation ensures scripts remain decoupled; a change to an AI patrolling loop won't compromise structural core database records or global game tracking states.</p>
+                </div>
+            </div>
+
+            <div class="saq-card">
+                <div class="saq-meta">
+                    <span class="saq-title">Question 3: Practical Coding Assessment Task</span>
+                    <span class="saq-marks">Code Practise</span>
+                </div>
+                <p><strong>Scenario:</strong> Design a micro game targeting engine in Python leveraging strict encapsulation contracts. Create a <code>Target</code> class holding an encapsulated health attribute, a public <code>take_damage()</code> method, and a secondary verification validation method to process elimination out of active system memory. Build a secondary <code>Weapon</code> class that utilizes a message passing reference vector to call operations directly on a target object instance.</p>
+                <button class="solution-btn" onclick="toggleSolution('sol3')">Reveal Reference Solution Code</button>
+                <div id="sol3" class="solution-content">
+                    <p><strong>Reference Solution Layout:</strong></p>
+                    <div class="code-sandbox">
+                        <pre><code><span class="keyword">class</span> <span class="class-name">Target</span>:
+    <span class="keyword">def</span> <span class="method-name">__init__</span>(self, initial_health=<span class="string">100</span>):
+        <span class="comment"># Protected structural encapsulation attribute</span>
+        self._health = initial_health
+        self._is_alive = <span class="keyword">True</span>
+
+    <span class="keyword">def</span> <span class="method-name">take_damage</span>(self, amount):
+        <span class="comment"># Safe encapsulated method protecting state variable validation rules</span>
+        <span class="keyword">if</span> <span class="keyword">not</span> self._is_alive:
+            print(<span class="string">"Target already neutralized. Action dropped."</span>)
+            <span class="keyword">return</span>
+            
+        self._health -= amount
+        print(f<span class="string">"Target received {amount} points of damage. Current Health: {self._health}"</span>)
+        self._verify_vitality_bounds()
+
+    <span class="keyword">def</span> <span class="method-name">_verify_vitality_bounds</span>(self):
+        <span class="comment"># Internal validation operation handling state modification</span>
+        <span class="keyword">if</span> self._health &lt;= <span class="string">0</span>:
+            self._health = <span class="string">0</span>
+            self._is_alive = <span class="keyword">False</span>
+            self._trigger_destruction_sequence()
+
+    <span class="keyword">def</span> <span class="method-name">_trigger_destruction_sequence</span>(self):
+        print(<span class="string">"Target health exhausted. Removing object instance from scene memory allocation."</span>)
+
+<span class="keyword">class</span> <span class="class-name">Weapon</span>:
+    <span class="keyword">def</span> <span class="method-name">__init__</span>(self, weapon_damage=<span class="string">35</span>):
+        self.damage = weapon_damage
+
+    <span class="keyword">def</span> <span class="method-name">fire_at_entity</span>(self, target_instance):
+        <span class="comment"># Executing message passing via class parameter references</span>
+        print(<span class="string">"Weapon script triggered. Projecting targeting ray vector..."</span>)
+        target_instance.take_damage(self.damage)
+
+<span class="comment"># Execution Simulation</span>
+<span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:
+    combat_target = Target(initial_health=<span class="string">80</span>)
+    plasma_rifle = Weapon(weapon_damage=<span class="string">40</span>)
+
+    <span class="comment"># Simulating interactive combat routines</span>
+    plasma_rifle.fire_at_entity(combat_target)
+    plasma_rifle.fire_at_entity(combat_target)</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function toggleSolution(id) {
+            const element = document.getElementById(id);
+            if (element.style.display === "block") {
+                element.style.display = "none";
+            } else {
+                element.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>

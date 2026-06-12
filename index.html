@@ -3,166 +3,294 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Innocent Until Proven Imposter</title>
-    <link rel="stylesheet" href="style.css">
+    <title>OOP Learning Portal | Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0d0e15;
+            --bg-card: rgba(20, 20, 35, 0.6);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b4b7c5;
+            --neon-blue: #00f0ff;
+            --neon-purple: #9d4edd;
+            --sidebar-width: 260px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #12131c;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: var(--neon-blue);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-menu li a:hover {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .sidebar-menu li a.active {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.1);
+            border-left-color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        .header-banner {
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .header-banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-banner p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* --- DASHBOARD TILES / GRID --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-blue);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            color: var(--neon-purple);
+        }
+
+        .card-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .card-btn {
+            align-self: flex-start;
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .card-btn:hover {
+            background: var(--neon-blue);
+            color: var(--bg-main);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+        }
+
+        /* Responsive Design Rules */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="matrix-background"></div>
-    
-    <main class="game-container">
-            
-        <header class="game-header">
-            <h1 class="ominous-title" data-text="INNOCENT UNTIL PROVEN IMPOSTER">
-                INNOCENT UNTIL PROVEN IMPOSTER
-            </h1>
-            <p class="subtitle">A Game of Semantic Leaks & Shifting Contexts</p>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-code"></i> SWE Portal
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html" class="active"><i class="fa-solid fa-house"></i> Home Overview</a></li>
+            <li><a href="week1.html"><i class="fa-solid fa-cube"></i> Week 1: Core Blueprint</a></li>
+            <li><a href="week2.html"><i class="fa-solid fa-sitemap"></i> Week 2: Inheritance</a></li>
+            <li><a href="week3.html"><i class="fa-solid fa-arrows-split-up-and-left"></i> Week 3: Generalisation</a></li>
+            <li><a href="week4.html"><i class="fa-solid fa-crosshairs"></i> Week 4: Target Systems</a></li>
+            <li><a href="week5.html"><i class="fa-solid fa-database"></i> Week 5: Database & ERDs</a></li>
+            <li><a href="week6.html"><i class="fa-solid fa-vector-square"></i> Week 6: 3D Meshes & Relationships</a></li>
+            <li><a href="week8.html"><i class="fa-solid fa-vial-circle-check"></i> Week 8: Testing Frameworks</a></li>
+            <li><a href="code.html"><i class="fa-solid fa-vial-circle-check"></i> OOP Code: The Four Pillars</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header class="header-banner">
+            <h1>Object-Oriented Paradigm Dashboard</h1>
+            <p>Welcome to your Term 2 study portal. Select an architectural focus path from the menu or dashboard tiles to explore concepts, syntax, and operational testing mechanisms.</p>
         </header>
 
-        <section id="setup-screen" class="game-card active">
-            <h2>Initialise Neural Network</h2>
-            <p class="instruction">Gather 3 to 10 players locally. Enter names to begin alignment.</p>
-
-            <div class="control-matrix-container" style="background: rgba(255, 255, 255, 0.03); border: 1px solid #323f5e; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; font-family: monospace; text-align: left;">
-                <h3 style="color: #00f2fe; margin-top: 0; font-size: 1rem; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid #323f5e; padding-bottom: 0.5rem; margin-bottom: 1rem;">
-                    SYSTEM MODIFIER PARAMETERS
-                </h3>
-                
-                <div style="margin-bottom: 0.8rem; display: flex; align-items: center;">
-                    <input type="checkbox" id="category-inversion-checkbox" checked style="margin-right: 10px; width: 18px; height: 18px; cursor: pointer; accent-color: #00f2fe;">
-                    <label for="category-inversion-checkbox" style="color: #fff; font-size: 0.9rem; cursor: pointer;">
-                        Enable Category Inversion Anomaly <span style="color: #4facfe;">(25% Event Chance)</span>
-                    </label>
-                </div>
-
-                <div style="margin-bottom: 0.8rem; display: flex; align-items: center;">
-                    <input type="checkbox" id="phantom-checkbox" checked style="margin-right: 10px; width: 18px; height: 18px; cursor: pointer; accent-color: #00ff66;">
-                    <label for="phantom-checkbox" style="color: #fff; font-size: 0.9rem; cursor: pointer;">
-                        Enable Phantom Protocol Ghost Threats <span style="color: #00ff66;">(15% Match Chance)</span>
-                    </label>
-                </div>
-
-                <div style="margin-bottom: 0.8rem; display: flex; align-items: center;">
-                    <input type="checkbox" id="paranoiac-toggle" checked style="margin-right: 10px; width: 18px; height: 18px; cursor: pointer; accent-color: #ffaa00;">
-                    <label for="paranoiac-toggle" style="color: #fff; font-size: 0.9rem; cursor: pointer;">
-                        Enable Blind Synchronisation Paranoiac <span style="color: #ffaa00;">(15% Event Chance)</span>
-                    </label>
-                </div>
-
-                <div style="margin-bottom: 0.8rem; display: flex; align-items: center;">
-                    <input type="checkbox" id="mimic-checkbox" checked style="margin-right: 10px; width: 18px; height: 18px; cursor: pointer; accent-color: #bc00ff;">
-                    <label for="mimic-checkbox" style="color: #fff; font-size: 0.9rem; cursor: pointer;">
-                        Enable Echo Chamber Mimic Allocation <span style="color: #bc00ff;">(10% Event Chance)</span>
-                    </label>
-                </div>
-
-                <div style="margin-bottom: 1.2rem; display: flex; align-items: center;">
-                    <input type="checkbox" id="static-frequency-checkbox" checked style="margin-right: 10px; width: 18px; height: 18px; cursor: pointer; accent-color: #ff0055;">
-                    <label for="static-frequency-checkbox" style="color: #fff; font-size: 0.9rem; cursor: pointer;">
-                        Enable Static Frequency Mute Sabotage <span style="color: #ff0055;">(10% Event Chance)</span>
-                    </label>
-                </div>
-
-                <div style="border-top: 1px solid #323f5e; padding-top: 0.8rem;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;">
-                        <div style="display: flex; align-items: center;">
-                            <input type="checkbox" id="mutation-rate-checkbox" checked style="margin-right: 10px; width: 18px; height: 18px; cursor: pointer; accent-color: #f43f5e;">
-                            <label for="mutation-rate-checkbox" style="color: #fff; font-size: 0.9rem; cursor: pointer;">
-                                Permit Chaos Mutation (Cross-Universe Dataset)
-                            </label>
-                        </div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 15px; padding-left: 28px;">
-                        <input type="range" id="mutation-rate" min="0.00" max="1.00" step="0.05" value="0.30" style="flex-grow: 1; cursor: pointer; accent-color: #f43f5e;">
-                        <span style="color: #f43f5e; font-size: 0.85rem; font-weight: bold; min-width: 40px; text-align: right;" id="mutation-rate-display">30%</span>
-                    </div>
-                </div>
-            </div>
+        <section class="dashboard-grid">
             
-            <div class="input-group">
-                <input type="text" id="player-name-input" placeholder="Enter player name...">
-                <button id="add-player-btn" class="btn secondary">Add Mind</button>
-            </div>
-
-            <ul id="player-list" class="player-list"></ul>
-
-            <button id="start-game-btn" class="btn primary dynamic-hide" disabled>Synchronise Synapses</button>
-            <button class="btn secondary rules-toggle-btn">VIEW GAME PROTOCOLS</button>
-        </section>
-
-        <section id="reveal-screen" class="game-card">
-            <div class="progress-bar"><div id="reveal-progress" class="progress"></div></div>
-            <h2 id="current-player-turn">Player's Turn</h2>
-            <p class="instruction">Pass the device to the player named above. Nobody else look!</p>
-            
-            <div class="secret-vault">
-                <button id="secure-peek-btn" class="btn warning">Click to Peek Secret Node</button>
-                
-                <div id="secret-data" class="secret-data hidden">
-                    <div class="data-field">
-                        <span class="label">ASSIGNED NODE:</span>
-                        <span id="secret-word" class="value">????</span>
-                    </div>
-                    <div class="data-field">
-                        <span class="label">MATRIX CONTEXT:</span>
-                        <span id="secret-hint" class="value">????</span>
-                    </div>
+            <div class="card">
+                <div>
+                    <div class="card-title"><i class="fa-solid fa-cube"></i> Week 1: Classes & Instances</div>
+                    <p class="card-desc">Master the structural boundary between generalized templates (Blueprints) and concrete implementations in memory (Instances), incorporating state encapsulation tools.</p>
                 </div>
+                <a href="week1.html" class="card-btn">Explore Module</a>
             </div>
 
-            <button id="next-player-btn" class="btn primary hidden">Lock & Pass Device</button>
-        </section>
-
-        <section id="debate-screen" class="game-card">
-            <h2>Neural Transmission Active</h2>
-            <p class="instruction">Discuss your nodes. Find the paradox. Who belongs to a parallel universe?</p>
-            
-            <div class="timer-display">
-                <div class="countdown" id="timer">03:00</div>
-                <div class="timer-controls">
-                    <button id="pause-timer-btn" class="btn mini">Pause</button>
+            <div class="card">
+                <div>
+                    <div class="card-title"><i class="fa-solid fa-sitemap"></i> Week 2: Hierarchy Mechanisms</div>
+                    <p class="card-desc">Deep-dive into inheritance hierarchies establishing clear "is-a" relationships. Review programmatic method overriding actions and the explicit use of the super() constructor link.</p>
                 </div>
+                <a href="week2.html" class="card-btn">Explore Module</a>
             </div>
 
-            <div class="reminder-box">
-                <p>⚠️ <strong>Remember:</strong> Everyone has a completely unique word. Listen for the underlying structural logic, not just matching terms.</p>
+            <div class="card">
+                <div>
+                    <div class="card-title"><i class="fa-solid fa-arrows-split-up-and-left"></i> Week 3: Generalisation Paths</div>
+                    <p class="card-desc">Differentiate between design-level generalisation schemas and structural top-down implementation layouts. Balance abstractions properly to prevent data redundancy issues.</p>
+                </div>
+                <a href="week3.html" class="card-btn">Explore Module</a>
             </div>
 
-            <button id="proceed-to-vote-btn" class="btn primary">Initiate Purge Protocol</button>
-        </section>
-
-        <section id="vote-screen" class="game-card">
-            <h2>Isolate the Paradox</h2>
-            <p class="instruction">Cast your votes. Who is operating on a leaked context map?</p>
-            
-            <div id="voting-pool" class="voting-grid"></div>
-        </section>
-
-        <section id="results-screen" class="game-card">
-            <h2>Matrix Evaluation</h2>
-            <div id="verdict-banner" class="verdict-banner"></div>
-
-            <div class="truth-reveal">
-                <h3>The Real Alignments:</h3>
-                <div id="final-reveal-list" class="reveal-list"></div>
+            <div class="card">
+                <div>
+                    <div class="card-title"><i class="fa-solid fa-crosshairs"></i> Week 4: Systems Operations</div>
+                    <p class="card-desc">Trace algorithmic hit detection processes spanning logical input monitoring, programmatic message passing vectors, and state modification functions without breaking interface contracts.</p>
+                </div>
+                <a href="week4.html" class="card-btn">Explore Module</a>
             </div>
 
-            <button id="play-again-btn" class="btn primary">Realign Synapses (Play Again)</button>
-        </section>
+            <div class="card">
+                <div>
+                    <div class="card-title"><i class="fa-solid fa-database"></i> Week 5: Database Design & ERDs</div>
+                    <p class="card-desc">Establish secure relational data boundaries via Primary, Foreign, and Composite Keys. Map system constraints cleanly using abstract cardinality mappings.</p>
+                </div>
+                <a href="week5.html" class="card-btn">Explore Module</a>
+            </div>
 
+            <div class="card">
+                <div>
+                    <div class="card-title"><i class="fa-solid fa-vector-square"></i> Week 6: Spatial Meshes & Elements</div>
+                    <p class="card-desc">Unpack graphic primitive databases, file object text layouts, and architectural dependency associations (Composition, Aggregation, and temporary parameter linkages).</p>
+                </div>
+                <a href="week6.html" class="card-btn">Explore Module</a>
+            </div>
+
+            <div class="card">
+                <div>
+                    <div class="card-title"><i class="fa-solid fa-vial-circle-check"></i> Week 8: Validation Frameworks</div>
+                    <p class="card-desc">Apply robust QA testing pipelines. Design systematic manual test profiles alongside automated test modules leveraging the Python unittest framework structure.</p>
+                </div>
+                <a href="week8.html" class="card-btn">Explore Module</a>
+            </div>
+
+            <div class="card"></div>
+                <div>
+                    <div class="card-title"><i class="fa-solid fa-vial-circle-check"></i> OOP Code: The Four Pillars</div>
+                    <p class="card-desc">Learn about the four pillars of Object-Oriented Programming and how to use them to code using Python.</p>
+                </div>
+                <a href="week8.html" class="card-btn">Explore Module</a>
+            </div>
+
+        </section>
     </main>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const slider = document.getElementById('mutation-rate');
-            const display = document.getElementById('mutation-rate-display');
-            if (slider && display) {
-                slider.addEventListener('input', (e) => {
-                    display.innerText = `${Math.round(e.target.value * 100)}%`;
-                });
-            }
-        });
-    </script>
-    <script src="words.js"></script>
-    <script src="script.js"></script>
 </body>
 </html>

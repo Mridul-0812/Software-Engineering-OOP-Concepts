@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOP Learning Portal | Week 6.3: Polymorphism & Pillars</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0d0e15;
+            --bg-card: rgba(20, 20, 35, 0.6);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b4b7c5;
+            --neon-blue: #00f0ff;
+            --neon-purple: #9d4edd;
+            --neon-green: #39ff14;
+            --sidebar-width: 260px;
+            --terminal-bg: #05050a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #12131c;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: var(--neon-blue);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-menu li a:hover {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .sidebar-menu li a.active {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.1);
+            border-left-color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        .header-banner {
+            margin-bottom: 40px;
+            position: relative;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .header-banner h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-banner p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        /* --- DETAILED TECHNICAL LAYOUTS --- */
+        .pillar-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(4px);
+        }
+
+        .pillar-section h2 {
+            font-size: 2rem;
+            color: var(--neon-blue);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid rgba(0, 240, 255, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .pillar-section h3 {
+            font-size: 1.4rem;
+            color: var(--neon-purple);
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .theory-quote {
+            background: rgba(157, 78, 221, 0.1);
+            border-left: 4px solid var(--neon-purple);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+            color: #e0dbf5;
+        }
+
+        p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        strong {
+            color: var(--text-primary);
+        }
+
+        .badge {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--neon-blue);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+        }
+
+        /* --- CODE ARCHITECTURE STYLING --- */
+        pre {
+            background-color: var(--terminal-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-left: 4px solid var(--neon-blue);
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        code {
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            color: #e6e6fa;
+            line-height: 1.5;
+        }
+
+        .comment { color: #75715e; font-style: italic; }
+        .keyword { color: #f92672; font-weight: bold; }
+        .builtin { color: #66d9ef; }
+        .string { color: #e6db74; }
+        .number { color: #ae81ff; }
+        .func-name { color: #a6e22e; }
+
+        /* --- INTERACTIVE EXAM SYSTEM --- */
+        .exam-container {
+            background: rgba(10, 25, 20, 0.6);
+            border: 1px solid rgba(57, 255, 20, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            margin-top: 50px;
+        }
+
+        .exam-container h2 {
+            color: var(--neon-green);
+            font-size: 2rem;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .question-block {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .q-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .q-easy { color: #a6e22e; }
+        .q-medium { color: #fd971f; }
+        .q-hard { color: #f92672; }
+
+        /* --- ADVANCED REALISTIC UML DIAGRAM DESIGN --- */
+        .uml-wrapper {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+            background: #090a0f;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+        }
+
+        .uml-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .uml-class-box {
+            background: #161824;
+            border: 2px solid var(--neon-purple);
+            border-radius: 6px;
+            width: 280px;
+            box-shadow: 0 4px 15px rgba(157, 78, 221, 0.2);
+        }
+
+        .uml-class-box.abstract-class {
+            border-color: var(--neon-blue);
+            box-shadow: 0 4px 15px rgba(0, 240, 255, 0.2);
+        }
+
+        .uml-header {
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .uml-header span {
+            display: block;
+            font-size: 0.75rem;
+            font-style: italic;
+            color: var(--neon-blue);
+        }
+
+        .uml-section {
+            padding: 10px 15px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85rem;
+            color: #dcdce6;
+        }
+
+        .uml-section:not(:last-child) {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .uml-arrow-down {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: -40px 0;
+            z-index: 10;
+        }
+
+        .uml-line {
+            width: 2px;
+            height: 40px;
+            background-color: var(--text-secondary);
+        }
+
+        .uml-triangle {
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 12px solid #0d0e15;
+            margin-top: -1px;
+            position: relative;
+        }
+        .uml-triangle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: -8px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 10px solid var(--text-secondary);
+            z-index: -1;
+        }
+
+        .uml-children-row {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            gap: 20px;
+        }
+
+        /* --- FOOTER NAVIGATION --- */
+        .footer-nav {
+            margin-top: 60px;
+            display: flex;
+            justify-content: flex-end;
+            border-top: 1px solid var(--border-color);
+            padding-top: 30px;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 28px;
+            background: linear-gradient(45deg, var(--neon-purple), #6200ea);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(157, 78, 221, 0.3);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(157, 78, 221, 0.5);
+            background: linear-gradient(45deg, #a95eed, #7614ff);
+        }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; position: relative; border-right: none; }
+            .main-content { margin-left: 0; padding: 20px; }
+            .uml-children-row { flex-direction: column; align-items: center; gap: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-code"></i> SWE Portal
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Home Overview</a></li>
+            <li><a href="week1.html"><i class="fa-solid fa-cube"></i> Week 1: Core Blueprint</a></li>
+            <li><a href="week2.html"><i class="fa-solid fa-sitemap"></i> Week 2: Inheritance</a></li>
+            <li><a href="week3.html"><i class="fa-solid fa-arrows-split-up-and-left"></i> Week 3: Generalisation</a></li>
+            <li><a href="week4.html"><i class="fa-solid fa-crosshairs"></i> Week 4: Target Systems</a></li>
+            <li><a href="week5.html"><i class="fa-solid fa-database"></i> Week 5: Database & ERDs</a></li>
+            <li><a href="week6.html" class="active"><i class="fa-solid fa-vector-square"></i> Week 6: 3D Meshes & Relationships</a></li>
+            <li><a href="week8.html"><i class="fa-solid fa-vial-circle-check"></i> Week 8: Testing Frameworks</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header class="header-banner">
+            <h1>Week 6.3: Code Implementation of the Four Pillars</h1>
+            <p>An absolute masterclass detailing operational programming execution. Move completely past design abstractions and learn exactly how to construct, manipulate, and secure software using Python syntax from the ground up.</p>
+        </header>
+
+        <section class="pillar-section">
+            <h2><i class="fa-solid fa-shield-halved"></i> Pillar 1: Practical Encapsulation</h2>
+            
+            <div class="theory-quote">
+                "In programming, Encapsulation is the practice of bundling data (variables) and the actions that use them (methods) into a single 'capsule' (a Class). More importantly, it is about hiding the internal data from the outside world to protect it from being accidentally or maliciously changed. We force outside code to use specific, safe 'doors' (methods) to interact with the data."
+            </div>
+
+            <h3>Python Commands & Core Basics for Complete Beginners</h3>
+            <p>If you have never coded before, understand these fundamental programmatic structural rules:</p>
+            <p><span class="badge">class</span>: This keyword marks the creation of our master template schema. It defines a brand new category type within system memory.</p>
+            <p><span class="badge">def</span>: This structural command stands for "define". It is used to create a function (an action loop blocks). When a function is enclosed directly inside a class, it is called a <strong>Method</strong>.</p>
+            <p><span class="badge">self</span>: An explicit memory pointer reference. Because a single blueprint template can generate hundreds of real entities in execution, <span class="badge">self</span> guarantees Python accesses or mutates the internal states of that <em>exact specific individual instance</em> currently calling the operation.</p>
+            
+            <h3>Controlling Accessibility with Visibility Indicators</h3>
+            <p>We control who can see and modify our data using specialized prefix naming parameters:</p>
+            <ul>
+                <li><strong>Public (<span class="badge">self.name</span>):</strong> Variables that can be accessed, edited, or deleted freely by any external script block outside the class boundary.</li>
+                <li><strong>Protected (<span class="badge">self._name</span>):</strong> A strict warning indicator to external files: <em>"Do not modify or call this component unless your class explicitly inherits from this parent blueprint."</em></li>
+                <li><strong>Private (<span class="badge">self.__name</span>):</strong> Absolute system isolation. Python actively triggers <strong>Name Mangling</strong> internally, mapping the structural address to <span class="badge">_ClassName__variable</span>, making outside manipulation virtually impossible.</li>
+            </ul>
+
+            <h3>Comprehensive Architectural Code Example</h3>
+            <p>Let's completely write out, execute, and break down a fully secured system instance:</p>
+
+<pre><code><span class="keyword">class</span> <span class="func-name">BankAccount</span>:
+    <span class="keyword">def</span> <span class="func-name">__init__</span>(<span class="builtin">self</span>, account_holder, initial_deposit):
+        <span class="builtin">self</span>.account_holder = account_holder            <span class="comment"># Public Attribute</span>
+        <span class="keyword">if</span> initial_deposit &lt; <span class="number">0</span>:
+            <span class="keyword">raise</span> <span class="builtin">ValueError</span>(<span class="string">"Initial balance cannot be negative!"</span>)
+        <span class="builtin">self</span>.__balance = initial_deposit                <span class="comment"># Private Attribute</span>
+
+    <span class="comment"># Getter Method: Safe visual door</span>
+    <span class="keyword">def</span> <span class="func-name">get_balance</span>(<span class="builtin">self</span>):
+        <span class="keyword">return</span> <span class="builtin">self</span>.__balance
+
+    <span class="comment"># Setter Method: Controlled mutation boundary</span>
+    <span class="keyword">def</span> <span class="func-name">deposit</span>(<span class="builtin">self</span>, amount):
+        <span class="keyword">if</span> amount &gt; <span class="number">0</span>:
+            <span class="builtin">self</span>.__balance += amount
+            <span class="builtin">print</span>(<span class="string">f"Successfully credited {amount}. New total: {self.__balance}"</span>)
+        <span class="keyword">else</span>:
+            <span class="keyword">print</span>(<span class="string">"Transaction Denied: Deposit value must be positive."</span>)</code></pre>
+
+            <h3>Granular Code Syntax Breakdown</h3>
+            <p><span class="badge">__init__</span>: The constructor engine execution path. It sets up initial entity state coordinates automatically the moment an instance is brought online.</p>
+            <p><span class="badge">raise ValueError()</span>: An internal error deployment engine. It instantly stops thread execution if data verification paths fail safety constraints, outputting explicit textual parameters.</p>
+            <p><span class="badge">return</span>: Forces execution flows to leave the active method block entirely, packaging and passing back specific state evaluations directly to the caller line interface.</p>
+        </section>
+
+        <section class="pillar-section">
+            <h2><i class="fa-solid fa-sitemap"></i> Pillar 2: Inheritance & ERD/UML Conversion</h2>
+            
+            <div class="theory-quote">
+                "Inheritance is a fundamental pillar of OOP that allows a class to derive properties and behaviours from another class, establishing a clear 'is-a' relationship. Write code once in the parent class; all children use it automatically."
+            </div>
+
+            <h3>Converting Class UML/ERD Architecture to Python</h3>
+            <p>Below is a highly accurate, industry-standard structural layout displaying class schemas and explicit structural inheritances:</p>
+
+            <div class="uml-wrapper">
+                <div class="uml-container">
+                    <div class="uml-class-box abstract-class">
+                        <div class="uml-header">
+                            <span>&lt;&lt;Abstract Class&gt;&gt;</span>
+                            Employee
+                        </div>
+                        <div class="uml-section">
+                            + name : str<br>
+                            # salary : float
+                        </div>
+                        <div class="uml-section">
+                            + __init__(name, salary)<br>
+                            + get_bonus() : float
+                        </div>
+                    </div>
+
+                    <div class="uml-arrow-down">
+                        <div class="uml-triangle"></div>
+                        <div class="uml-line"></div>
+                    </div>
+
+                    <div class="uml-class-box">
+                        <div class="uml-header">
+                            Manager
+                        </div>
+                        <div class="uml-section">
+                            + department : str
+                        </div>
+                        <div class="uml-section">
+                            + __init__(name, salary, dept)<br>
+                            + get_bonus() : float [Overridden]
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <h3>Interpreting and Coding the Hierarchy</h3>
+            <p>To implement an inheritance path in code, we pass the master template name directly into the child parameters initialization line <span class="badge">class Child(Parent):</span>.</p>
+            <p>To populate child definitions with inherited parent logic smoothly without retyping code lines, we leverage the specialized <span class="badge">super().__init__()</span> connector link execution pipeline.</p>
+
+<pre><code><span class="keyword">class</span> <span class="func-name">Employee</span>:
+    <span class="keyword">def</span> <span class="func-name">__init__</span>(<span class="builtin">self</span>, name, salary):
+        <span class="builtin">self</span>.name = name
+        <span class="builtin">self</span>._salary = salary <span class="comment"># Protected variable: Child access enabled</span>
+
+    <span class="keyword">def</span> <span class="func-name">get_bonus</span>(<span class="builtin">self</span>):
+        <span class="keyword">return</span> <span class="builtin">self</span>._salary * <span class="number">0.10</span> <span class="comment"># Base 10% bonus schema</span>
+
+<span class="keyword">class</span> <span class="func-name">Manager</span>(<span class="func-name">Employee</span>):
+    <span class="keyword">def</span> <span class="func-name">__init__</span>(<span class="builtin">self</span>, name, salary, department):
+        <span class="builtin">super</span>().__init__(name, salary) <span class="comment"># Direct upward pipeline linkage execution</span>
+        <span class="builtin">self</span>.department = department
+
+    <span class="comment"># Method Overriding: Replacing parent behaviour rules completely</span>
+    <span class="keyword">def</span> <span class="func-name">get_bonus</span>(<span class="builtin">self</span>):
+        <span class="keyword">return</span> <span class="builtin">self</span>._salary * <span class="number">0.20</span> <span class="comment"># Overridden to 20%</span></code></pre>
+        </section>
+
+        <section class="pillar-section">
+            <h2><i class="fa-solid fa-wand-magic-sparkles"></i> Pillar 3: Deep-Dive Polymorphism</h2>
+            
+            <div class="theory-quote">
+                "Polymorphism allows different classes to be treated as instances of a common parent but respond with their own unique behaviours. Dynamic Binding (Late Binding) ensures the computer decides which version of a method to run at Runtime, based on the actual object type, not the variable type."
+            </div>
+
+            <h3>Operational Pipeline Execution</h3>
+            <p>Look at the exact structural loop code below. The system engine driving execution loops through varied objects blindly. It has zero explicit functional awareness regarding individual underlying internal mechanics; it simply trusts that every single entry inherits from the matching superclass and implements the precise common structural interface call.</p>
+
+<pre><code><span class="comment"># High-Level Structural Polymorphic Architecture</span>
+<span class="keyword">class</span> <span class="func-name">CombatModifier</span>:
+    <span class="keyword">def</span> <span class="func-name">apply_modifier</span>(<span class="builtin">self</span>, damage):
+        <span class="keyword">return</span> damage
+
+<span class="keyword">class</span> <span class="func-name">CriticalHitModifier</span>(<span class="func-name">CombatModifier</span>):
+    <span class="keyword">def</span> <span class="func-name">apply_modifier</span>(<span class="builtin">self</span>, damage):
+        <span class="keyword">return</span> damage * <span class="number">2.0</span> <span class="comment"># Multiplier rule execution</span>
+
+<span class="keyword">class</span> <span class="func-name">ShieldAbsorbModifier</span>(<span class="func-name">CombatModifier</span>):
+    <span class="keyword">def</span> <span class="func-name">apply_modifier</span>(<span class="builtin">self</span>, damage):
+        <span class="keyword">return</span> <span class="builtin">max</span>(<span class="number">0</span>, damage - <span class="number">15</span>) <span class="comment"># Subtraction operation</span>
+
+<span class="comment"># Running the Polymorphic Processing Sequence Engine</span>
+modifier_pipeline = [CriticalHitModifier(), ShieldAbsorbModifier()]
+active_damage = <span class="number">40.0</span>
+
+<span class="keyword">for</span> modifier <span class="keyword">in</span> modifier_pipeline:
+    <span class="comment"># Dynamic binding captures object identity at execution frame instantly</span>
+    active_damage = modifier.apply_modifier(active_damage)
+
+<span class="builtin">print</span>(<span class="string">f"Final Pipeline Damage output: {active_damage}"</span>) <span class="comment"># Evaluates to 65.0</span></code></pre>
+
+            <h3>Why This is Peak Software Architecture</h3>
+            <p>If you want to introduce an entirely new gameplay feature or business logic variation, you do not modify your primary calculation script block or core loops at all. You simply construct a brand new isolated child block that inherits from the core parent class and insert it right into the runtime workspace. This isolates concerns, prevents regressions, and minimizes system downtime.</p>
+        </section>
+
+        <section class="pillar-section">
+            <h2><i class="fa-solid fa-eye-slash"></i> Pillar 4: Abstraction Mechanics</h2>
+            
+            <div class="theory-quote">
+                "Abstraction is identifying the essential characteristics of an object while ignoring the irrelevant details. Purpose: Reducing complexity by focusing on WHAT an object does rather than HOW it does it."
+            </div>
+
+            <h3>Enforcing Interface Contracts via ABC</h3>
+            <p>To enforce design consistency across teams, we convert a base blueprint into an explicit <strong>Abstract Base Class (ABC)</strong>. This tells Python that the template class <em>cannot be instantiated directly</em> and sets up mandatory implementation rules that all inheriting child classes must follow.</p>
+
+<pre><code><span class="keyword">from</span> abc <span class="keyword">import</span> ABC, abstractmethod
+
+<span class="keyword">class</span> <span class="func-name">Vehicle</span>(ABC): <span class="comment"># Inheriting from ABC stops direct template activation</span>
+    
+    @abstractmethod
+    <span class="keyword">def</span> <span class="func-name">start_engine</span>(<span class="builtin">self</span>):
+        <span class="keyword">pass</span> <span class="comment"># Structural placeholder declaration: No raw functionality code allowed here</span>
+
+<span class="keyword">class</span> <span class="func-name">Motorcycle</span>(<span class="func-name">Vehicle</span>):
+    <span class="keyword">def</span> <span class="func-name">start_engine</span>(<span class="builtin">self</span>):
+        <span class="builtin">print</span>(<span class="string">"Ignition sequence activated. Two-cylinder engine operational."</span>)</code></pre>
+        </section>
+
+        <section class="exam-container">
+            <h2><i class="fa-solid fa-graduation-cap"></i> Industry-Grade QA & Exam Validation</h2>
+            <p>Test your comprehensive implementation fluency against realistic, mark-mapped examination constraints.</p>
+
+            <div class="question-block">
+                <div class="q-meta">
+                    <span>Question 1: Data Structuring & Integrity Boundary</span>
+                    <span class="q-easy">Easy (5 Marks)</span>
+                </div>
+                <p><strong>Task:</strong> Code an enclosed template class structure called <span class="badge">Product</span> tracking name fields along with private structural balances designated <span class="badge">__price</span>. Build defensive operational getter/setter functions tracking safe pricing allocations (rejecting values &le; 0).</p>
+                
+                <details>
+                    <summary style="cursor: pointer; color: var(--neon-blue); font-weight: 600;">View High-Grade Sample Solution & marking Guide</summary>
+<pre><code><span class="keyword">class</span> <span class="func-name">Product</span>:
+    <span class="keyword">def</span> <span class="func-name">__init__</span>(<span class="builtin">self</span>, name, price):
+        <span class="builtin">self</span>.name = name
+        <span class="keyword">if</span> price &lt;= <span class="number">0</span>:
+            <span class="keyword">raise</span> <span class="builtin">ValueError</span>(<span class="string">"Price tracking parameter metrics must exceed baseline zero indices."</span>)
+        <span class="builtin">self</span>.__price = price
+
+    <span class="keyword">def</span> <span class="func-name">get_price</span>(<span class="builtin">self</span>):
+        <span class="keyword">return</span> <span class="builtin">self</span>.__price
+
+    <span class="keyword">def</span> <span class="func-name">set_price</span>(<span class="builtin">self</span>, new_price):
+        <span class="keyword">if</span> new_price &gt; <span class="number">0</span>:
+            <span class="builtin">self</span>.__price = new_price
+        <span class="keyword">else</span>:
+            <span class="builtin">print</span>(<span class="string">"Execution Blocked: Invalid price metrics update parameters input."</span>)</code></pre>
+                    <p style="font-size: 0.85rem; color: #a6e22e;"><strong>Marking Matrix:</strong> 1 Mark setup validation | 1 Mark tracking private naming prefixes | 1 Mark error validation routing checks | 1 Mark accurate functional reader extraction returns | 1 Mark functional assignment logic check routines.</p>
+                </details>
+            </div>
+
+            <div class="question-block">
+                <div class="q-meta">
+                    <span>Question 2: Architectural Inheritance Hierarchy</span>
+                    <span class="q-medium">Medium (5 Marks)</span>
+                </div>
+                <p><strong>Task:</strong> Construct a multi-tier structured computing model containing base properties named <span class="badge">Account</span> running unique structural properties tracking processing details alongside base calculations. Generate derived variations modifying execution behaviors explicitly using inherited constructor pipelines.</p>
+                
+                <details>
+                    <summary style="cursor: pointer; color: var(--neon-blue); font-weight: 600;">View High-Grade Sample Solution & marking Guide</summary>
+<pre><code><span class="keyword">class</span> <span class="func-name">Account</span>:
+    <span class="keyword">def</span> <span class="func-name">__init__</span>(<span class="builtin">self</span>, id_code):
+        <span class="builtin">self</span>.id_code = id_code
+
+    <span class="keyword">def</span> <span class="func-name">calculate_fees</span>(<span class="builtin">self</span>):
+        <span class="keyword">return</span> <span class="number">10.0</span>
+
+<span class="keyword">class</span> <span class="func-name">PremiumAccount</span>(<span class="func-name">Account</span>):
+    <span class="keyword">def</span> <span class="func-name">__init__</span>(<span class="builtin">self</span>, id_code, tier_level):
+        <span class="builtin">super</span>().__init__(id_code)
+        <span class="builtin">self</span>.tier_level = tier_level
+
+    <span class="keyword">def</span> <span class="func-name">calculate_fees</span>(<span class="builtin">self</span>):
+        <span class="keyword">return</span> <span class="number">0.0</span> <span class="comment"># Overridden system fee exemption logic</span></code></pre>
+                    <p style="font-size: 0.85rem; color: #fd971f;"><strong>Marking Matrix:</strong> 1 Mark clean subclass inheritance structural mapping definitions | 2 Marks correct superclass connection constructor routing logic allocations | 2 Marks proper implementation of overridden method mechanics.</p>
+                </details>
+            </div>
+
+            <div class="question-block">
+                <div class="q-meta">
+                    <span>Question 3: Polymorphic Pipeline Engineering</span>
+                    <span class="q-hard">Hard (5 Marks)</span>
+                </div>
+                <p><strong>Task:</strong> Build a modern notifications pipeline utilizing abstract class contracts. Construct separate messaging execution systems running polymorphic functions that process alert distributions dynamically based on individual targeted endpoint structures.</p>
+                
+                <details>
+                    <summary style="cursor: pointer; color: var(--neon-blue); font-weight: 600;">View High-Grade Sample Solution & marking Guide</summary>
+<pre><code><span class="keyword">from</span> abc <span class="keyword">import</span> ABC, abstractmethod
+
+<span class="keyword">class</span> <span class="func-name">NotificationChannel</span>(ABC):
+    @abstractmethod
+    <span class="keyword">def</span> <span class="func-name">send_alert</span>(<span class="builtin">self</span>, message):
+        <span class="keyword">pass</span>
+
+<span class="keyword">class</span> <span class="func-name">EmailChannel</span>(<span class="func-name">NotificationChannel</span>):
+    <span class="keyword">def</span> <span class="func-name">send_alert</span>(<span class="builtin">self</span>, message):
+        <span class="builtin">print</span>(<span class="string">f"SMTP Gateway dispatching payload connection data routing: {message}"</span>)
+
+<span class="keyword">class</span> <span class="func-name">SMSChannel</span>(<span class="func-name">NotificationChannel</span>):
+    <span class="keyword">def</span> <span class="func-name">send_alert</span>(<span class="builtin">self</span>, message):
+        <span class="builtin">print</span>(<span class="string">f"Telephony API shifting SMS cellular packet distributions: {message}"</span>)
+
+<span class="comment"># Central Processing Engine Execution Block</span>
+<span class="keyword">def</span> <span class="func-name">broadcast_system_alert</span>(channels_list, alert_text):
+    <span class="keyword">for</span> channel <span class="keyword">in</span> channels_list:
+        channel.send_alert(alert_text) <span class="comment"># Dynamic binding resolved at Runtime</span></code></pre>
+                    <p style="font-size: 0.85rem; color: #f92672;"><strong>Marking Matrix:</strong> 1 Mark correct implementation of abstract design modules | 2 Marks proper construction of distinct child subclasses fulfilling the interface contracts | 2 Marks dynamic looping structure demonstrating correct execution of polymorphic message-passing workflows.</p>
+                </details>
+            </div>
+        </section>
+
+        <footer class="footer-nav">
+            <a href="week64.html" class="nav-btn">
+                Proceed to Module 6.4: Abstraction <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </footer>
+    </main>
+
+</body>
+</html>
+</code>

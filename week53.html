@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOP Learning Portal | Week 5: Class Diagram Relationships</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0d0e15;
+            --bg-card: rgba(20, 20, 35, 0.6);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b4b7c5;
+            --neon-blue: #00f0ff;
+            --neon-purple: #9d4edd;
+            --sidebar-width: 260px;
+            --terminal-bg: #090a0f;
+            --success-green: #00ff66;
+            --warning-orange: #ff9900;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR NAVIGATION (EXACTLY AS REQUESTED) --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #12131c;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: var(--neon-blue);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-menu li a:hover {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .sidebar-menu li a.active {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.1);
+            border-left-color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        .header-banner {
+            margin-bottom: 40px;
+            position: relative;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .header-banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-banner p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* --- EPITOME DESIGN LAYOUTS --- */
+        .section-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            color: var(--neon-blue);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+            padding-bottom: 8px;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--neon-purple);
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+            color: var(--text-secondary);
+        }
+
+        li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        /* --- TABLE ARCHITECTURE --- */
+        .table-responsive {
+            overflow-x: auto;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            background: rgba(10, 11, 18, 0.8);
+        }
+
+        .custom-table th {
+            background-color: rgba(157, 78, 221, 0.15);
+            color: var(--neon-blue);
+            padding: 14px 16px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+            font-size: 0.95rem;
+        }
+
+        .custom-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            vertical-align: top;
+        }
+
+        .custom-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* --- CODE BLOCKS --- */
+        .code-container {
+            background: var(--terminal-bg);
+            border-left: 4px solid var(--neon-blue);
+            border-radius: 4px 8px 8px 4px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-container pre {
+            font-family: inherit;
+            color: #e0e0e0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .code-label {
+            font-size: 0.75rem;
+            color: var(--neon-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        /* --- VECTOR GRAPHICS (UML/ERD DRAWINGS) --- */
+        .diagram-wrapper {
+            background: #11121a;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .uml-svg {
+            width: 100%;
+            max-width: 850px;
+            height: auto;
+            background: transparent;
+        }
+
+        /* --- EXAM & PRACTISE BOXES --- */
+        .exam-box {
+            border: 1px dashed var(--warning-orange);
+            background: rgba(255, 153, 0, 0.03);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+
+        .exam-tag {
+            background: var(--warning-orange);
+            color: #000;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .practise-box {
+            border: 1px solid var(--success-green);
+            background: rgba(0, 255, 102, 0.02);
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .practise-tag {
+            background: var(--success-green);
+            color: #000;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        /* --- FOOOTER NAVIGATION --- */
+        .footer-navigation {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--neon-purple), #6231a3);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(157, 78, 221, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 240, 255, 0.4);
+            background: linear-gradient(135deg, var(--neon-blue), #00b0c2);
+            color: var(--bg-main);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-code"></i> SWE Portal
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Home Overview</a></li>
+            <li><a href="week1.html"><i class="fa-solid fa-cube"></i> Week 1: Core Blueprint</a></li>
+            <li><a href="week2.html"><i class="fa-solid fa-sitemap"></i> Week 2: Inheritance</a></li>
+            <li><a href="week3.html"><i class="fa-solid fa-arrows-split-up-and-left"></i> Week 3: Generalisation</a></li>
+            <li><a href="week4.html"><i class="fa-solid fa-crosshairs"></i> Week 4: Target Systems</a></li>
+            <li><a href="week5.html" class="active"><i class="fa-solid fa-database"></i> Week 5: Database & ERDs</a></li>
+            <li><a href="week6.html"><i class="fa-solid fa-vector-square"></i> Week 6: 3D Meshes & Relationships</a></li>
+            <li><a href="week8.html"><i class="fa-solid fa-vial-circle-check"></i> Week 8: Testing Frameworks</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        
+        <header class="header-banner">
+            <h1>Week 5, Lesson 3: Class Diagram Relationships</h1>
+            <p><strong>Learning Intention:</strong> Understand and apply the concepts of class diagrams in modelling relationships between classes in object-oriented programming.</p>
+            <p><strong>Success Criteria:</strong> Identify and describe different types of relationships in class diagrams. Create UML class diagrams that accurately represent these relationships between classes. Explain the significance of each type of relationship and how it affects the design & functionality. Apply their knowledge to model real-world scenarios using class diagrams.</p>
+            <p><strong>Homework:</strong> For an online shopping system, identify the classes, attributes, and relationships.</p>
+        </header>
+
+        <section class="section-container">
+            <h2 class="section-title"><i class="fa-solid fa-shuffle"></i> I. Mapping ERDs to Class Diagrams</h2>
+            <p>Slide 21281</p>
+            <p>Understanding how to translate an Entity-Relationship Diagram (ERD) into a Class Diagram is a crucial skill in software engineering. This process bridges the gap between database design and object-oriented programming (OOP).</p>
+            
+            <h3 class="section-subtitle">The Step-by-Step Translation Pathway</h3>
+            <p><strong>Step 1 - Entities to Classes:</strong> In an ERD, entities represent tables in a database, each containing specific data related to objects within the system. In OOP, these entities map directly to classes. Each class in a class diagram corresponds to an entity in the ERD. For example, a Student entity in an ERD becomes a Student class in OOP. This class will encapsulate all the attributes and behaviours associated with a student.</p>
+            <p><strong>Step 2 - Attributes to Class Attributes:</strong> Attributes in an ERD, which describe properties or characteristics of an entity, map directly to class attributes (fields or properties) in OOP. For example, attributes of a Student entity such as StudentID, Name, and DateOfBirth become attributes of the Student class. These attributes define the data that each instance of the class will hold.</p>
+            <p><strong>Step 3 - Relationships to Associations:</strong> Relationships between entities in an ERD translate to associations between classes in OOP. These associations represent how objects of one class are connected to objects of another class. For example, if a Student entity is related to a Course entity through an enrollment relationship, this relationship becomes an association between the Student class and the Course class. Associations in class diagrams are depicted by lines connecting the classes, often annotated with multiplicity indicators to show cardinality (e.g., one-to-many).</p>
+
+            <h3 class="section-subtitle">Object-Relational Mapping (ORM)</h3>
+            <p>Object-Relational Mapping (ORM) is a technique that facilitates the conversion between database structures (represented by ERDs) and object-oriented models (represented by class diagrams). ORMs automate the process of mapping database tables to classes, rows to objects, and columns to attributes. This allows developers to interact with the database using the more intuitive and flexible paradigm of OOP.</p>
+            <p>An ORM framework, such as Django's ORM, manages the translation between the database and the application code. When you define a class in your application, the ORM automatically handles creating the corresponding table in the database. It also manages data retrieval and manipulation, allowing developers to work with database records as objects in their code, simplifying CRUD (Create, Read, Update, Delete) operations.</p>
+
+            <h3 class="section-subtitle">Primary Keys as Object Identifiers</h3>
+            <p>In an ERD, primary keys are unique identifiers for each entity instance, ensuring that each record can be uniquely distinguished from others. When translating this to OOP, primary keys become unique identifiers for objects. For example, the StudentID attribute in a Student entity serves as the primary key in the database. In the corresponding Student class, this attribute uniquely identifies each Student object, allowing for precise object manipulation and retrieval.</p>
+
+            <div class="code-container">
+                <div class="code-label">Python Implementation</div>
+                <pre><code>class Student:
+    def __init__(self, student_id, name, date_of_birth):
+        self.student_id = student_id  # Primary key mapping
+        self.name = name
+        self.date_of_birth = date_of_birth</code></pre>
+            </div>
+
+            <h3 class="section-subtitle">Foreign Keys and Associations</h3>
+            <p>Foreign keys in an ERD establish relationships between different entities by referencing the primary key of another entity. In OOP, these foreign keys translate to references or pointers in classes, linking objects of one class to objects of another. For example, if a Course entity has a foreign key TeacherID that links to a Teacher entity, this relationship translates to a reference in the Course class mirroring the foreign key relationship in the database.</p>
+
+            <div class="code-container">
+                <div class="code-label">Python Implementation</div>
+                <pre><code>class Teacher:
+    def __init__(self, teacher_id, name):
+        self.teacher_id = teacher_id  # Primary key
+        self.name = name</code></pre>
+            </div>
+
+            <h3 class="section-subtitle">Structural Architecture Mapping Table</h3>
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Database Element (ERD)</th>
+                            <th>OOP Element (Class Diagram)</th>
+                            <th>Python Practical Implementation Syntax</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Entity</strong></td>
+                            <td>Class</td>
+                            <td><code>class Student:</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Attribute</strong></td>
+                            <td>Class Attribute</td>
+                            <td><code>self.name = name</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Primary Key</strong></td>
+                            <td>Object Identifier</td>
+                            <td><code>self.student_id = student_id</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Relationship</strong></td>
+                            <td>Association</td>
+                            <td>References to other object instances</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Foreign Key</strong></td>
+                            <td>Reference / Pointer</td>
+                            <td><code>self.teacher = teacher_obj</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="section-subtitle">Worked Example: Library & Book Linkage</h3>
+            <p>Let's consider a simple example of a library system where Library and Book are two classes that are associated with each other. Each Library has a collection of Books, and each Book belongs to a Library.</p>
+            <ul>
+                <li><strong>Classes:</strong> Library, Book</li>
+                <li><strong>Attributes:</strong> Library: <code>name</code>, <code>books</code>; Book: <code>title</code>, <code>author</code>, <code>library</code></li>
+                <li><strong>Methods:</strong> Library: <code>add_book</code>; Book: <code>set_library</code></li>
+                <li><strong>Associations:</strong> Library has a collection of Book (one-to-many relationship)</li>
+            </ul>
+
+            <div class="diagram-wrapper">
+                <svg class="uml-svg" viewBox="0 0 700 160">
+                    <rect x="20" y="10" width="220" height="130" fill="#1b1c26" stroke="#00f0ff" stroke-width="2" rx="6"/>
+                    <text x="130" y="32" fill="#00f0ff" font-weight="bold" font-size="14" text-anchor="middle">Library</text>
+                    <line x1="20" y1="42" x2="240" y2="42" stroke="#00f0ff" stroke-width="1"/>
+                    <text x="30" y="60" fill="#b4b7c5" font-size="12">- name: String</text>
+                    <text x="30" y="78" fill="#b4b7c5" font-size="12">- books: List&lt;Book&gt;</text>
+                    <line x1="20" y1="88" x2="240" y2="88" stroke="#00f0ff" stroke-width="1"/>
+                    <text x="30" y="106" fill="#ffffff" font-size="12">+ add_book(book: Book): void</text>
+                    
+                    <line x1="240" y1="75" x2="450" y2="75" stroke="#ffffff" stroke-width="2"/>
+                    <text x="250" y="65" fill="#9d4edd" font-size="12" font-weight="bold">1</text>
+                    <text x="310" y="92" fill="#b4b7c5" font-size="11" font-style="italic">has books</text>
+                    <text x="415" y="65" fill="#9d4edd" font-size="12" font-weight="bold">0..*</text>
+                    <path d="M 435 65 L 450 75 L 435 85" fill="none" stroke="#ffffff" stroke-width="2"/>
+                    <line x1="435" y1="65" x2="435" y2="85" stroke="#ffffff" stroke-width="2"/>
+
+                    <rect x="450" y="10" width="230" height="130" fill="#1b1c26" stroke="#00f0ff" stroke-width="2" rx="6"/>
+                    <text x="565" y="32" fill="#00f0ff" font-weight="bold" font-size="14" text-anchor="middle">Book</text>
+                    <line x1="450" y1="42" x2="680" y2="42" stroke="#00f0ff" stroke-width="1"/>
+                    <text x="460" y="60" fill="#b4b7c5" font-size="12">- title: String</text>
+                    <text x="460" y="74" fill="#b4b7c5" font-size="12">- author: String</text>
+                    <text x="460" y="88" fill="#b4b7c5" font-size="12">- library: Library</text>
+                    <line x1="450" y1="96" x2="680" y2="96" stroke="#00f0ff" stroke-width="1"/>
+                    <text x="460" y="114" fill="#ffffff" font-size="12">+ set_library(lib: Library): void</text>
+                </svg>
+            </div>
+
+            <div class="code-container">
+                <div class="code-label">library.py</div>
+                <pre><code>class Book:
+    def __init__(self, title, author):
+        self.title = title
+        self.author = author
+        self.library = None  # Holds the explicit Library instance
+
+    def set_library(self, library):
+        self.library = library
+
+class Library:
+    def __init__(self, name):
+        self.name = name
+        self.books = [] # Representing a one-to-many relationship
+
+    def add_book(self, book):
+        self.books.append(book)
+        book.set_library(self)</code></pre>
+            </div>
+        </section>
+
+        <section class="section-container">
+            <h2 class="section-title"><i class="fa-solid fa-diagram-project"></i> II. Core Class Relationships</h2>
+            <p>UML uses specific lines and symbols to define how classes interact. Understanding the "strength" of these bonds is critical for design validation.</p>
+
+            <h3 class="section-subtitle">UML Connectors Architectural Master Summary</h3>
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Relationship</th>
+                            <th>UML Line Type</th>
+                            <th>Arrow / Symbol Style</th>
+                            <th>Conceptual Meaning & Lifecycle Strength</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Association</strong></td>
+                            <td>Solid Line</td>
+                            <td>None / Open Arrow</td>
+                            <td>General structural connection; parts are independent.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Inheritance</strong></td>
+                            <td>Solid Line</td>
+                            <td>Hollow Triangle Arrowhead</td>
+                            <td>"Is-a" relationship; structural subclassing mechanism.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Aggregation</strong></td>
+                            <td>Solid Line</td>
+                            <td>Hollow (Unfilled) Diamond</td>
+                            <td>"Has-a" part-whole link; parts exist independently.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Composition</strong></td>
+                            <td>Solid Line</td>
+                            <td>Filled (Black) Diamond</td>
+                            <td>"Has-a" part-whole link; parts are strictly bound to lifecycle.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Dependency</strong></td>
+                            <td>Dashed Line</td>
+                            <td>Open Arrowhead</td>
+                            <td>"Uses-a" transient constraint; temporary runtime access.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="section-subtitle">1. Association (General Link)</h3>
+            <p>A basic structural relationship where classes are aware of each other but function completely independently outside of memory pointers.</p>
+            <div class="diagram-wrapper">
+                <svg class="uml-svg" viewBox="0 0 600 100">
+                    <rect x="10" y="20" width="160" height="60" fill="#1b1c26" stroke="#00f0ff" stroke-width="2" rx="4"/>
+                    <text x="90" y="55" fill="#ffffff" text-anchor="middle" font-size="14">Customer</text>
+                    <line x1="170" y1="50" x2="430" y2="50" stroke="#ffffff" stroke-width="2"/>
+                    <text x="185" y="40" fill="#9d4edd" font-size="12">1</text>
+                    <text x="410" y="40" fill="#9d4edd" font-size="12">0..*</text>
+                    <rect x="430" y="20" width="160" height="60" fill="#1b1c26" stroke="#00f0ff" stroke-width="2" rx="4"/>
+                    <text x="510" y="55" fill="#ffffff" text-anchor="middle" font-size="14">Product</text>
+                </svg>
+            </div>
+            <div class="code-container">
+                <div class="code-label">Association Python Implementation</div>
+                <pre><code>class Product:
+    def __init__(self, name):
+        self.name = name
+
+class Customer:
+    def __init__(self, name):
+        self.name = name
+        self.browsed_products = [] # Association reference pointer</code></pre>
+            </div>
+
+            <h3 class="section-subtitle">2. Aggregation (Part-Whole: "Weak")</h3>
+            <p>Slide 21285</p>
+            <p>Aggregation is a special form of association that represents a "whole-part" relationship where the part can exist independently of the whole. In this example, we will use a Team and Player classes to demonstrate aggregation. A Team consists of multiple Players, but a Player can exist independently of a Team.</p>
+            <div class="diagram-wrapper">
+                <svg class="uml-svg" viewBox="0 0 600 100">
+                    <rect x="10" y="20" width="160" height="60" fill="#1b1c26" stroke="#00f0ff" stroke-width="2" rx="4"/>
+                    <text x="90" y="55" fill="#ffffff" text-anchor="middle" font-size="14">Team</text>
+                    <line x1="190" y1="50" x2="430" y2="50" stroke="#ffffff" stroke-width="2"/>
+                    <polygon points="170,50 180,43 190,50 180,57" fill="#11121a" stroke="#ffffff" stroke-width="2"/>
+                    <text x="205" y="40" fill="#9d4edd" font-size="12">1</text>
+                    <text x="410" y="40" fill="#9d4edd" font-size="12">0..*</text>
+                    <rect x="430" y="20" width="160" height="60" fill="#1b1c26" stroke="#00f0ff" stroke-width="2" rx="4"/>
+                    <text x="510" y="55" fill="#ffffff" text-anchor="middle" font-size="14">Player</text>
+                </svg>
+            </div>
+            <div class="code-container">
+                <div class="code-label">Aggregation Python Implementation</div>
+                <pre><code>class Player:
+    def __init__(self, name):
+        self.name = name
+
+class Team:
+    def __init__(self, name):
+        self.name = name
+        self.players = [] # The parts exist independently outside this list container
+
+    def add_player(self, player):
+        self.players.append(player)</code></pre>
+            </div>
+
+            <h3 class="section-subtitle">3. Composition (Part-Whole: "Strong")</h3>
+            <p>Slide 21286</p>
+            <p>Composition is a stronger form of aggregation where the lifecycle of the part is strictly dependent on the lifecycle of the whole. In this example, we will use a House and Room classes to demonstrate composition. A House consists of multiple Rooms, and a Room cannot exist without a House.</p>
+            <p>In the context of a composition relationship, it is generally assumed that the "part" cannot exist without the "whole." In this specific example, a Room cannot exist independently without a House. However, a House can conceptually exist without any Rooms, especially when first created before any rooms are added. This setup allows for a house to be created and rooms to be added later. If you want to strictly adhere to the concept that a house must always have rooms, you could enforce that a House must have at least one room upon creation. This design would reflect a stronger dependency between House and Room.</p>
+            <div class="diagram-wrapper">
+                <svg class="uml-svg" viewBox="0 0 600 100">
+                    <rect x="10" y="20" width="160" height="60" fill="#1b1c26" stroke="#00f0ff" stroke-width="2" rx="4"/>
+                    <text x="90" y="55" fill="#ffffff" text-anchor="middle" font-size="14">House</text>
+                    <line x1="190" y1="50" x2="430" y2="50" stroke="#ffffff" stroke-width="2"/>
+                    <polygon points="170,50 180,43 190,50 180,57" fill="#ffffff" stroke="#ffffff" stroke-width="2"/>
+                    <text x="205" y="40" fill="#9d4edd" font-size="12">1</text>
+                    <text x="410" y="40" fill="#9d4edd" font-size="12">1..*</text>
+                    <rect x="430" y="20" width="160" height="60" fill="#1b1c26" stroke="#00f0ff" stroke-width="2" rx="4"/>
+                    <text x="510" y="55" fill="#ffffff" text-anchor="middle" font-size="14">Room</text>
+                </svg>
+            </div>
+            <div class="code-container">
+                <div class="code-label">Composition Python Implementation</div>
+                <pre><code>class Room:
+    def __init__(self, name):
+        self.name = name
+
+class House:
+    def __init__(self, address):
+        self.address = address
+        self.rooms = [] # Instantiated or fully controlled inside the whole block
+
+    def add_room(self, name):
+        # The whole creates the part; part lifecycle tied to host object allocation
+        self.rooms.append(Room(name))</code></pre>
+            </div>
+
+            <h3 class="section-subtitle">4. Inheritance (Generalisation)</h3>
+            <p>Slide 21287</p>
+            <p>Inheritance is a fundamental concept in object-oriented programming where one class (the subclass) inherits attributes and methods from another class (the superclass), representing an "is-a" relationship. In this example, we will use a Person class as the superclass and Employee and Customer classes as subclasses.</p>
+            <div class="diagram-wrapper">
+                <svg class="uml-svg" viewBox="0 0 600 180">
+                    <rect x="220" y="10" width="160" height="60" fill="#1b1c26" stroke="#00f0ff" stroke-width="2" rx="4"/>
+                    <text x="300" y="45" fill="#ffffff" text-anchor="middle" font-size="14">Person</text>
+                    
+                    <line x1="300" y1="100" x2="300" y2="80" stroke="#ffffff" stroke-width="2"/>
+                    <polygon points="300,70 293,85 307,85" fill="#11121a" stroke="#ffffff" stroke-width="2"/>
+                    
+                    <line x1="110" y1="100" x2="490" y2="100" stroke="#ffffff" stroke-width="2"/>
+                    <line x1="110" y1="100" x2="110" y2="120" stroke="#ffffff" stroke-width="2"/>
+                    <line x1="490" y1="100" x2="490" y2="120" stroke="#ffffff" stroke-width="2"/>
+
+                    <rect x="30" y="120" width="160" height="50" fill="#1b1c26" stroke="#00f0ff" stroke-width="2" rx="4"/>
+                    <text x="110" y="150" fill="#ffffff" text-anchor="middle" font-size="13">Employee</text>
+                    
+                    <rect x="410" y="120" width="160" height="50" fill="#1b1c26" stroke="#00f0ff" stroke-width="2" rx="4"/>
+                    <text x="490" y="150" fill="#ffffff" text-anchor="middle" font-size="13">Customer</text>
+                </svg>
+            </div>
+            <div class="code-container">
+                <div class="code-label">Inheritance Python Implementation</div>
+                <pre><code>class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+class Employee(Person):
+    def __init__(self, name, age, employee_id):
+        super().__init__(name, age) # explicit parent class init sequence hook
+        self.employee_id = employee_id</code></pre>
+            </div>
+
+            <h3 class="section-subtitle">5. Dependency (Usage Link)</h3>
+            <p>Slide 21288</p>
+            <p>Dependency in UML class diagrams shows that one class depends on another to function correctly. In this example, let's consider a Report class that depends on a DataFetcher class to fetch data. In UML class diagrams, a dependency relationship is represented by a dashed line with an open arrowhead pointing from the dependent class (the client) to the class it depends on (the supplier).</p>
+            <div class="diagram-wrapper">
+                <svg class="uml-svg" viewBox="0 0 600 100">
+                    <rect x="10" y="20" width="160" height="60" fill="#1b1c26" stroke="#00f0ff" stroke-width="2" rx="4"/>
+                    <text x="90" y="55" fill="#ffffff" text-anchor="middle" font-size="14">Report</text>
+                    <line x1="170" y1="50" x2="430" y2="50" stroke="#ffffff" stroke-width="2" stroke-dasharray="8,8"/>
+                    <path d="M 415 40 L 430 50 L 415 60" fill="none" stroke="#ffffff" stroke-width="2"/>
+                    <rect x="430" y="20" width="160" height="60" fill="#1b1c26" stroke="#00f0ff" stroke-width="2" rx="4"/>
+                    <text x="510" y="55" fill="#ffffff" text-anchor="middle" font-size="14">DataFetcher</text>
+                </svg>
+            </div>
+            <div class="code-container">
+                <div class="code-label">Dependency Python Implementation</div>
+                <pre><code>class DataFetcher:
+    def fetch_data(self):
+        return "Raw System Stream Segment"
+
+class Report:
+    def generate(self, fetcher_instance):
+        # Parameter validation dependency tracking hook. No persistent attribute reference.
+        data = fetcher_instance.fetch_data()
+        return f"Report Output: {data}"</code></pre>
+            </div>
+        </section>
+
+        <section class="section-container">
+            <h2 class="section-title"><i class="fa-solid fa-user-shield"></i> III. Professional Standards & Best Practices</h2>
+            <ul>
+                <li><strong>Encapsulation:</strong> Attributes should be marked private (-) in diagrams unless there is a specific reason to make them public (+). Access should be handled via explicit public methods to keep memory configurations well protected.</li>
+                <li><strong>Separation of Concerns:</strong> In frameworks like Django (MVT), ensure the View (logic), Model (data), and Template (UI) are kept completely distinct.</li>
+                <li><strong>Multiplicity Placement:</strong> Always place the number or symbol at the extreme end of the connecting line closest to the class it describes (e.g., the * goes next to the Book class if a Library has many books).</li>
+            </ul>
+        </section>
+
+        <section class="section-container">
+            <h2 class="section-title"><i class="fa-solid fa-book-open-reader"></i> IV. Library Management System ERD-to-Code Mapping Activity</h2>
+            <p>Slide 21283</p>
+            <p><strong>Task Constraint:</strong> Translate the Library Management System ERD into executable Object-Oriented code structures following the strict cardinality mappings specified below.</p>
+            
+            <h3 class="section-subtitle">Core Architectural Relationships Mapping Schema</h3>
+            <ul>
+                <li><strong>Member to Loans (1..*):</strong> One Member can have multiple Loans. The Member class maintains an active sequence array logging Loan structural objects.</li>
+                <li><strong>Books to Loans (1..*):</strong> One Book can appear in multiple Loans across its processing lifetime.</li>
+                <li><strong>Loan to Book and Member (Many-to-One):</strong> Each Loan execution instance involves exactly one Book, one Member, and one Librarian helper object.</li>
+                <li><strong>Librarians to Loans (1..*):</strong> One Librarian manages multiple Loans over time.</li>
+            </ul>
+
+            <h3 class="section-subtitle">Fully Realised System ERD-to-Code Implementation</h3>
+            <div class="code-container">
+                <div class="code-label">library_management_system.py</div>
+                <pre><code>class Member:
+    def __init__(self, member_id, name):
+        self.member_id = member_id
+        self.name = name
+        self.loans = []
+
+    def attach_loan(self, loan):
+        self.loans.append(loan)
+
+class Book:
+    def __init__(self, isbn, title):
+        self.isbn = isbn
+        self.title = title
+        self.loans = []
+
+    def log_loan(self, loan):
+        self.loans.append(loan)
+
+class Librarian:
+    def __init__(self, staff_id, name, address, phone):
+        self.staff_id = staff_id
+        self.name = name
+        self.address = address
+        self.phone = phone
+        self.loans = []  # List to store Loan objects
+
+    def add_loan(self, loan):
+        self.loans.append(loan)
+        loan.librarian = self
+
+class Loan:
+    def __init__(self, loan_date, return_date, book, member, librarian):
+        self.loan_date = loan_date
+        self.return_date = return_date
+        self.book = book
+        self.member = member
+        self.librarian = librarian  # Reference to a Librarian object
+        
+        # Enforce reciprocal mapping instantly upon object instantiation
+        self.book.log_loan(self)
+        self.member.attach_loan(self)</code></pre>
+            </div>
+        </section>
+
+        <section class="section-container">
+            <h2 class="section-title"><i class="fa-solid fa-graduation-cap"></i> Theoretical Exam Assessment Panel (SAQs)</h2>
+            <p>Review these highly targeted analytical questions designed to align with strict criteria for software verification and structural parsing analysis.</p>
+
+            <div class="exam-box">
+                <span class="exam-tag">SAQ Question 1 (3 Marks)</span>
+                <p><strong>Question:</strong> In software engineering architectural designs, clarify the operational difference between an Aggregation relationship and a Composition relationship when drawn on a structural UML Class Diagram. Your answer must explicitly address graphical notation markers and class constructor lifecycle dependencies.</p>
+                <hr style="border: 0; border-top: 1px dashed rgba(255,255,255,0.1); margin: 12px 0;">
+                <p style="color: var(--success-green); font-weight: bold;"><i class="fa-solid fa-circle-check"></i> Criterion-Referenced Sample Solution:</p>
+                <p>1. <strong>Graphical Notation:</strong> Aggregation is represented on a UML layout using a solid line paired with an open (hollow) diamond attached to the "whole" parent class module container. Conversely, Composition requires a solid line accompanied by a filled (solid black) diamond attached to the "whole" parent block class marker.</p>
+                <p>2. <strong>Lifecycle Dependency:</strong> Aggregation maps a weak structural linkage where part component entities exist completely independently of the master framework whole lifecycle (e.g., if a Team class is deleted, individual Player object nodes persist safely in system memory). Composition mandates a strong existential bond where sub-part objects cannot survive outside the host parent object boundary; their creation is typical inside the parent container's constructor, ensuring automated cascading destruction when the parent object is swept from system registration limits.</p>
+            </div>
+
+            <div class="exam-box">
+                <span class="exam-tag">SAQ Question 2 (4 Marks)</span>
+                <p><strong>Question:</strong> Detail how Object-Relational Mapping (ORM) paradigms parse structural relational fields from an Entity-Relationship Diagram (ERD) into an Object-Oriented environment. Explicitly map how Primary Keys, Foreign Keys, and Tables are reassigned inside application runtimes.</p>
+                <hr style="border: 0; border-top: 1px dashed rgba(255,255,255,0.1); margin: 12px 0;">
+                <p style="color: var(--success-green); font-weight: bold;"><i class="fa-solid fa-circle-check"></i> Criterion-Referenced Sample Solution:</p>
+                <p>Object-Relational Mapping abstracts transactional data patterns using a direct schema translation pattern:</p>
+                <ul>
+                    <li><strong>Tables to Classes:</strong> Each distinct record-storing Entity mapped inside a conventional structural ERD converts directly into a standalone operational Class block within the application environment.</li>
+                    <li><strong>Primary Keys to Object Identifiers:</strong> A unique Primary Key identifier column tracking row instances inside a relational database converts directly into a unique class instance state variable property (e.g., <code>self.student_id</code>) ensuring precise parsing bounds within memory.</li>
+                    <li><strong>Foreign Keys to Reference Pointers:</strong> Relational reference columns mapping structural constraints via Foreign Keys map cleanly into active class variable references holding memory pointers to actual live instance targets of the associated class object type, substituting plain textual keys with rich object manipulation paths.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section-container">
+            <h2 class="section-title"><i class="fa-solid fa-code-branch"></i> Practical Design Challenge: Online Shopping System</h2>
+            <p>Slide 21288 - Homework Insight Scenario Integration</p>
+            <p><strong>Context Specification Constraints:</strong> Interpret the technical structural business rules depicted inside the master UML class diagram model mapped below and construct an equivalent, fully compliant Python runtime script file. Ensure all encapsulation principles are strictly maintained.</p>
+
+            <div class="practise-box">
+                <span class="practise-tag"><i class="fa-solid fa-layer-group"></i> Master Structural System UML Diagram Model Specification</span>
+                
+                <div class="diagram-wrapper">
+                    <svg class="uml-svg" viewBox="0 0 850 480">
+                        <rect x="20" y="20" width="230" height="110" fill="#1b1c26" stroke="#00f0ff" stroke-width="2" rx="4"/>
+                        <text x="135" y="42" fill="#00f0ff" font-weight="bold" font-size="14" text-anchor="middle">Customer</text>
+                        <line x1="20" y1="52" x2="250" y2="52" stroke="#00f0ff" stroke-width="1"/>
+                        <text x="30" y="70" fill="#b4b7c5" font-size="12">- customer_id: String</text>
+                        <text x="30" y="86" fill="#b4b7c5" font-size="12">- name: String</text>
+                        <line x1="20" y1="94" x2="250" y2="94" stroke="#00f0ff" stroke-width="1"/>
+                        <text x="30" y="108" fill="#ffffff" font-size="11"> </text>
+
+                        <rect x="460" y="20" width="240" height="120" fill="#1b1c26" stroke="#00f0ff" stroke-width="2" rx="4"/>
+                        <text x="580" y="42" fill="#00f0ff" font-weight="bold" font-size="14" text-anchor="middle">Order</text>
+                        <line x1="460" y1="52" x2="700" y2="52" stroke="#00f0ff" stroke-width="1"/>
+                        <text x="470" y="70" fill="#b4b7c5" font-size="12">- order_id: String</text>
+                        <text x="470" y="86" fill="#b4b7c5" font-size="12">- status: String</text>
+                        <text x="470" y="102" fill="#b4b7c5" font-size="12">- items: List&lt;Product&gt;</text>
+                        <line x1="460" y1="110" x2="700" y2="110" stroke="#00f0ff" stroke-width="1"/>
+                        <text x="470" y="124" fill="#ffffff" font-size="11"> </text>
+
+                        <rect x="460" y="210" width="240" height="90" fill="#1b1c26" stroke="#00f0ff" stroke-width="2" rx="4"/>
+                        <text x="580" y="232" fill="#00f0ff" font-weight="bold" font-size="14" text-anchor="middle">Product</text>
+                        <line x1="460" y1="242" x2="700" y2="242" stroke="#00f0ff" stroke-width="1"/>
+                        <text x="470" y="260" fill="#b4b7c5" font-size="12">- product_id: String</text>
+                        <text x="470" y="276" fill="#b4b7c5" font-size="12">- price: Float</text>
+
+                        <rect x="180" y="340" width="230" height="110" fill="#1b1c26" stroke="#00f0ff" stroke-width="2" rx="4"/>
+                        <text x="295" y="362" fill="#00f0ff" font-weight="bold" font-size="14" text-anchor="middle">ShippingInfo</text>
+                        <line x1="180" y1="372" x2="410" y2="372" stroke="#00f0ff" stroke-width="1"/>
+                        <text x="190" y="390" fill="#b4b7c5" font-size="12">- address: String</text>
+                        <text x="190" y="406" fill="#b4b7c5" font-size="12">- tracking_no: String</text>
+
+                        <line x1="250" y1="75" x2="460" y2="75" stroke="#ffffff" stroke-width="2"/>
+                        <text x="260" y="65" fill="#9d4edd" font-size="12">1</text>
+                        <text x="440" y="65" fill="#9d4edd" font-size="12">0..*</text>
+
+                        <line x1="580" y1="140" x2="580" y2="210" stroke="#ffffff" stroke-width="2"/>
+                        <polygon points="580,140 573,150 580,160 587,150" fill="#11121a" stroke="#ffffff" stroke-width="2"/>
+                        <text x="590" y="175" fill="#9d4edd" font-size="12">0..*</text>
+
+                        <line x1="460" y1="120" x2="295" y2="120" stroke="#ffffff" stroke-width="2"/>
+                        <line x1="295" y1="120" x2="295" y2="340" stroke="#ffffff" stroke-width="2"/>
+                        <polygon points="460,120 450,113 440,120 450,127" fill="#ffffff" stroke="#ffffff" stroke-width="2"/>
+                        <text x="415" y="110" fill="#9d4edd" font-size="12">1</text>
+                        <text x="310" y="330" fill="#9d4edd" font-size="12">1</text>
+                    </svg>
+                </div>
+                
+                <h3 class="section-subtitle" style="color:var(--success-green);"><i class="fa-solid fa-square-poll-horizontal"></i> Reference Programmatic Solution Code Blueprint</h3>
+                <p>This code directly implements the structural design properties specified by the UML diagram rules model above, explicitly maintaining separation of concerns and appropriate scoping conventions.</p>
+                
+                <div class="code-container">
+                    <div class="code-label">online_shopping_system.py</div>
+                    <pre><code>class Product:
+    def __init__(self, product_id, price):
+        self.__product_id = product_id
+        self.__price = price
+
+    def get_price(self):
+        return self.__price
+
+
+class ShippingInfo:
+    def __init__(self, address, tracking_no):
+        self.__address = address
+        self.__tracking_no = tracking_no
+
+
+class Order:
+    def __init__(self, order_id, address, tracking_no):
+        self.__order_id = order_id
+        self.__status = "Pending"
+        self.__items = []  # Aggregation Container Linkage Array
+        
+        # Composition Mechanism Enforcement: 
+        # The whole creates and encapsulates the part lifecycle inside its constructor bounds
+        self.__shipping_info = ShippingInfo(address, tracking_no)
+
+    def add_product(self, product: Product):
+        self.__items.append(product)
+
+
+class Customer:
+    def __init__(self, customer_id, name):
+        self.__customer_id = customer_id
+        self.__name = name
+        self.__orders = []  # 1-to-Many Association Reference Vector
+
+    def purchase_order(self, order: Order):
+        self.__orders.append(order)</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer-navigation">
+            <a href="week54.html" class="nav-btn">Proceed to Week 5, Lesson 4 <i class="fa-solid fa-arrow-right"></i></a>
+        </footer>
+
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWE Portal | Week 3: Polymorphism Paths</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0d0e15;
+            --bg-card: rgba(20, 20, 35, 0.6);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b4b7c5;
+            --neon-blue: #00f0ff;
+            --neon-purple: #9d4edd;
+            --neon-green: #390099;
+            --accent-green: #00f5d4;
+            --sidebar-width: 260px;
+            --code-bg: #050508;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #12131c;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: var(--neon-blue);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-menu li a:hover {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .sidebar-menu li a.active {
+            color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.1);
+            border-left-color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        .header-banner {
+            margin-bottom: 40px;
+            position: relative;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .header-banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-banner p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .pagination-status {
+            display: inline-block;
+            background: rgba(157, 78, 221, 0.2);
+            color: var(--neon-purple);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(157, 78, 221, 0.3);
+        }
+
+        /* --- CONCEPT PANELS & CARDS --- */
+        .content-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            color: var(--neon-blue);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+            padding-bottom: 8px;
+        }
+
+        .section-title i {
+            color: var(--neon-purple);
+        }
+
+        p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 1rem;
+            margin-bottom: 16px;
+        }
+
+        ul, ol {
+            margin-left: 24px;
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+        }
+
+        li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        strong {
+            color: var(--text-primary);
+        }
+
+        /* --- EXPLANATION BOXES --- */
+        .expansion-box {
+            background: rgba(0, 240, 255, 0.03);
+            border-left: 4px solid var(--neon-blue);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .expansion-box h4 {
+            color: var(--neon-blue);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .example-block {
+            background: rgba(157, 78, 221, 0.03);
+            border-left: 4px solid var(--neon-purple);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .example-block h4 {
+            color: var(--neon-purple);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        /* --- TABLES --- */
+        .revision-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.95rem;
+            text-align: left;
+        }
+
+        .revision-table th {
+            background-color: rgba(157, 78, 221, 0.15);
+            color: var(--neon-blue);
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            font-weight: 600;
+        }
+
+        .revision-table td {
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .revision-table tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        /* --- CODE ARCHITECTURE --- */
+        .code-container {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .code-lang {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--neon-blue);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        pre {
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            color: #e0e0e0;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .keyword { color: #ff79c6; font-weight: bold; }
+        .class-name { color: #50fa7b; text-decoration: underline; }
+        .method-name { color: #8be9fd; }
+        .string { color: #f1fa8c; }
+        .comment { color: #6272a4; font-style: italic; }
+        .decorator { color: #bd93f9; }
+
+        /* --- EXAM & QA AREA --- */
+        .exam-panel {
+            background: rgba(245, 0, 86, 0.03);
+            border: 1px dashed rgba(255, 0, 100, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 40px;
+        }
+
+        .exam-header {
+            color: #ff5252;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .question-box {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .question-tag {
+            color: var(--accent-green);
+            font-weight: bold;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .sample-solution {
+            background: rgba(0, 245, 212, 0.02);
+            border-left: 3px solid var(--accent-green);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 0 6px 6px 0;
+        }
+
+        /* --- FOOTER & PAGINATION BUTTONS --- */
+        .page-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-prev {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .btn-prev:hover {
+            border-color: var(--text-primary);
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, var(--neon-purple), #7209b7);
+            color: var(--text-primary);
+            border: none;
+            box-shadow: 0 4px 15px rgba(157, 78, 221, 0.3);
+        }
+
+        .btn-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(157, 78, 221, 0.5);
+        }
+
+        /* Responsive Design Rules */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-code"></i> SWE Portal
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Home Overview</a></li>
+            <li><a href="week1.html"><i class="fa-solid fa-cube"></i> Week 1: Core Blueprint</a></li>
+            <li><a href="week2.html"><i class="fa-solid fa-sitemap"></i> Week 2: Inheritance</a></li>
+            <li><a href="week3.html" class="active"><i class="fa-solid fa-arrows-split-up-and-left"></i> Week 3: Generalisation</a></li>
+            <li><a href="week4.html"><i class="fa-solid fa-crosshairs"></i> Week 4: Target Systems</a></li>
+            <li><a href="week5.html"><i class="fa-solid fa-database"></i> Week 5: Database & ERDs</a></li>
+            <li><a href="week6.html"><i class="fa-solid fa-vector-square"></i> Week 6: 3D Meshes & Relationships</a></li>
+            <li><a href="week8.html"><i class="fa-solid fa-vial-circle-check"></i> Week 8: Testing Frameworks</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <span class="pagination-status">Module Track: Part 2 / 3</span>
+        
+        <header class="header-banner">
+            <h1>Week 3: Polymorphism Paths</h1>
+            <p>Mastering dynamic boundaries, parameter signatures, evaluation dispatch states, and architectural interface contracts.</p>
+        </header>
+
+        <section class="content-section">
+            <h2 class="section-title"><i class="fa-solid fa-wand-magic-sparkles"></i> 1. Defining Polymorphism</h2>
+            <p>Polymorphism comes from Greek, meaning "many forms." In OOP, it refers to the ability of different objects to be treated as instances of a common parent class, where a single method name can perform different actions depending on the object calling it.</p>
+            
+            <ul>
+                <li><strong>The Core Concept:</strong> One interface, multiple implementations.</li>
+                <li><strong>The Benefit:</strong> It allows you to write code that can interact with any object that follows a certain structure, without needing to know the specific class of that object at the time of writing.</li>
+            </ul>
+
+            <div class="expansion-box">
+                <h4><i class="fa-solid fa-book-open"></i> Extended Architectural Insight</h4>
+                <p>Polymorphism is the mechanism that decouples your high-level system logic from low-level programmatic details. By writing code that points to an abstract type or interface rather than a rigid, concrete class, the software architecture becomes resilient to change. When new object subtypes are introduced, the existing evaluation functions do not require reconfiguration or editing.</p>
+            </div>
+
+            <div class="example-block">
+                <h4><i class="fa-solid fa-circle-info"></i> General Conceptual Example</h4>
+                <p><strong>General Concept:</strong> Think of a universal remote control. The remote features a single "Power Button" (the shared uniform interface). However, when you press this single button, the result completely changes depending on the specific device the remote is pointing to: a Television turns on its display screen, an Audio Amplifier initialises its speaker channels, and a Projector drops down its presentation screen. The user issues the exact same instruction, but the underlying receiver handles the work uniquely.</p>
+            </div>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Python Structural Context Implementation</span>
+                    <span class="code-lang">Python</span>
+                </div>
+<pre><span class="keyword">class</span> <span class="class-name">RemoteInterface</span>:
+    <span class="keyword">def</span> <span class="method-name">press_power</span>(self):
+        <span class="comment"># Define a structural stub that subclasses must implement</span>
+        <span class="keyword">pass</span>
+
+<span class="keyword">class</span> <span class="class-name">Television</span>(RemoteInterface):
+    <span class="keyword">def</span> <span class="method-name">press_power</span>(self):
+        <span class="keyword">return</span> <span class="string">"Television screen illuminates in 4K resolution."</span>
+
+<span class="keyword">class</span> <span class="class-name">AudioAmplifier</span>(RemoteInterface):
+    <span class="keyword">def</span> <span class="method-name">press_power</span>(self):
+        <span class="keyword">return</span> <span class="string">"Audio system powers on and initialises surround sound."</span>
+
+<span class="comment"># Client function demonstrating interface interaction without concrete class locking</span>
+<span class="keyword">def</span> <span class="method-name">activate_device</span>(device_object: RemoteInterface):
+    <span class="comment"># Polymorphism handles execution automatically based on concrete instance assignment</span>
+    print(device_object.press_power())
+
+<span class="comment"># Instantiate concrete variants</span>
+tv = Television()
+amp = AudioAmplifier()
+
+activate_device(tv)   <span class="comment"># Output: Television screen illuminates in 4K resolution.</span>
+activate_device(amp)  <span class="comment"># Output: Audio system powers on and initialises surround sound.</span></pre>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2 class="section-title"><i class="fa-solid fa-bolt"></i> 2. Compile-Time vs. Run-Time Polymorphism</h2>
+            <p>This is a high-priority exam topic. The difference lies in when the computer decides which version of a method to execute.</p>
+            
+            <h3>I. Compile-Time Polymorphism (Static Binding)</h3>
+            <p>Also known as <strong>Method Overloading</strong>.</p>
+            <ul>
+                <li><strong>How it works:</strong> Multiple methods in the same class have the same name but different parameters (different types or number of arguments).</li>
+                <li><strong>When it's decided:</strong> During compilation (before the program actually runs). The compiler looks at the arguments you provided and "binds" the call to the correct version.</li>
+                <li><strong>Example:</strong> A <code>calculate_area</code> method that works differently if you pass one number (a square) versus two numbers (a rectangle).</li>
+            </ul>
+
+            <h3>II. Run-Time Polymorphism (Dynamic Binding)</h3>
+            <p>Also known as <strong>Method Overriding</strong>.</p>
+            <ul>
+                <li><strong>How it works:</strong> A subclass provides a specific version of a method that is already defined in its superclass.</li>
+                <li><strong>When it's decided:</strong> At execution (while the program is running). The computer checks the actual type of the object and calls the most specific version available.</li>
+                <li><strong>Example:</strong> An <code>Animal</code> class has a <code>make_sound()</code> method, but the <code>Dog</code> class overrides it to "Bark".</li>
+            </ul>
+
+            <div class="expansion-box">
+                <h4><i class="fa-solid fa-graduation-cap"></i> Syllabus Theory Note</h4>
+                <p>Static binding minimises run-time resource utilisation costs because data type checks are completed during the compilation phase. Dynamic binding requires a small calculation overhead at run-time because the system must inspect the allocation memory addresses via lookup pointers to discover the actual object instantiation mapping.</p>
+            </div>
+
+            <div class="example-block">
+                <h4><i class="fa-solid fa-lightbulb"></i> Concrete Scenario Comparison</h4>
+                <p><strong>Overloading Concept (Static):</strong> An automated postal scale has a method called <code>calculate_postage()</code>. If you place a simple parcel, it calculates cost based on <code>weight</code>. If you supply <code>weight</code> AND <code>destination_country</code>, it switches internally to an international tariff algorithm. The method name is completely identical, but the entry footprint changes.</p>
+                <p><strong>Overriding Concept (Dynamic):</strong> A baseline corporate system defines a structural class <code>Employee</code> with a method called <code>calculate_bonus()</code> which gives a flat 5% reward. A subclass called <code>Manager</code> completely sweeps away that baseline script logic, replacing it with a custom 15% corporate algorithm.</p>
+            </div>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Python Simulation: Simulating Overloading vs True Overriding</span>
+                    <span class="code-lang">Python</span>
+                </div>
+<pre><span class="comment"># Demonstration of Run-Time Polymorphism (Method Overriding)</span>
+<span class="keyword">class</span> <span class="class-name">Employee</span>:
+    <span class="keyword">def</span> <span class="method-name">calculate_bonus</span>(self, base_salary):
+        <span class="keyword">return</span> base_salary * <span class="0.05">0.05</span>
+
+<span class="keyword">class</span> <span class="class-name">Manager</span>(Employee):
+    <span class="comment"># Method Overriding: Completely replaces the execution structure for this variant subclass</span>
+    <span class="keyword">def</span> <span class="method-name">calculate_bonus</span>(self, base_salary):
+        <span class="keyword">return</span> base_salary * <span class="0.15">0.15</span>
+
+<span class="comment"># Demonstration of Pythonic Method Overloading Simulation (Using Default Parameters)</span>
+<span class="keyword">class</span> <span class="class-name">PostalScale</span>:
+    <span class="comment"># Because Python does not support native static signature binding, we simulate it via optional arguments</span>
+    <span class="keyword">def</span> <span class="method-name">calculate_postage</span>(self, weight, destination_country=<span class="keyword">None</span>):
+        <span class="keyword">if</span> destination_country <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:
+            <span class="keyword">return</span> weight * <span class="4.5</span>  <span class="comment"># International Tariff Pathway</span>
+        <span class="keyword">return</span> weight * <span class="1.2</span>       <span class="comment"># Domestic Basic Pathway</span>
+
+scale = PostalScale()
+print(scale.calculate_postage(<span class="10">10</span>))                 <span class="comment"># Evaluates Basic Tariff</span>
+print(scale.calculate_postage(<span class="10">10</span>, <span class="string">"United Kingdom"</span>)) <span class="comment"># Evaluates International Tariff</span></pre>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2 class="section-title"><i class="fa-solid fa-table-list"></i> 3. Method Overloading vs. Overriding</h2>
+            <p>An overarching assessment comparison detailing programmatic conditions between parameters, scope locations, and compiler interaction boundaries.</p>
+
+            <table class="revision-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Method Overloading (Static)</th>
+                        <th>Method Overriding (Dynamic)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Class Relationship</strong></td>
+                        <td>Happens within the same class.</td>
+                        <td>Happens between a Parent and Child class.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Method Name</strong></td>
+                        <td>Must be the same.</td>
+                        <td>Must be the same.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Parameters</strong></td>
+                        <td>Must be different (different inputs).</td>
+                        <td>Must be the same (same signature).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Binding Time</strong></td>
+                        <td>Compile-time (Static).</td>
+                        <td>Run-time (Dynamic).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Primary Goal</strong></td>
+                        <td>Flexibility in how a method is called.</td>
+                        <td>Tailoring a behaviour for a specific subclass.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="expansion-box">
+                <h4><i class="fa-solid fa-code-merge"></i> Parameter Signature Demystification</h4>
+                <p>The term <strong>Signature</strong> represents a core analytical descriptor used by evaluation parsers. A formal method signature comprises the structural identifier name along with its explicit sequence of input parameters. For method overloading to successfully map inside traditional languages, the names must match perfectly while the input count, ordering sequence, or underlying data type specifications must differ.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2 class="section-title"><i class="fa-solid fa-cubes-stacked"></i> 4. Practical Implementation (Python Context)</h2>
+            <p><strong>Note:</strong> Python does not support "True" Method Overloading (Static Binding) in the way C++ or Java does. If you define two methods with the same name in Python, the second one replaces the first. However, for your exam, you must understand the theory behind both.</p>
+            
+            <h3>Overriding (The Python Standard)</h3>
+            <p>Below is the programmatic implementation displaying how dynamic inheritance trees dispatch matching identifiers based on structural runtime assignments.</p>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Syllabus Verified Python Blueprint Layout</span>
+                    <span class="code-lang">Python</span>
+                </div>
+<pre><span class="keyword">class</span> <span class="class-name">Animal</span>:
+    <span class="keyword">def</span> <span class="method-name">get_sound</span>(self):
+        <span class="keyword">return</span> <span class="string">"Generic animal sound"</span>
+
+<span class="keyword">class</span> <span class="class-name">Dog</span>(Animal):
+    <span class="comment"># Method Overriding: Changing the parent's behaviour</span>
+    <span class="keyword">def</span> <span class="method-name">get_sound</span>(self):
+        <span class="keyword">return</span> <span class="string">"Bark!"</span>
+
+<span class="keyword">class</span> <span class="class-name">Cat</span>(Animal):
+    <span class="keyword">def</span> <span class="method-name">get_sound</span>(self):
+        <span class="keyword">return</span> <span class="string">"Meow!"</span>
+
+<span class="comment"># Polymorphism in action:</span>
+animals = [Dog(), Cat(), Animal()]
+<span class="keyword">for</span> a <span class="keyword">in</span> animals:
+    print(a.get_sound())  <span class="comment"># The same method name yields 'many forms' of output</span></pre>
+            </div>
+
+            <div class="expansion-box">
+                <h4><i class="fa-solid fa-circle-nodes"></i> How Python Evaluates Overriding Under the Hood</h4>
+                <p>Python utilizes its unique dynamic property binding mechanism called <code>MRO</code> (Method Resolution Order). When an expression reads <code>a.get_sound()</code>, the interpreter performs a lookup directly within the local dictionary wrapper of the concrete subclass instance. If it finds a matching attribute key, it stops and fires that block immediately, bypassing the base script declaration entirely.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2 class="section-title"><i class="fa-solid fa-award"></i> 5. Benefits of Polymorphism (Exam Keywords)</h2>
+            <p>If an exam question asks, <em>"How does polymorphism contribute to software development?"</em>, use these three keywords:</p>
+            
+            <ol>
+                <li><strong>Flexibility and Scalability:</strong> You can add new subclasses (e.g., a <code>Bird</code> class) and the existing code (like the loop above) will work perfectly without any changes.</li>
+                <li><strong>Reusability:</strong> You can reuse the same common interface (method name) for many different data types.</li>
+                <li><strong>Maintainability:</strong> It simplifies the code by reducing the need for complex <code>if/else</code> or <code>switch</code> statements to check what type of object you are dealing with.</li>
+            </ol>
+        </section>
+
+        <section class="content-section">
+            <h2 class="section-title"><i class="fa-solid fa-shield-halved"></i> 6. Exam-Ready Revision Table</h2>
+            <p>An essential structural definitions collection engineered for raw marks extraction during marking scheme review loops.</p>
+
+            <table class="revision-table">
+                <thead>
+                    <tr>
+                        <th>Term</th>
+                        <th>Essential Definition</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Polymorphism</strong></td>
+                        <td>Ability of a single method name to behave differently based on the object.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Static Binding</strong></td>
+                        <td>Determining which method to call at compile-time (Overloading).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dynamic Binding</strong></td>
+                        <td>Determining which method to call at run-time (Overriding).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Signature</strong></td>
+                        <td>The combination of a method's name and its parameters.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Override</strong></td>
+                        <td>Replacing a parent's method with a more specific one in the child class.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="expansion-box" style="border-left-color: #ff5252; background: rgba(255, 82, 82, 0.02);">
+                <p style="color: #ff5252; margin-bottom: 0;"><strong>Meticulous Revision Tip:</strong> Remember that Inheritance is required for Overriding to occur. You cannot have run-time polymorphism without a relationship between a Base and Derived class.</p>
+            </div>
+        </section>
+
+        <section class="exam-panel">
+            <h3 class="exam-header"><i class="fa-solid fa-file-signature"></i> High-Yield Assessment Section: Short Answer Questions</h3>
+            
+            <div class="question-box">
+                <span class="question-tag">Question 1 (3 Marks)</span>
+                <p><strong>Explain the operational differences between static binding and dynamic binding in relation to polymorphism, explicitly stating the development cycle stage where each takes place.</strong></p>
+                
+                <div class="sample-solution">
+                    <strong>Detailed Sample Solution:</strong>
+                    <p>Static binding (associated with method overloading) occurs during the <strong>compilation phase</strong> of the software development lifecycle. In this scenario, the compiler inspects the explicit parameter types and argument count supplied to an identifier to determine which implementation to lock down before binary assembly generation. Conversely, dynamic binding (associated with method overriding) operates entirely at <strong>run-time</strong> during software execution. The computing environment resolves the target method resolution order dynamically by evaluating the concrete class classification address allocation inside memory, allowing specialized implementation details to overwrite parent blueprints instantly based on active execution parameters.</p>
+                </div>
+            </div>
+
+            <div class="question-box">
+                <span class="question-tag">Question 2 (4 Marks)</span>
+                <p><strong>A software developer avoids using polymorphism and instead designs an inventory system tracking multiple equipment types via massive nested conditional blocks (if/else chains). Appraise this design choice by identifying two long-term architectural maintenance issues this pattern creates.</strong></p>
+                
+                <div class="sample-solution">
+                    <strong>Detailed Sample Solution:</strong>
+                    <p>This structural pattern constitutes an anti-pattern that severely degrades system scalability and maintainability. Firstly, it creates <strong>brittle code dependencies</strong> and introduces structural redundancy; whenever a new equipment type is incorporated into the organization, developers must manually locate and alter every single nested conditional match construct across the ecosystem, exponentially escalating the risk of regression defects. Secondly, it breaks <strong>extensibility models and architectural boundaries</strong> by forcing high-level routines to track explicit concrete implementation mechanics rather than coding to a clean, universal polymorphic interface signature. This lack of encapsulation results in bloated, rigid files that are highly prone to unexpected testing failures during deployment.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section" style="border-color: var(--neon-purple); margin-top: 40px;">
+            <h2 class="section-title" style="color: var(--neon-purple); border-bottom-color: rgba(157, 78, 221, 0.3);">
+                <i class="fa-solid fa-keyboard"></i> Practical Code Challenge Arena
+            </h2>
+            <p>Apply your Week 3 polymorphism architectural principles to construct a programmatic validation structure matching exam parameters.</p>
+            
+            <div class="question-box" style="background: rgba(0,0,0,0.4);">
+                <p><strong>The Scenario:</strong> You are tasked with developing a financial accounting sub-engine. Create a baseline class called <code>TaxInvoice</code> with an internal attribute mapping <code>amount</code> and a method called <code>calculate_total()</code> that applies a standard 10% processing charge. Then, derive a child subclass named <code>CorporateInvoice</code> that overrides <code>calculate_total()</code> to implement a premium tier flat processing charge of exactly £50 instead of the standard percentage markup. Ensure your code loops through a polymorphic array containing both objects seamlessly.</p>
+            </div>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Constructed Exemplar Practice Solution Block</span>
+                    <span class="code-lang">Python</span>
+                </div>
+<pre><span class="keyword">class</span> <span class="class-name">TaxInvoice</span>:
+    <span class="keyword">def</span> <span class="method-name">__init__</span>(self, amount):
+        self.amount = amount
+
+    <span class="keyword">def</span> <span class="method-name">calculate_total</span>(self):
+        <span class="comment"># Apply baseline standard 10% surcharge processing fee</span>
+        <span class="keyword">return</span> self.amount * <span class="1.10">1.10</span>
+
+<span class="keyword">class</span> <span class="class-name">CorporateInvoice</span>(TaxInvoice):
+    <span class="comment"># Overriding process to use specific tailored corporate rules</span>
+    <span class="keyword">def</span> <span class="method-name">calculate_total</span>(self):
+        <span class="comment"># Apply standard flat fee adjustment directly to base amount</span>
+        <span class="keyword">return</span> self.amount + <span class="50">50</span>
+
+<span class="comment"># Verification Pipeline Mapping</span>
+invoice_ledger = [
+    TaxInvoice(<span class="100">100</span>),          <span class="comment"># Standard Fee: should yield 110.0</span>
+    CorporateInvoice(<span class="100">100</span>)     <span class="comment"># Premium Corp Flat Fee: should yield 150.0</span>
+]
+
+<span class="keyword">for</span> invoice <span class="keyword">in</span> invoice_ledger:
+    print(<span class="string">f"Processed Ledger Output: £"</span>, invoice.calculate_total())</pre>
+            </div>
+        </section>
+
+        <footer class="page-navigation">
+            <a href="week3.html" class="nav-btn btn-prev">
+                <i class="fa-solid fa-arrow-left"></i> Previous: Part 1 / 3
+            </a>
+            <a href="week33.html" class="nav-btn btn-next">
+                Next: Part 3 / 3 <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </footer>
+    </main>
+
+</body>
+</html>
