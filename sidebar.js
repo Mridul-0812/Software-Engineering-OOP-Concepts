@@ -1,12 +1,10 @@
 class SiteSidebar extends HTMLElement {
     connectedCallback() {
         // --- ADAPTIVE STYLE INJECTION ---
-        // This injects styles safely scoped strictly to our component and layouts
         if (!document.getElementById("sidebar-generated-styles")) {
             const styleTag = document.createElement("style");
             styleTag.id = "sidebar-generated-styles";
             styleTag.innerHTML = `
-                /* We scope structural variables with smart fallbacks if the host page doesn't define them */
                 site-sidebar {
                     --sb-width: var(--sidebar-width, 280px);
                     --sb-bg-main: var(--bg-main, #060713);
@@ -16,7 +14,6 @@ class SiteSidebar extends HTMLElement {
                     --sb-border: var(--border-color, rgba(255, 255, 255, 0.05));
                 }
 
-                /* Layout isolation structures */
                 .sidebar {
                     width: var(--sb-width);
                     background: rgba(10, 11, 22, 0.85); 
@@ -51,7 +48,6 @@ class SiteSidebar extends HTMLElement {
                     animation: sbPulse 2s infinite; 
                 }
 
-                /* Scoped Tracker Layout Styles */
                 .progress-container { 
                     padding: 15px 24px; 
                     border-bottom: 1px solid var(--sb-border); 
@@ -86,7 +82,6 @@ class SiteSidebar extends HTMLElement {
                     transition: width 0.5s ease; 
                 }
 
-                /* Sidebar Navigation List Layouts */
                 .sidebar-menu { 
                     list-style: none; 
                     padding: 20px 0; 
@@ -139,7 +134,6 @@ class SiteSidebar extends HTMLElement {
                     100% { opacity: 0.7; transform: scale(1); } 
                 }
 
-                /* Responsive Layout Management Rules */
                 @media (max-width: 992px) {
                     .sidebar { 
                         width: 100%; 
@@ -181,7 +175,7 @@ class SiteSidebar extends HTMLElement {
                 <li><a href="week5.html" id="nav-week5"><i class="fa-solid fa-database"></i> Week 5: Database & ERDs</a></li>
                 <li><a href="week6.html" id="nav-week6"><i class="fa-solid fa-vector-square"></i> OOP Code: The Four Pillars</a></li>
                 <li><a href="week8.html" id="nav-week8"><i class="fa-solid fa-vial-circle-check"></i> Week 8: Testing Frameworks</a></li>
-                <li><a href="https://mridul-0812.github.io/Practise-OOP/"><i class="fa-solid fa-circle-question"></i> Further practice on OOP</a></li>
+                <li><a href="https://mridul-0812.github.io/Practise-OOP/" id="nav-playground" target="_blank"><i class="fa-solid fa-circle-question"></i> Further practice on OOP</a></li>
             </ul>
         </nav>
         `;
@@ -210,9 +204,50 @@ class SiteSidebar extends HTMLElement {
     }
 
     startTimeTracking() {
+        const currentPage = window.location.pathname.split("/").pop() || "index.html";
+
+        // --- 1. TRACK PAGE ACTIVATION EVENT (CLICKS) ---
+        // Using sessionStorage so refreshing the current tab doesn't falsely multiply click actions
+        if (!sessionStorage.getItem(`logged_${currentPage}`)) {
+            let clickLog = JSON.parse(localStorage.getItem("oop_portal_click_log")) || {};
+            clickLog[currentPage] = (clickLog[currentPage] || 0) + 1;
+            localStorage.setItem("oop_portal_click_log", JSON.stringify(clickLog));
+            sessionStorage.setItem(`logged_${currentPage}`, "true");
+        }
+
+        // Catch redirect dispatches to the external sandbox link
+        const playgroundBtn = this.querySelector("#nav-playground");
+        if (playgroundBtn) {
+            playgroundBtn.addEventListener("click", () => {
+                let clickLog = JSON.parse(localStorage.getItem("oop_portal_click_log")) || {};
+                clickLog["practice_playground"] = (clickLog["practice_playground"] || 0) + 1;
+                localStorage.setItem("oop_portal_click_log", JSON.stringify(clickLog));
+            });
+        }
+
+        // --- 2. LIVE VERTICAL VIEW DEPTH MONITOR (SCROLL) ---
+        const logScrollDepth = () => {
+            const winHeight = window.innerHeight;
+            const docHeight = document.documentElement.scrollHeight - winHeight;
+            if (docHeight > 0) {
+                const scrollPercent = Math.round((window.scrollY / docHeight) * 100);
+                let scrollLog = JSON.parse(localStorage.getItem("oop_portal_scroll_log")) || {};
+                
+                // Retain only the peak scroll boundary reached
+                if (!scrollLog[currentPage] || scrollPercent > scrollLog[currentPage]) {
+                    scrollLog[currentPage] = Math.min(scrollPercent, 100);
+                    localStorage.setItem("oop_portal_scroll_log", JSON.stringify(scrollLog));
+                }
+            }
+        };
+        window.addEventListener("scroll", logScrollDepth);
+        // Run once on load to capture shorter pages that don't require scrolling
+        logScrollDepth();
+
+        // --- 3. DURATION METRIC TICKER (TIME ON PAGE) ---
         const targetMinutes = 30; 
         let currentMinutes = parseFloat(localStorage.getItem("oop_study_minutes")) || 0;
-        let trackingInterval;
+        let secondAccumulator = 0;
         
         const updateProgressBar = () => {
             let progressPercent = Math.min((currentMinutes / targetMinutes) * 100, 100);
@@ -226,27 +261,32 @@ class SiteSidebar extends HTMLElement {
 
         updateProgressBar();
 
-        const startInterval = () => {
-            return setInterval(() => {
+        const trackingInterval = setInterval(() => {
+            // Update the granular timeline registry every second
+            let timeLog = JSON.parse(localStorage.getItem("oop_portal_time_log")) || {};
+            timeLog[currentPage] = (timeLog[currentPage] || 0) + 1;
+            localStorage.setItem("oop_portal_time_log", JSON.stringify(timeLog));
+
+            // Sync with global macro progress bar every 60 seconds
+            secondAccumulator++;
+            if (secondAccumulator >= 60) {
                 currentMinutes += 1;
                 localStorage.setItem("oop_study_minutes", currentMinutes);
                 updateProgressBar();
-            }, 60000);
-        };
+                secondAccumulator = 0;
+            }
+        }, 1000);
 
-        trackingInterval = startInterval();
-
+        // --- 4. DATA PURGE RESET INTERFACES ---
         const resetBtn = this.querySelector("#reset-progress-btn");
         if (resetBtn) {
             resetBtn.addEventListener("click", () => {
-                if (window.confirm("Are you sure?")) {
-                    if (window.confirm("Are you really sure? This cannot be undone!")) {
-                        clearInterval(trackingInterval);
-                        localStorage.removeItem("oop_study_minutes");
-                        currentMinutes = 0;
-                        updateProgressBar();
-                        trackingInterval = startInterval();
-                    }
+                if (window.confirm("Are you sure you want to clear your study bar progress?")) {
+                    clearInterval(trackingInterval);
+                    localStorage.removeItem("oop_study_minutes");
+                    currentMinutes = 0;
+                    updateProgressBar();
+                    window.location.reload();
                 }
             });
         }

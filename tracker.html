@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOP Learning Portal | Deep Analytics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #05060f;
+            --bg-glass: rgba(20, 24, 44, 0.5);
+            --bg-glass-hover: rgba(30, 36, 60, 0.7);
+            --border-glow: rgba(0, 240, 255, 0.15);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a5b8;
+            --neon-blue: #00f0ff;
+            --neon-purple: #9d4edd;
+            --neon-pink: #ff007f;
+            --success-green: #00ff88;
+            --warning-orange: #ffaa00;
+            --danger-red: #ff3366;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Background Orbs */
+        body::before, body::after {
+            content: ''; position: fixed; width: 600px; height: 600px; border-radius: 50%;
+            z-index: -1; filter: blur(150px); opacity: 0.12; pointer-events: none;
+        }
+        body::before { background: var(--neon-blue); top: -200px; left: -100px; }
+        body::after { background: var(--neon-purple); bottom: -200px; right: -100px; }
+
+        .dashboard-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .header-text h1 {
+            font-size: 2.6rem;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .header-text p { color: var(--text-secondary); font-size: 1.05rem; }
+
+        .btn-home {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 12px 24px; background: rgba(0, 240, 255, 0.05);
+            border: 1px solid var(--neon-blue); color: var(--neon-blue);
+            border-radius: 10px; text-decoration: none; font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-home:hover {
+            background: var(--neon-blue); color: var(--bg-main);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.4); transform: translateY(-2px);
+        }
+
+        /* Macro Aggregation Overview Cards */
+        .macro-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        .macro-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .macro-card i { font-size: 1.8rem; color: var(--neon-blue); }
+        .macro-info span { display: block; font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+        .macro-info strong { display: block; font-size: 1.4rem; font-weight: 700; margin-top: 2px; }
+
+        /* Grid Layout */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        /* Module Card Styling */
+        .metric-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 240, 255, 0.25);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+        }
+
+        .card-header {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            margin-bottom: 20px; gap: 10px;
+        }
+
+        .module-title { font-size: 1.15rem; font-weight: 700; color: #fff; line-height: 1.3; }
+        .module-path { display: block; font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px; font-family: monospace; }
+
+        .status-badge {
+            padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+            white-space: nowrap; border: 1px solid transparent;
+        }
+
+        /* Metric Rows inside Card */
+        .data-row {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed rgba(255,255,255,0.05);
+        }
+        
+        .data-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .data-label { color: var(--text-secondary); font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
+        .data-value { font-size: 1.05rem; font-weight: 600; font-family: monospace; }
+
+        /* Visual Progress Bars */
+        .bar-container { width: 100%; background: rgba(255,255,255,0.05); height: 8px; border-radius: 4px; overflow: hidden; margin-top: 8px; }
+        .bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+
+        /* Bottom Control Panel */
+        .controls { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; flex-wrap: wrap; gap: 15px; }
+        .controls p { color: var(--text-secondary); font-size: 0.9rem; }
+        .btn-clear {
+            background: transparent; border: 1px solid var(--neon-pink); color: var(--neon-pink);
+            padding: 12px 24px; border-radius: 10px; cursor: pointer; font-weight: 600; transition: all 0.3s;
+        }
+        .btn-clear:hover { background: var(--neon-pink); color: #fff; box-shadow: 0 0 15px rgba(255, 0, 127, 0.4); }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .analytics-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-wrapper">
+        <header>
+            <div class="header-text">
+                <h1>Behavioral Matrix & Analytics</h1>
+                <p>Auditing focus durations, engagement frequencies, and vertical scroll depths.</p>
+            </div>
+            <a href="index.html" class="btn-home"><i class="fa-solid fa-house"></i> Core Dashboard</a>
+        </header>
+
+        <div class="macro-row">
+            <div class="macro-card">
+                <i class="fa-solid fa-stopwatch"></i>
+                <div class="macro-info">
+                    <span>Total Portal Focus</span>
+                    <strong id="total-portal-time">00m 00s</strong>
+                </div>
+            </div>
+            <div class="macro-card">
+                <i class="fa-solid fa-fingerprint" style="color: var(--neon-purple);"></i>
+                <div class="macro-info">
+                    <span>Aggregate Actions</span>
+                    <strong id="total-portal-clicks">0 clicks</strong>
+                </div>
+            </div>
+            <div class="macro-card">
+                <i class="fa-solid fa-gauge-high" style="color: var(--success-green);"></i>
+                <div class="macro-info">
+                    <span>Portal Integrity Rating</span>
+                    <strong id="total-portal-integrity">0%</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="analytics-grid" id="metrics-container"></div>
+
+        <div class="controls">
+            <p><i class="fa-solid fa-circle-info" style="color: var(--neon-blue);"></i> Dashboard components refresh dynamically every second.</p>
+            <button class="btn-clear" id="btn-nuke"><i class="fa-solid fa-dumpster-fire"></i> Purge Telemetry History</button>
+        </div>
+    </div>
+
+    <script>
+        const modules = {
+            "index.html": { title: "Home Dashboard Overview", icon: "fa-house", type: "internal" },
+            "week1.html": { title: "Week 1: Classes & Instances", icon: "fa-cube", type: "internal" },
+            "week2.html": { title: "Week 2: Hierarchy Mechanisms", icon: "fa-sitemap", type: "internal" },
+            "week3.html": { title: "Week 3: Generalisation Paths", icon: "fa-arrows-split-up-and-left", type: "internal" },
+            "week4.html": { title: "Week 4: Systems Operations", icon: "fa-crosshairs", type: "internal" },
+            "week5.html": { title: "Week 5: Database Design & ERDs", icon: "fa-database", type: "internal" },
+            "week6.html": { title: "Week 6: OOP Code (Four Pillars)", icon: "fa-vector-square", type: "internal" },
+            "week8.html": { title: "Week 8: Validation Frameworks", icon: "fa-vial-circle-check", type: "internal" },
+            "practice_playground": { title: "Sandbox Practice Link", icon: "fa-brain", type: "external" }
+        };
+
+        function formatTime(seconds) {
+            if (!seconds) return "00m 00s";
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
+            if (h > 0) return `${h}h ${m}m ${s}s`;
+            return `${String(m).padStart(2, '0')}m ${String(s).padStart(2, '0')}s`;
+        }
+
+        function determineEngagementQuality(time, clicks, scrollDepth, type) {
+            if (clicks === 0) return { text: "Unopened", color: "var(--text-secondary)", bg: "rgba(255,255,255,0.1)", weight: 0 };
+            if (type === "external") return { text: "Redirected", color: "var(--neon-purple)", bg: "rgba(157, 78, 221, 0.15)", weight: 100 };
+            
+            if (time > 180 && scrollDepth < 15) {
+                return { text: "Idle Run / Left Open", color: "var(--danger-red)", bg: "rgba(255, 51, 102, 0.15)", weight: 20 };
+            }
+            if (scrollDepth >= 85) {
+                return { text: "Thoroughly Read", color: "var(--success-green)", bg: "rgba(0, 255, 136, 0.15)", weight: 100 };
+            }
+            if (scrollDepth >= 40) {
+                return { text: "Partially Digested", color: "var(--neon-blue)", bg: "rgba(0, 240, 255, 0.15)", weight: 65 };
+            }
+            return { text: "Skimmed Periphery", color: "var(--warning-orange)", bg: "rgba(255, 170, 0, 0.15)", weight: 45 };
+        }
+
+        function getScrollColor(depth) {
+            if (depth >= 80) return "var(--success-green)";
+            if (depth >= 40) return "var(--neon-blue)";
+            if (depth > 15) return "var(--warning-orange)";
+            return "var(--danger-red)";
+        }
+
+        function renderDashboard() {
+            const container = document.getElementById("metrics-container");
+            const currentCardsData = {};
+            
+            // Capture existing progress bar widths to protect transition smoothness
+            container.querySelectorAll('.metric-card').forEach(card => {
+                const path = card.getAttribute('data-path');
+                const fill = card.querySelector('.bar-fill');
+                if (path && fill) currentCardsData[path] = fill.style.width;
+            });
+
+            const timeLog = JSON.parse(localStorage.getItem("oop_portal_time_log")) || {};
+            const clickLog = JSON.parse(localStorage.getItem("oop_portal_click_log")) || {};
+            const scrollLog = JSON.parse(localStorage.getItem("oop_portal_scroll_log")) || {};
+
+            let macroTime = 0;
+            let macroClicks = 0;
+            let integritySum = 0;
+            let activeInternalModules = 0;
+
+            // Generate card fragments
+            const fragment = document.createDocumentFragment();
+
+            Object.entries(modules).forEach(([path, meta]) => {
+                const totalSecs = timeLog[path] || 0;
+                const clicks = clickLog[path] || 0;
+                const maxScroll = scrollLog[path] || 0;
+                
+                macroTime += totalSecs;
+                macroClicks += clicks;
+
+                const avgSecs = clicks > 0 ? Math.round(totalSecs / clicks) : 0;
+                const status = determineEngagementQuality(totalSecs, clicks, maxScroll, meta.type);
+                const scrollColor = getScrollColor(maxScroll);
+
+                if (clicks > 0 && meta.type === "internal") {
+                    integritySum += status.weight;
+                    activeInternalModules++;
+                }
+
+                const card = document.createElement("div");
+                card.className = "metric-card";
+                card.setAttribute('data-path', path);
+                
+                // Protect Sandbox Layout Metrics from showing broken metrics
+                const dataRowsMarkup = meta.type === "external" ? `
+                    <div class="data-row">
+                        <div class="data-label"><i class="fa-solid fa-arrow-up-right-from-square"></i> Sandbox Dispatches</div>
+                        <div class="data-value" style="color: var(--neon-purple);">${clicks} launches</div>
+                    </div>
+                    <div class="data-row" style="border: none;">
+                        <div class="data-label"><i class="fa-solid fa-circle-nodes"></i> Focus Constraints</div>
+                        <div class="data-value" style="color: var(--text-secondary); font-size:0.85rem;">External Tracking Restrained</div>
+                    </div>
+                ` : `
+                    <div class="data-row">
+                        <div class="data-label"><i class="fa-regular fa-clock"></i> Total Time Spent</div>
+                        <div class="data-value" style="color: var(--neon-blue);">${formatTime(totalSecs)}</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label"><i class="fa-solid fa-arrow-pointer"></i> Activation Instances</div>
+                        <div class="data-value">${clicks} clicks</div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label"><i class="fa-solid fa-stopwatch"></i> Avg. Stay per Click</div>
+                        <div class="data-value" style="color: var(--text-secondary);">${formatTime(avgSecs)}</div>
+                    </div>
+                    <div style="margin-top: 18px;">
+                        <div class="data-row" style="border: none; padding: 0; margin-bottom: 4px;">
+                            <div class="data-label"><i class="fa-solid fa-arrows-up-down"></i> Scroll Depth Profile</div>
+                            <div class="data-value" style="color: ${scrollColor};">${maxScroll}%</div>
+                        </div>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="width: ${currentCardsData[path] || '0%'}; background: ${scrollColor}; box-shadow: 0 0 10px ${scrollColor};"></div>
+                        </div>
+                    </div>
+                `;
+
+                card.innerHTML = `
+                    <div class="card-header">
+                        <div>
+                            <div class="module-title"><i class="fa-solid ${meta.icon}" style="color: var(--neon-purple); margin-right: 8px;"></i> ${meta.title}</div>
+                            <span class="module-path">/${path}</span>
+                        </div>
+                        <div class="status-badge" style="color: ${status.color}; background: ${status.bg}; border: 1px solid ${status.color}">
+                            ${status.text}
+                        </div>
+                    </div>
+                    ${dataRowsMarkup}
+                `;
+                fragment.appendChild(card);
+            });
+
+            container.innerHTML = "";
+            container.appendChild(fragment);
+
+            // Animate progress indicators post append
+            setTimeout(() => {
+                Object.entries(modules).forEach(([path, meta]) => {
+                    if (meta.type === "internal") {
+                        const cardElement = container.querySelector(`[data-path="${path}"] .bar-fill`);
+                        if (cardElement) cardElement.style.width = `${scrollLog[path] || 0}%`;
+                    }
+                });
+            }, 50);
+
+            // Render Aggregate Summaries
+            document.getElementById("total-portal-time").innerText = formatTime(macroTime);
+            document.getElementById("total-portal-clicks").innerText = `${macroClicks} actions`;
+            
+            const macroIntegrity = activeInternalModules > 0 ? Math.round(integritySum / activeInternalModules) : 0;
+            document.getElementById("total-portal-integrity").innerText = `${macroIntegrity}%`;
+        }
+
+        // Live refresh interval loops 
+        renderDashboard();
+        setInterval(renderDashboard, 1000);
+
+        // Nuke Button logic
+        document.getElementById("btn-nuke").addEventListener("click", () => {
+            if(confirm("CRITICAL WARNING: Are you sure you want to completely erase all tracking telemetry? This action cannot be undone.")) {
+                localStorage.removeItem("oop_portal_time_log");
+                localStorage.removeItem("oop_portal_click_log");
+                localStorage.removeItem("oop_portal_scroll_log");
+                localStorage.removeItem("oop_study_minutes");
+                renderDashboard();
+            }
+        });
+    </script>
+</body>
+</html>

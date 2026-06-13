@@ -6,6 +6,7 @@
     <title>OOP Learning Portal | Home</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="sidebar.js"></script>
+    <site-sidebar></site-sidebar>
     <style>
         :root {
             --bg-main: #060713;
@@ -169,6 +170,17 @@
             transform: rotate(10deg) scale(1.1);
         }
 
+        /* Unique Style Modifiers for Tracker and Practice Tiles */
+        .card.tracker-card {
+            border-color: rgba(0, 240, 255, 0.3);
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.05), var(--bg-glass));
+        }
+
+        .card.tracker-card .card-title i {
+            color: var(--neon-blue);
+            filter: drop-shadow(0 0 5px rgba(0, 240, 255, 0.6));
+        }
+
         .card.practice-card .card-title i {
             color: var(--neon-pink);
             filter: drop-shadow(0 0 5px rgba(255, 0, 127, 0.6));
@@ -241,10 +253,18 @@
 
         <section class="dashboard-grid">
             
+            <div class="card tracker-card">
+                <div>
+                    <div class="card-title"><i class="fa-solid fa-chart-simple"></i> System Metrics & Analytics</div>
+                    <p class="card-desc">Review a detailed computational breakdown of your real-time portal engagement data. Analyses focus durations down to the second and aggregates module discovery counts.</p>
+                </div>
+                <a href="tracker.html" class="card-btn">Open Tracker Matrix</a>
+            </div>
+            
             <div class="card">
                 <div>
                     <div class="card-title"><i class="fa-solid fa-cube"></i> Week 1: Classes & Instances</div>
-                    <p class="card-desc">Master the structural boundary between generalized templates (Blueprints) and concrete implementations in memory (Instances), incorporating state encapsulation tools.</p>
+                    <p class="card-desc">Master the structural boundary between generalised templates (Blueprints) and concrete implementations in memory (Instances), incorporating state encapsulation tools.</p>
                 </div>
                 <a href="week1.html" class="card-btn">Explore Module</a>
             </div>
@@ -283,7 +303,7 @@
 
             <div class="card">
                 <div>
-                    <div class="card-title"><i class="fa-solid fa-gopuram"></i> OOP Code: The Four Pillars</div>
+                    <div class="card-title"><i class="fa-solid fa-vector-square"></i> OOP Code: The Four Pillars</div>
                     <p class="card-desc">Learn about the four typical pillars of Object-Oriented Programming (Encapsulation, Inheritance, Abstraction and Polymorphism) and how to use them to code using Python.</p>
                 </div>
                 <a href="week6.html" class="card-btn">Explore Module</a>
