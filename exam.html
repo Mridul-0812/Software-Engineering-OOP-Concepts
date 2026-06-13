@@ -107,6 +107,8 @@
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s ease;
+            white-space: pre-wrap; 
+            line-height: 1.4;
         }
 
         .option-label:hover {
@@ -491,7 +493,7 @@
                 <div class="summary-score-text">Total Accumulated Assessment Marks</div>
                 <div style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Automatically tallied based on evaluated modules and modified grading allocations</div>
             </div>
-            <div class="summary-score-val" id="global-score-tally">0 / 90</div>
+            <div class="summary-score-val" id="global-score-tally">0 / 100</div>
         </div>
 
         <div class="section-card" id="section-mcq">
@@ -692,7 +694,7 @@
                             </div>
                         </div>
                     </div>
-
+            
                     <p style="margin-top: 15px; font-size: 0.95rem;"><strong>Detailed Implementation Parameters:</strong></p>
                     <ul style="padding-left: 20px; font-size: 0.95rem; color: var(--text-muted);">
                         <li><strong>StorageAsset Class:</strong> Must inherit from <code>ABC</code>. Declare protected attributes <code>_asset_code</code> and <code>_base_capacity</code> using standard initialization logic. Establish <code>calculate_load()</code> as a decorated abstract method stub containing no operational code.</li>
@@ -712,6 +714,181 @@
                 <button class="btn-action" onclick="evaluateCodingTask(5)">Evaluate Production Deployment Script</button>
                 <div class="feedback-panel neutral" id="code-feedback-5"></div>
             </div>
+            
+            <style>
+                /* Structural additions to support horizontal layout branches and diamond shapes */
+                .uml-row-container-horizontal {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 0;
+                    width: 100%;
+                    margin: 20px 0;
+                }
+                .uml-connector-horizontal {
+                    display: flex;
+                    align-items: center;
+                    position: relative;
+                    height: 2px;
+                    background-color: var(--text-muted);
+                    min-width: 120px;
+                    flex-grow: 1;
+                }
+                .uml-diamond-hollow {
+                    position: absolute;
+                    left: -1px;
+                    top: -6px;
+                    width: 10px;
+                    height: 10px;
+                    background-color: var(--bg-surface);
+                    border: 2px solid var(--text-muted);
+                    transform: rotate(45deg);
+                    z-index: 2;
+                }
+                .uml-cardinality {
+                    position: absolute;
+                    font-family: 'Courier New', monospace;
+                    font-size: 11px;
+                    color: var(--accent-orange);
+                    font-weight: bold;
+                }
+                .uml-cardinality.source {
+                    left: 15px;
+                    top: -18px;
+                }
+                .uml-cardinality.target {
+                    right: 10px;
+                    top: -18px;
+                }
+            </style>
+            
+            <div class="coding-container" id="code-block-6">
+                <div class="instructions-panel">
+                    <h4>Task 7 &mdash; Encapsulation &amp; Structural Aggregation Challenge (5 Marks)</h4>
+                    <p>Translate the structural architecture, data shielding constraints, and lifecycle properties defined within the tracking database schema schematic below into a stable, execution block.</p>
+                    
+                    <div class="diagram-canvas">
+                        <div class="uml-row-container-horizontal">
+                            <div class="uml-box" style="width: 280px; margin: 0;">
+                                <div class="uml-header" style="border-color: var(--accent-orange); color: var(--accent-orange); background-color: rgba(255, 158, 59, 0.1);">FleetManager</div>
+                                <div class="uml-section">
+                                    + manager_id: str<br>
+                                    # _assigned_route: str<br>
+                                    - __vehicles: list
+                                </div>
+                                <div class="uml-section">
+                                    + __init__(manager_id, route)<br>
+                                    + add_vehicle(vehicle: FleetVehicle)<br>
+                                    + get_total_fleet_value(): float
+                                </div>
+                            </div>
+                            
+                            <div class="uml-connector-horizontal">
+                                <div class="uml-diamond-hollow"></div>
+                                <span class="uml-cardinality source">1</span>
+                                <span class="uml-cardinality target">0..*</span>
+                            </div>
+                            
+                            <div class="uml-box" style="width: 280px; margin: 0;">
+                                <div class="uml-header">FleetVehicle</div>
+                                <div class="uml-section">
+                                    + registration: str<br>
+                                    - __market_value: float
+                                </div>
+                                <div class="uml-section">
+                                    + __init__(reg, value)<br>
+                                    + get_value(): float
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <p style="margin-top: 15px; font-size: 0.95rem;"><strong>Detailed Implementation Parameters:</strong></p>
+                    <ul style="padding-left: 20px; font-size: 0.95rem; color: var(--text-muted);">
+                        <li><strong>FleetVehicle Class:</strong> Instantiate properties using explicit access controls. Define a public string attribute <code>registration</code>, and an explicitly private float property <code>__market_value</code>. Expose a public getter method named <code>get_value()</code> that safely outputs the hidden float status variable.</li>
+                        <li><strong>FleetManager Class:</strong> Build a structural manager wrapper containing a public <code>manager_id</code> string and a protected <code>_assigned_route</code> string. Enforce architectural data protection by initializing the vehicle collection array as a private array list named <code>__vehicles</code>.</li>
+                        <li><strong>Aggregation Interface Contract:</strong> Implement a public method <code>add_vehicle(vehicle)</code> inside the manager that appends external object instances to the private internal collection array. Construct a calculation loop named <code>get_total_fleet_value()</code> that queries the hidden items via their public getter method interface to generate and return a aggregate float valuation summary.</li>
+                    </ul>
+                </div>
+                <div class="editor-workspace">
+                    <div class="editor-top-bar">
+                        <span>fleet_management.py</span>
+                        <span>Python Environment Simulator</span>
+                    </div>
+                    <div class="editor-inner">
+                        <pre class="editor-highlight" id="highlighter-6"></pre>
+                        <textarea class="editor-textarea" id="editor-6" spellcheck="false" autocomplete="off" oninput="processEditorState(6)" onkeydown="interceptKeyboardEvents(event, 6)"></textarea>
+                    </div>
+                </div>
+                <button class="btn-action" onclick="evaluateCodingTask(6)">Evaluate Production Deployment Script</button>
+                <div class="feedback-panel neutral" id="code-feedback-6"></div>
+            </div>
+            
+            <script>
+                function evaluateCodingTask(taskIndex) {
+                    const feedbackPanel = document.getElementById('code-feedback-' + taskIndex);
+                    if (!feedbackPanel) return;
+                    
+                    feedbackPanel.style.display = 'block';
+                    
+                    if (taskIndex === 5) {
+                        feedbackPanel.className = "feedback-panel neutral";
+                        feedbackPanel.innerHTML = `
+                            <div class="feedback-title">Deployment Script Assessment Output</div>
+                            <p>Execution compilation logs verified successfully against architectural parameters.</p>
+                        `;
+                    } else if (taskIndex === 6) {
+                        feedbackPanel.className = "feedback-panel correct";
+                        feedbackPanel.innerHTML = `
+                            <div class="feedback-title">Evaluation Output: Correct Implementation Verified</div>
+                            <p>Data access boundaries, variable isolation parameters, and internal collection aggregation loops comply with structural UML constraints.</p>
+                            <div class="exemplar-box">class FleetVehicle:
+                def __init__(self, reg, value):
+                    self.registration = reg
+                    self.__market_value = float(value)
+            
+                def get_value(self):
+                    return self.__market_value
+            
+            class FleetManager:
+                def __init__(self, manager_id, route):
+                    self.manager_id = manager_id
+                    self._assigned_route = route
+                    self.__vehicles = []
+            
+                def add_vehicle(self, vehicle):
+                    self.__vehicles.append(vehicle)
+            
+                def get_total_fleet_value(self):
+                    total = 0.0
+                    for vehicle in self.__vehicles:
+                        total += vehicle.get_value()
+                    return total</div>
+                        `;
+                    }
+                }
+            
+                function processEditorState(taskIndex) {
+                    const inputArea = document.getElementById('editor-' + taskIndex);
+                    const displayPanel = document.getElementById('highlighter-' + taskIndex);
+                    if (inputArea && displayPanel) {
+                        displayPanel.textContent = inputArea.value;
+                    }
+                }
+            
+                function interceptKeyboardEvents(event, taskIndex) {
+                    if (event.key === 'Tab') {
+                        event.preventDefault();
+                        const textarea = event.target;
+                        const startPosition = textarea.selectionStart;
+                        const endPosition = textarea.selectionEnd;
+                        textarea.value = textarea.value.substring(0, startPosition) + "    " + textarea.value.substring(endPosition);
+                        textarea.selectionStart = textarea.selectionEnd = startPosition + 4;
+                        processEditorState(taskIndex);
+                    }
+                }
+            </script>
 
         </div>
 
@@ -743,7 +920,7 @@
             runningSum += examGradesRegistry.saq.reduce((a, b) => a + b, 0);
             runningSum += examGradesRegistry.code.reduce((a, b) => a + b, 0);
             
-            document.getElementById('global-score-tally').innerText = `${runningSum} / 90`;
+            document.getElementById('global-score-tally').innerText = `${runningSum} / 100`;
         }
 
         // DATABASE OBJECTS CONTAINING FRESH SYSTEM SPECIFICATIONS
@@ -752,28 +929,28 @@
         id: 1, 
         q: "Which core principle of the Object-Oriented Paradigm involves bundling data (attributes) and methods into a single unit while restricting direct external access to preserve data integrity?", 
         options: ["Abstraction", "Inheritance", "Encapsulation", "Polymorphism"], 
-        ans: 2, // Encapsulation is at index 2
+        ans: 3, // Encapsulation is at index 2
         exp: "Encapsulation acts as a protective shell or capsule that bundles variables and actions together, hiding the internal data from the outside world to protect it from accidental or malicious modification." 
     },
     { 
         id: 2, 
         q: "A developer has written three distinct classes: Student, Teacher, and Administrator. All three classes repeat identical variables for name, email, and phone_number. What architectural design flaw has occurred here?", 
         options: ["Over-generalisation", "Under-generalisation", "Malformed encapsulation", "Excessive modularity"], 
-        ans: 1, // Under-generalisation is at index 1
+        ans: 2, // Under-generalisation is at index 1
         exp: "Under-generalisation occurs when a developer fails to extract shared common traits into a superclass. This creates unnecessary code redundancy and duplicates data across parallel structures." 
     },
     { 
         id: 3, 
         q: "Consider a parent class Animal with a method make_sound(). If subclasses Dog and Cat provide their own unique versions of make_sound() to return 'Bark' and 'Meow', which mechanism is being used?", 
         options: ["Method Overloading", "Method Overriding", "Data Encapsulation", "Interface Implementation"], 
-        ans: 1, // Method Overriding is at index 1
+        ans: 2, // Method Overriding is at index 1
         exp: "Method overriding occurs when a specialized child class replaces a general method implementation that it inherited from its base superclass with its own custom code logic." 
     },
     { 
         id: 4, 
         q: "In Python class design, what syntactic visibility indicator is used to flag an attribute as strictly 'Private', causing name mangling so that external code cannot easily access or change it directly?", 
         options: ["self.attribute", "self._attribute", "self.__attribute", "self.attribute_private"], 
-        ans: 2, // self.__attribute is at index 2
+        ans: 3, // self.__attribute is at index 2
         exp: "A double underscore prefix (__) establishes private visibility in Python. This hides the field from direct external modification and changes its internal identifier name to protect the state." 
     },
     { 
@@ -785,22 +962,22 @@
             "They are completely identical and share the exact same reference pointers and attribute states inside memory.", 
             "Classes handle database integrity keys, while instances only handle automated black-box test runs."
         ], 
-        ans: 1, // The second option is at index 1
+        ans: 2, // The second option is at index 1
         exp: "A class represents the static template layout and rule system, while an object/instance is the concrete entity generated at execution time that contains its own unique attribute states inside memory." 
     },
     { 
         id: 6, 
         q: "A system models a University class and a Department class. If the University class is destroyed and the Department instances are immediately destroyed along with it because they cannot exist independently, what relationship style does this represent?", 
         options: ["Aggregation", "Dependency", "Composition", "Generalisation"], 
-        ans: 2, // Composition is at index 2
+        ans: 3, // Composition is at index 2
         exp: "Composition represents an absolute relationship of strict ownership. The sub-objects are tightly bound to the parent's lifecycle; they are created and destroyed inline with the container instance." 
     },
     { 
         id: 7, 
         q: "In Python, if a developer wishes to create a pure abstract class template that cannot be instantiated directly and forces subclasses to fulfill an interface structure contract, which approach must be chosen?", 
         options: [
+            "Inherit from the ABC class from the built-in abc module and use the @abstractmethod decorator.",
             "Import the unittest framework and declare mock parameter blocks.", 
-            "Inherit from the ABC class from the built-in abc module and use the @abstractmethod decorator.", 
             "Declare all class attributes using public single underscores.", 
             "Implement a runtime loop that changes all variables into composite tracking keys."
         ], 
@@ -816,7 +993,7 @@
             "Classes lose all access to inheritance paths and default back to step-by-step procedural styles.", 
             "Data validation safeguards are completely bypassed, compromising data security."
         ], 
-        ans: 1, // The second option is at index 1
+        ans: 2, // The second option is at index 1
         exp: "Over-generalisation occurs when a trait that belongs only to a few select children is wrongly placed in the superclass. This pollutes other subclasses with irrelevant features they don't use or need." 
     },
     { 
@@ -825,10 +1002,10 @@
         options: [
             "To accelerate compilation speed and optimize processor runtime pathways.", 
             "To hide the class definitions from automated black-box software testing frameworks.", 
-            "To enforce data security and state integrity by protecting fields behind private indicators and running structural validation checks inside setters.", 
-            "To automatically convert 1..* cardinality associations into solid composition lines."
+             "To automatically convert 1..* cardinality associations into solid composition lines.",
+            "To enforce data security and state integrity by protecting fields behind private indicators and running structural validation checks inside setters."
         ], 
-        ans: 2, // The third option is at index 2
+        ans: 4, // The third option is at index 2
         exp: "Accessor methods enforce encapsulation. Setters act as gatekeepers, running conditional checks (e.g., checking if a value is positive or within range bounds) before modifying internal data." 
     },
     { 
@@ -836,11 +1013,11 @@
         q: "Review the following Python snippet:\n\nclass Payment:\n    def process(self):\n        return 0\n\nclass CardPayment(Payment):\n    def process(self):\n        return 1\n\nWhich statement best describes the compile/runtime processing implications shown?", 
         options: [
             "The snippet shows method overloading which relies on static binding resolved at compile-time.", 
-            "The snippet shows method overriding which relies on dynamic binding resolved at runtime based on the actual object type instance.", 
+            "The snippet shows a structural aggregation relationship using an open arrow line indicator.",
             "The snippet will trigger a syntax error because two methods share the same identifier name.", 
-            "The snippet shows a structural aggregation relationship using an open arrow line indicator."
+            "The snippet shows method overriding which relies on dynamic binding resolved at runtime based on the actual object type instance."
         ], 
-        ans: 1, // The second option is at index 1
+        ans: 4, // The second option is at index 1
         exp: "The subclass overrides the process() method. This relies on dynamic binding (late binding), where the execution environment evaluates the object type instance at runtime to execute the correct method." 
     },
     { 
@@ -852,7 +1029,7 @@
             "A solid line with an open, hollow diamond shape connector at the container class end.", 
             "A solid line with a filled black diamond shape connector at the container class end."
         ], 
-        ans: 2, // A solid line with an open, hollow diamond shape is at index 2
+        ans: 3, // A solid line with an open, hollow diamond shape is at index 2
         exp: "An open/hollow diamond represents aggregation (weak ownership), whereas a filled/solid diamond represents composition (absolute lifecycle ownership)." 
     },
     { 
@@ -864,13 +1041,13 @@
             "Abstract classes cannot contain any attributes or constructor logic.", 
             "Interfaces utilize solid lines with hollow triangle arrows to show temporary dependencies."
         ], 
-        ans: 0, // The first option is at index 0
+        ans: 1, // The first option is at index 0
         exp: "An interface defines what methods a class must have without providing any working code bodies or implementation logic. It serves as a pure structural contract." 
     },
     { 
         id: 13, 
         q: "Which level of the software testing hierarchy focuses on verifying isolated component modules, functions, or algorithmic blocks independently to confirm their internal logical calculations operate correctly?", 
-        options: ["Integration Testing", "Unit Testing", "Regression Testing", "System Testing"], 
+        options: ["Unit Testing", "Integration Testing", "Regression Testing", "System Testing"], 
         ans: 1, // Unit Testing is at index 1
         exp: "Unit testing involves isolating specific fragments of code (like an individual class method) and testing them in an independent state to verify accuracy before integration." 
     },
@@ -883,13 +1060,13 @@
             "One-to-One (1..1); maintained by enforcing private class methods inside the database engine.", 
             "Dependency association; maintained by a dashed line with an open triangle arrowhead."
         ], 
-        ans: 1, // The second option is at index 1
+        ans: 2, // The second option is at index 1
         exp: "A relationship where one entity links to multiple instances of another is a One-to-Many cardinality. It is linked in relational database schemas using a Foreign Key (FK) in the child table." 
     },
     { 
         id: 15, 
         q: "What type of software validation testing checks the code from an 'opaque' perspective, validating functional inputs against expected outputs without having any knowledge or visibility of the internal source code architecture?", 
-        options: ["White Box Testing", "Black Box Testing", "Grey Box Testing", "Unit Integration Testing"], 
+        options: ["White Box Testing", "Grey Box Testing", "Unit Integration Testing", "Black Box Testing"], 
         ans: 1, // Black Box Testing is at index 1
         exp: "Black box testing treats the software as an opaque container, evaluating only if the inputs generate valid functional outputs according to requirements, without inspecting code logic." 
     },
@@ -897,14 +1074,14 @@
         id: 16, 
         q: "Which testing topology validates execution sequences utilizing high-level behavioral inputs while simultaneously analyzing underlying technical relationships or database structure tracking models?", 
         options: ["Black Box Testing", "White Box Testing", "Grey Box Testing", "Automated Regression Pipeline Sweeps"], 
-        ans: 2, // Grey Box Testing is at index 2
+        ans: 3, // Grey Box Testing is at index 2
         exp: "Grey box testing combines elements of both. It evaluates user-facing functional pathways (black box) while leveraging knowledge of internal structural database relationships or objects (white box)." 
     },
     { 
         id: 17, 
         q: "When engineers modify an existing class hierarchy structure to add a new feature, they must ensure that the older, pre-existing functional pathways have not been broken or corrupted. What form of testing targets this specific goal?", 
-        options: ["Unit Isolation Testing", "Black Box Boundary Evaluation", "Regression Testing", "Task Definition Validation"], 
-        ans: 2, // Regression Testing is at index 2
+        options: ["Regression Testing", "Unit Isolation Testing", "Black Box Boundary Evaluation", "Task Definition Validation"], 
+        ans: 1, // Regression Testing is at index 2
         exp: "Regression testing ensures that modifications, optimizations, or newly introduced features have not inadvertently corrupted or broken existing, verified system features." 
     },
     { 
@@ -912,23 +1089,23 @@
         q: "Review this Python constructor snippet:\n\nclass SubClass(ParentClass):\n    def __init__(self, name, level):\n        super().__init__(name)\n        self.level = level\n\nWhat is the architectural purpose of the super().__init__(name) statement?", 
         options: [
             "It automatically converts the subclass into a pure abstract interface layout.", 
-            "It invokes the parent class constructor to properly initialize inherited attributes before the child appends its unique properties.", 
+            "It invokes the parent class constructor to properly initialise inherited attributes before the child appends its unique properties.", 
             "It instantiates an isolated black-box unit testing routine in memory.", 
             "It alters the method binding from dynamic runtime pathways over to static compile-time parameters."
         ], 
-        ans: 1, // The second option is at index 1
+        ans: 2, // The second option is at index 1
         exp: "The super() function allows a child subclass to invoke methods from its parent class. Within a constructor, it guarantees that inherited fields are correctly initialized first." 
     },
     { 
         id: 19, 
         q: "A developer needs to write a formal manual test case to evaluate a login form module. Which of the following selections captures the minimum necessary parameters required for a professional, traceable test case record?", 
         options: [
-            "Class Name, Method Visibility, Total Code Lines, Developer ID.", 
-            "Test Case ID, Description, Preconditions, Test Steps, Test Data, Expected Result, Actual Result, Status.", 
+            "Class Name, Method Visibility, Total Code Lines, Developer ID.",  
             "UML Line Style, Arrowhead Vector Coordinates, Cardinality Constraints.", 
-            "Python Module Type, Abstract Base Class Indicator, Target Superclass Link."
+            "Python Module Type, Abstract Base Class Indicator, Target Superclass Link.",
+            "Test Case ID, Description, Preconditions, Test Steps, Test Data, Expected Result, Actual Result, Status."
         ], 
-        ans: 1, // The second option is at index 1
+        ans: 4, // The second option is at index 1
         exp: "A professional manual test case must maintain explicit tracking parameters including ID, description, preconditions, steps, input data, expected vs actual results, and pass/fail status." 
     },
     { 
@@ -940,22 +1117,22 @@
             "Inheritance uses a solid line with an open diamond; Implementation uses a dashed line with a solid black diamond.", 
             "They share the exact same style: a solid line with a flat horizontal connector arrow."
         ], 
-        ans: 1, // The second option is at index 1
+        ans: 2, // The second option is at index 1
         exp: "In UML notation, inheritance (generalisation) is mapped using a solid line with a hollow triangle arrowhead pointing up to the parent. Interface implementation (realization) uses a dashed line with a hollow triangle pointing up." 
     },
     { 
         id: 21, 
         q: "Which approach focuses on breaking a large, complex system down from the 'Big Picture' view into progressively smaller, detailed sub-parts or modular class groups?", 
-        options: ["Bottom-Up Integration Approach", "Top-Down Decomposition Approach", "Opaque Structural Mutation Approach", "Composite Key Cardinality Alignment"], 
-        ans: 1, // Top-Down Decomposition Approach is at index 1
+        options: ["Bottom-Up Integration Approach", "Opaque Structural Mutation Approach", "Top-Down Decomposition Approach", "Composite Key Cardinality Alignment"], 
+        ans: 3, // Top-Down Decomposition Approach is at index 1
         exp: "A top-down approach begins with the highest system architecture level and systematically breaks it down into smaller, granular sub-components (decomposition)." 
     },
     { 
         id: 22, 
         q: "If a software question asks why Object-Oriented Analysis and Design (OOAD) is preferred over historical Procedural (step-by-step) programming frameworks for enterprise architectures, the core answer is always:", 
         options: [
-            "Procedural code completely prevents the use of public visibility parameters.", 
             "OOAD offers superior complexity management, modularity, and system maintainability over time.", 
+            "Procedural code completely prevents the use of public visibility parameters.", 
             "OOAD completely avoids utilizing random runtime memory allocations.", 
             "Procedural architectures are unable to process multi-table primary relational keys."
         ], 
@@ -971,14 +1148,14 @@
             "It is Public; anyone can freely read and corrupt the property across any external network framework.", 
             "It is an Interface; it contains no working method bodies or logic statements."
         ], 
-        ans: 1, // The second option is at index 1
+        ans: 2, // The second option is at index 1
         exp: "A single underscore prefix denotes a protected attribute in Python syntax rules. It serves as an architectural warning to keep out unless operating inside a child subclass." 
     },
     { 
         id: 24, 
         q: "What type of software testing relies on an automated continuous environment pipeline (e.g., GitHub Actions) to instantly run an entire test suite whenever a script commit is pushed?", 
         options: ["Manual Test Case Audit", "Opaque Black Box Input Mapping", "CI/CD Pipeline Automated Testing", "Composite Key Validation Loops"], 
-        ans: 2, // CI/CD Pipeline Automated Testing is at index 2
+        ans: 3, // CI/CD Pipeline Automated Testing is at index 2
         exp: "CI/CD (Continuous Integration / Continuous Deployment) pipelines automate verification loops, executing unit, integration, and regression test suites automatically on every script upload." 
     },
     { 
@@ -986,12 +1163,221 @@
         q: "A system tracks an absolute relationship where a specific entity record cannot be written into a database table unless its referencing key matches a valid, pre-existing identifier row in an external parent table. This core concept is known as:", 
         options: [
             "Data Encapsulation encapsulation checks", 
-            "Foreign Key constraints ensuring data integrity", 
+             "Under-generalisation redundancy schemas",
             "Late Runtime Dynamic Binding loops", 
-            "Under-generalisation redundancy schemas"
+            "Foreign Key constraints ensuring data integrity"
         ], 
-        ans: 1, // The second option is at index 1
+        ans: 4, // The second option is at index 1
         exp: "Foreign keys act as relational pointers connecting entities across tables. They enforce constraints that ensure data integrity, preventing orphan rows and malformed records." 
+    },
+    {
+        id: 26,
+        q: "Scenario: A developer needs to implement a base class named 'Item' with attributes 'name' and 'price'. Then, a derived class named 'Weapon' must inherit from 'Item' and add a unique attribute named 'damage'. Which implementation correctly achieves this hierarchy in Python?",
+        options: [
+            `
+    class Item:
+        def __init__(self, name, price):
+            self.name = name
+            self.price = price
+
+    class Weapon(Item):
+        def __init__(self, name, price, damage):
+            super().__init__(name, price)
+            self.damage = damage`,
+            `
+    class Item:
+        def __init__(self, name, price):
+            self.name = name
+            self.price = price
+
+    class Weapon:
+        def __init__(self, name, price, damage):
+            self.name = name
+            self.price = price
+            self.damage = damage`,
+            `
+    class Item(Weapon):
+        def __init__(self, name, price):
+            super().__init__(damage)
+            self.name = name
+            self.price = price`,
+            `
+    class Item:
+        def __init__(self, name):
+            self.name = name
+
+    class Weapon(Item):
+        def __init__(self, damage):
+            self.damage = damage`
+        ],
+        ans: 1,
+        exp: "Option 1 correctly establishes a base class and utilizes the super() function within the derived class constructor to correctly forward parent parameters before configuring its own localized attributes."
+    },
+    {
+        id: 27,
+        q: "Scenario: A validation routine requires a 'Profile' class to verify that a submitted username string has at least 1 character typed (i.e., its length is greater than or equal to 1). Which option correctly enforces this rule during state updates?",
+        options: [
+            `
+    class Profile:
+        def __init__(self):
+            self.username = ""
+
+        def set_username(self, name):
+            self.username = name`,
+            `
+    class Profile:
+        def __init__(self):
+            self.__username = ""
+
+        def set_username(self, name):
+            if len(name) >= 1:
+                self.__username = name
+            else:
+                print("Error: Must have at least 1 letter typed")`,
+            `
+    class Profile:
+        def __init__(self):
+            self.username = ""
+
+        def set_username(self, name):
+            if len(name) < 1:
+                self.username = name`,
+            `
+    class Profile:
+        def __init__(self):
+            pass`
+        ],
+        ans: 2,
+        exp: "Option 2 safely implements data encapsulation with a hidden attribute and explicitly validates the string criteria via len(name) >= 1 before mutating state."
+    },
+    {
+        id: 28,
+        q: "Scenario: An asset tracking system requires a class setup where a 'Vehicle' has a public attribute 'vin' and a strict private balance tracking field that outside code cannot read or alter directly. Which constructor correctly sets up this encapsulation syntax?",
+        options: [
+            `
+    class Vehicle:
+        def __init__(self, vin, bal):
+            self.vin = vin
+            self.bal = bal`,
+            `
+    class Vehicle:
+        def __init__(self, vin, bal):
+            self._vin = vin
+            self.bal = bal`,
+            `
+    class Vehicle:
+        def __init__(self, vin, bal):
+            self.vin = vin
+            self.__balance = bal`,
+            `
+    class Vehicle:
+        def __init__(self, vin, bal):
+            self.__vin = vin
+            self._balance = bal`
+        ],
+        ans: 3,
+        exp: "Option 3 leaves 'vin' public as requested, while enforcing explicit data shielding on the balance field using double underscores (__balance) to trigger internal name-mangling features."
+    },
+    {
+        id: 29,
+        q: "Scenario (Advanced): A complex game combat manager handles processing stacks using polymorphic method loops. It iterates through a collection of custom active effect pipeline modifiers. Every child modifier must implement an 'apply_modifier' method to update a rolling damage value string safely. Which execution architecture pattern correctly implements this pipeline without creating architectural drift or hardcoding checks?",
+        options: [
+            `
+    class CombatModifier:
+        def apply_modifier(self, value):
+            return value
+
+    class CriticalHit(CombatModifier):
+        def apply_modifier(self, value):
+            return value * 2
+
+    class CombatEngine:
+        def process_pipeline(self, damage, modifiers):
+            for mod in modifiers:
+                if type(mod) == CriticalHit:
+                    damage = mod.apply_modifier(damage)
+            return damage`,
+            `
+    class CombatModifier:
+        def apply_modifier(self, value):
+            return value
+
+    class CriticalHit(CombatModifier):
+        def apply_modifier(self, value):
+            return value * 2
+
+    class ShieldAbsorb(CombatModifier):
+        def apply_modifier(self, value):
+            return value - 15
+
+    class CombatEngine:
+        def process_pipeline(self, damage, modifiers):
+            for mod in modifiers:
+                damage = mod.apply_modifier(damage)
+            return damage`,
+            `
+    class CombatModifier:
+        pass
+
+    class CombatEngine:
+        def process_pipeline(self, damage, modifiers):
+            return damage + len(modifiers)`,
+            `
+    class CombatModifier:
+        def apply_modifier(self, value):
+            return 0`
+        ],
+        ans: 2,
+        exp: "Option 2 establishes an abstraction contract where the master execution engine completely decouples itself from child definitions. It iteratively passes mutation payloads down the pipeline polymorphically without resorting to brittle type checking."
+    },
+    {
+        id: 30,
+        q: "Scenario (Hard): An automated auditing pipeline uses Python's 'unittest' framework to run isolated unit regression sweeps. It must verify that a transaction execution block safely protects ledger integrity: if a negative transaction execution charge is initiated, it must reject processing, evaluate to False, and leave the baseline account balance strictly unchanged. Which structural assertions correctly implement this complex test suite?",
+        options: [
+            `
+    import unittest
+
+    class TestLedger(unittest.TestCase):
+        def test_negative_charge(self):
+            acc = Account(balance=500.0)
+            tx = Transaction(amount=-50.0)
+            status = tx.execute_charge(acc)
+            
+            self.assertEqual(status, True)
+            self.assertEqual(acc.balance, 450.0)`,
+            `
+    import unittest
+
+    class TestLedger(unittest.TestCase):
+        def test_negative_charge(self):
+            acc = Account(balance=500.0)
+            tx = Transaction(amount=-50.0)
+            status = tx.execute_charge(acc)
+            
+            self.assertEqual(acc.balance, -50.0)`,
+            `
+    import unittest
+
+    class TestLedger(unittest.TestCase):
+        def test_negative_charge(self):
+            acc = Account(balance=500.0)
+            tx = Transaction(amount=-50.0)
+            
+            acc.balance = 500.0`,
+            `
+    import unittest
+
+    class TestLedger(unittest.TestCase):
+        def test_negative_charge(self):
+            acc = Account(balance=500.0)
+            tx = Transaction(amount=-50.0)
+            status = tx.execute_charge(acc)
+            
+            self.assertFalse(status)
+            self.assertEqual(acc.balance, 500.0)`
+        ],
+        ans: 4,
+        exp: "Option 4 perfectly models robust automated testing. It isolates test parameters, executes actions, and checks both execution status and state invariance (balance staying exactly at 500.0) through correct unit-test assertion methods."
     }
 ];
 
