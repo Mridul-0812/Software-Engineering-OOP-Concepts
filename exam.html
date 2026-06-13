@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object-Oriented Paradigm Final Examination</title>
+    <style>
+        :root {
+            --bg-main: #0a0b10;
+            --bg-surface: #12131c;
+            --bg-workspace: #1a1b26;
+            --accent-blue: #00f0ff;
+            --accent-green: #39ff14;
+            --accent-orange: #ff9e3b;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-color: #2d3142;
+            --vscode-keyword: #ff79c6;
+            --vscode-class: #50fa7b;
+            --vscode-string: #f1fa8c;
+            --vscode-comment: #6272a4;
+            --vscode-number: #bd93f9;
+            --vscode-def: #8be9fd;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--bg-surface);
+            padding: 30px;
+            border-bottom: 2px solid var(--border-color);
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            color: var(--accent-blue);
+            letter-spacing: 1px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            margin: 10px 0 0 0;
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .section-card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--accent-blue);
+            margin-top: 0;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        /* MCQ Styles */
+        .question-block {
+            background-color: rgba(255,255,255,0.02);
+            border-left: 4px solid var(--border-color);
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 0 8px 8px 0;
+            transition: all 0.3s ease;
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            background-color: rgba(255,255,255,0.03);
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-label:hover {
+            background-color: rgba(0, 240, 255, 0.05);
+            border-color: var(--accent-blue);
+        }
+
+        .option-label input {
+            margin-right: 15px;
+            accent-color: var(--accent-blue);
+        }
+
+        /* Match-up Matrix */
+        .matrix-row {
+            display: grid;
+            grid-template-columns: 1fr 1px 1.2fr;
+            gap: 20px;
+            background-color: rgba(255,255,255,0.02);
+            padding: 15px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            align-items: center;
+        }
+
+        .matrix-divider {
+            background-color: var(--border-color);
+            height: 100%;
+        }
+
+        .matrix-select {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 6px;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        /* Testing Tables */
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 20px;
+            margin-bottom: 25px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: rgba(255,255,255,0.01);
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: rgba(0, 240, 255, 0.05);
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        .table-input {
+            width: 100%;
+            box-sizing: border-box;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        .table-select {
+            width: 100%;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        /* VS Code Simulator Styling */
+        .coding-container {
+            margin-bottom: 40px;
+        }
+
+        .instructions-panel {
+            background-color: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .instructions-panel h4 {
+            margin-top: 0;
+            color: var(--accent-orange);
+            font-size: 1.2rem;
+        }
+
+        .editor-workspace {
+            position: relative;
+            background-color: var(--bg-workspace);
+            border: 1px solid var(--border-color);
+            border-radius: 0 0 8px 8px;
+            height: 320px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            overflow: hidden;
+        }
+
+        .editor-top-bar {
+            background-color: #14151f;
+            padding: 6px 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .editor-inner {
+            position: relative;
+            width: 100%;
+            height: calc(100% - 29px);
+        }
+
+        .editor-textarea, .editor-highlight {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 15px;
+            box-sizing: border-box;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 20px;
+            white-space: pre;
+            overflow-y: auto;
+            overflow-x: auto;
+            margin: 0;
+        }
+
+        .editor-textarea {
+            color: transparent;
+            caret-color: var(--text-main);
+            z-index: 2;
+            resize: none;
+        }
+
+        .editor-highlight {
+            color: #cfd8dc;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Short Answers */
+        .saq-textarea {
+            width: 100%;
+            height: 120px;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            margin-bottom: 15px;
+        }
+
+        /* Generic Interactive Button */
+        .btn-action {
+            background-color: rgba(0, 240, 255, 0.1);
+            color: var(--accent-blue);
+            border: 1px solid var(--accent-blue);
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-action:hover {
+            background-color: var(--accent-blue);
+            color: var(--bg-main);
+            box-shadow: 0 0 12px rgba(0,240,255,0.4);
+        }
+
+        /* Feedback and Marking Overrides */
+        .feedback-panel {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #161923;
+            border-left: 4px solid var(--border-color);
+            display: none;
+        }
+
+        .feedback-panel.correct { border-left-color: var(--accent-green); }
+        .feedback-panel.incorrect { border-left-color: #ff5555; }
+        .feedback-panel.neutral { border-left-color: var(--accent-orange); }
+
+        .feedback-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 1.05rem;
+        }
+
+        .exemplar-box {
+            background-color: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 12px;
+            border: 1px dashed rgba(255,255,255,0.1);
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+            font-size: 13px;
+        }
+
+        .score-adjuster {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            background: rgba(255,255,255,0.02);
+            padding: 8px 12px;
+            border-radius: 6px;
+            width: fit-content;
+        }
+
+        .score-adjuster input {
+            width: 50px;
+            background: var(--bg-main);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 4px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        /* Vector Class Diagram CSS Grid Layout */
+        .diagram-canvas {
+            background-color: #161722;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .uml-box {
+            background-color: #1e2030;
+            border: 2px solid var(--accent-blue);
+            width: 260px;
+            border-radius: 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            margin: 10px;
+        }
+
+        .uml-header {
+            background-color: rgba(0, 240, 255, 0.1);
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            border-bottom: 2px solid var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .uml-section {
+            padding: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+        }
+
+        .uml-section:not(:last-child) {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .uml-connector-vertical {
+            width: 2px;
+            height: 40px;
+            background-color: var(--text-muted);
+            position: relative;
+        }
+
+        .uml-arrow-up {
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 10px solid var(--text-muted);
+            position: absolute;
+            top: -10px;
+            left: -7px;
+        }
+
+        .uml-row-container {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 700px;
+            margin-top: 10px;
+        }
+
+        /* Summary Dashboard */
+        .summary-banner {
+            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+            border: 1px solid var(--accent-blue);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .summary-score-text {
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .summary-score-val {
+            color: var(--accent-blue);
+            font-size: 2.2rem;
+            font-weight: bold;
+        }
+
+        .footer-nav {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: center;
+            margin-bottom: 60px;
+        }
+
+        .btn-nav-back {
+            background-color: #1e1b4b;
+            color: #ffffff;
+            border: 1px solid var(--border-color);
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-nav-back:hover {
+            background-color: #2e2a72;
+            border-color: var(--accent-blue);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Object-Oriented Paradigm Evaluation Engine</h1>
+        <p>Comprehensive Summative Examination Framework &bull; Advanced Software Engineering Standards</p>
+    </header>
+
+    <div class="container">
+
+        <div class="summary-banner">
+            <div>
+                <div class="summary-score-text">Total Accumulated Assessment Marks</div>
+                <div style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Automatically tallied based on evaluated modules and modified grading allocations</div>
+            </div>
+            <div class="summary-score-val" id="global-score-tally">0 / 90</div>
+        </div>
+
+        <div class="section-card" id="section-mcq">
+            <h2 class="section-title">Section I &mdash; Multiple Choice Inquiries (25 Marks)</h2>
+            <p style="color: var(--text-muted); margin-bottom: 25px;">Select the most accurate option for each structural engineering question. Each item is strictly worth 1 mark.</p>
+            
+            <div id="mcq-container"></div>
+        </div>
+
+        <div class="section-card" id="section-matching">
+            <h2 class="section-title">Section II &mdash; Architectural Terminology Matrix (10 Marks)</h2>
+            <p style="color: var(--text-muted); margin-bottom: 25px;">Map each structural definition statement to its proper object-oriented concept designation. 1 mark per correct mapping.</p>
+            
+            <div id="matching-container"></div>
+            <button class="btn-action" onclick="evaluateTerminologyMatrix()">Submit Terminology Matrix</button>
+            <div class="feedback-panel neutral" id="matching-feedback"></div>
+        </div>
+
+        <div class="section-card" id="section-tables">
+            <h2 class="section-title">Section III &mdash; Quality Assurance Testing Configurations (15 Marks)</h2>
+            <p style="color: var(--text-muted); margin-bottom: 25px;">Analyze the diagnostic parameters and evaluate the targeted functional validation layouts below. 5 marks per table layout.</p>
+
+            <h3>1. Black Box Behavioral Test Case Specification</h3>
+            <p style="font-size: 0.95rem; color: var(--text-muted);">Scenario: A luxury transport booking algorithm computes structural base pricing. Input requirements dictate a distance check ($> 0$).</p>
+            <div class="table-responsive">
+                <table id="table-blackbox">
+                    <thead>
+                        <tr>
+                            <th>Test ID</th>
+                            <th>Target Component Description</th>
+                            <th>Preconditions</th>
+                            <th>Input Data Parameter</th>
+                            <th>Expected Structural Result</th>
+                            <th>Runtime Evaluation Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>TC-BB-01</td>
+                            <td>Standard calculation pass loop</td>
+                            <td>Account active</td>
+                            <td>Distance = 15.5 miles</td>
+                            <td>Compute flat base rate cleanly</td>
+                            <td>
+                                <select class="table-select" data-ans="Pass">
+                                    <option value="">-- Choose --</option>
+                                    <option value="Pass">Pass</option>
+                                    <option value="Fail">Fail</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>TC-BB-02</td>
+                            <td>Zero spatial measurement error boundary</td>
+                            <td>System operational</td>
+                            <td>Distance = 0.0 miles</td>
+                            <td><input type="text" class="table-input" data-ans="raise ValueError,Throw Error,Error,Exception" placeholder="Expected execution state?"></td>
+                            <td>
+                                <select class="table-select" data-ans="Fail">
+                                    <option value="">-- Choose --</option>
+                                    <option value="Pass">Pass</option>
+                                    <option value="Fail">Fail</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn-action" onclick="evaluateBlackBoxTable()">Submit Black Box Specifications</button>
+            <div class="feedback-panel neutral" id="blackbox-feedback"></div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 30px 0;">
+
+            <h3>2. White Box Control-Path Sequence Mapping</h3>
+            <p style="font-size: 0.95rem; color: var(--text-muted);">Scenario: Diagnostic trace mapping branches inside a localized nested logical state evaluation statement block.</p>
+            <div class="table-responsive">
+                <table id="table-whitebox">
+                    <thead>
+                        <tr>
+                            <th>Path ID</th>
+                            <th>Executed Code Branch Scenario</th>
+                            <th>Conditional Evaluation Point</th>
+                            <th>Target Variable Mutator</th>
+                            <th>Expected Structural Output</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>WB-PT-01</td>
+                            <td>High-priority user verification route</td>
+                            <td>if user.is_admin == True</td>
+                            <td>override_clearance = True</td>
+                            <td><input type="text" class="table-input" data-ans="Access Granted,Granted,True" placeholder="Output state string?"></td>
+                        </tr>
+                        <tr>
+                            <td>WB-PT-02</td>
+                            <td>Standard guest execution fallback loop</td>
+                            <td>else block activation</td>
+                            <td>override_clearance = False</td>
+                            <td>
+                                <select class="table-select" data-ans="Access Restricted">
+                                    <option value="">-- Choose Fallback --</option>
+                                    <option value="Access Granted">Access Granted</option>
+                                    <option value="Access Restricted">Access Restricted</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn-action" onclick="evaluateWhiteBoxTable()">Submit White Box Maps</button>
+            <div class="feedback-panel neutral" id="whitebox-feedback"></div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 30px 0;">
+
+            <h3>3. Grey Box Architectural Integration Diagnostic</h3>
+            <p style="font-size: 0.95rem; color: var(--text-muted);">Scenario: Inter-class data structural validation tracking data packet transfers between public and private bounds.</p>
+            <div class="table-responsive">
+                <table id="table-greybox">
+                    <thead>
+                        <tr>
+                            <th>Diagnostic ID</th>
+                            <th>Integrated Component Layer Check</th>
+                            <th>Underlying Schema Context</th>
+                            <th>Observed Internal Data State</th>
+                            <th>System Response Target</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>GB-ID-01</td>
+                            <td>Database entity interface linkage</td>
+                            <td>Foreign Key pointer assignment</td>
+                            <td>Account ID mismatch anomaly</td>
+                            <td>
+                                <select class="table-select" data-ans="Reject Request">
+                                    <option value="">-- Choose --</option>
+                                    <option value="Process Request">Process Request</option>
+                                    <option value="Reject Request">Reject Request</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>GB-ID-02</td>
+                            <td>Private attribute wrapper verification</td>
+                            <td>Getter method lookup execution</td>
+                            <td>__shadow_balance read request</td>
+                            <td><input type="text" class="table-input" data-ans="Return Private Value,Return data,value,balance" placeholder="Expected return operation?"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn-action" onclick="evaluateGreyBoxTable()">Submit Grey Box Integrity Checks</button>
+            <div class="feedback-panel neutral" id="greybox-feedback"></div>
+        </div>
+
+        <div class="section-card" id="section-saq">
+            <h2 class="section-title">Section I&mdash; Short Answer Architectural Inquiries (15 Marks)</h2>
+            <p style="color: var(--text-muted); margin-bottom: 25px;">Formulate analytical engineering evaluations based on the structural constraints described. Self-tally your score allocations honestly using the verification templates provided.</p>
+            <div id="saq-container"></div>
+        </div>
+
+        <div class="section-card" id="section-coding">
+            <h2 class="section-title">Section V &mdash; Production Implementation Tasks (25 Marks)</h2>
+            <p style="color: var(--text-muted); margin-bottom: 25px;">Synthesize elegant object-oriented code architecture scripts following the structural prompt directives. Code changes instantly trigger live lexical context coloring inside the production editor workspaces.</p>
+
+            <div id="coding-tasks-container"></div>
+
+            <div class="coding-container" id="code-block-5">
+                <div class="instructions-panel">
+                    <h4>Task 6 &mdash; Advanced Architectural Extension Challenge (5 Marks)</h4>
+                    <p>Translate the exact structural system specifications mapped inside the interactive UML structural class blueprint schematic below into a fully realized, stable execution script layout block.</p>
+                    
+                    <div class="diagram-canvas">
+                        <div class="uml-box">
+                            <div class="uml-header">StorageAsset &lt;&lt;Abstract&gt;&gt;</div>
+                            <div class="uml-section">
+                                # _asset_code: str<br>
+                                # _base_capacity: int
+                            </div>
+                            <div class="uml-section">
+                                + __init__(code, cap)<br>
+                                + calculate_load(): float [Abstract]
+                            </div>
+                        </div>
+                        <div class="uml-connector-vertical">
+                            <div class="uml-arrow-up"></div>
+                        </div>
+                        <div class="uml-row-container">
+                            <div class="uml-box">
+                                <div class="uml-header">CloudVault</div>
+                                <div class="uml-section">
+                                    + encryption_factor: float
+                                </div>
+                                <div class="uml-section">
+                                    + calculate_load(): float
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p style="margin-top: 15px; font-size: 0.95rem;"><strong>Detailed Implementation Parameters:</strong></p>
+                    <ul style="padding-left: 20px; font-size: 0.95rem; color: var(--text-muted);">
+                        <li><strong>StorageAsset Class:</strong> Must inherit from <code>ABC</code>. Declare protected attributes <code>_asset_code</code> and <code>_base_capacity</code> using standard initialization logic. Establish <code>calculate_load()</code> as a decorated abstract method stub containing no operational code.</li>
+                        <li><strong>CloudVault Class:</strong> Inherit cleanly from <code>StorageAsset</code>. Pass variables up through standard parent linkages using the <code>super()</code> function block setup inside the constructor. Provide a unique <code>encryption_factor</code> float multiplier property. Override <code>calculate_load()</code> to return the mathematical product of <code>_base_capacity</code> multiplied by the localized <code>encryption_factor</code> value.</li>
+                    </ul>
+                </div>
+                <div class="editor-workspace">
+                    <div class="editor-top-bar">
+                        <span>vault_architecture.py</span>
+                        <span>Python Environment Simulator</span>
+                    </div>
+                    <div class="editor-inner">
+                        <pre class="editor-highlight" id="highlighter-5"></pre>
+                        <textarea class="editor-textarea" id="editor-5" spellcheck="false" autocomplete="off" oninput="processEditorState(5)" onkeydown="interceptKeyboardEvents(event, 5)"></textarea>
+                    </div>
+                </div>
+                <button class="btn-action" onclick="evaluateCodingTask(5)">Evaluate Production Deployment Script</button>
+                <div class="feedback-panel neutral" id="code-feedback-5"></div>
+            </div>
+
+        </div>
+
+        <div class="footer-nav">
+            <a href="index.html" class="btn-nav-back">&larr; Return to Central Dashboard Network</a>
+        </div>
+
+    </div>
+
+    <script>
+        // METRIC TALLY TRACKING REGISTRY
+        const examGradesRegistry = {
+            mcq: Array(10).fill(0),
+            matching: 0,
+            blackbox: 0,
+            whitebox: 0,
+            greybox: 0,
+            saq: Array(5).fill(0),
+            code: Array(6).fill(0)
+        };
+
+        function recalculateGlobalScoreTally() {
+            let runningSum = 0;
+            runningSum += examGradesRegistry.mcq.reduce((a, b) => a + b, 0);
+            runningSum += examGradesRegistry.matching;
+            runningSum += examGradesRegistry.blackbox;
+            runningSum += examGradesRegistry.whitebox;
+            runningSum += examGradesRegistry.greybox;
+            runningSum += examGradesRegistry.saq.reduce((a, b) => a + b, 0);
+            runningSum += examGradesRegistry.code.reduce((a, b) => a + b, 0);
+            
+            document.getElementById('global-score-tally').innerText = `${runningSum} / 90`;
+        }
+
+        // DATABASE OBJECTS CONTAINING FRESH SYSTEM SPECIFICATIONS
+        const mcqDataCollection = [
+    { 
+        id: 1, 
+        q: "Which core principle of the Object-Oriented Paradigm involves bundling data (attributes) and methods into a single unit while restricting direct external access to preserve data integrity?", 
+        options: ["Abstraction", "Inheritance", "Encapsulation", "Polymorphism"], 
+        ans: 2, // Encapsulation is at index 2
+        exp: "Encapsulation acts as a protective shell or capsule that bundles variables and actions together, hiding the internal data from the outside world to protect it from accidental or malicious modification." 
+    },
+    { 
+        id: 2, 
+        q: "A developer has written three distinct classes: Student, Teacher, and Administrator. All three classes repeat identical variables for name, email, and phone_number. What architectural design flaw has occurred here?", 
+        options: ["Over-generalisation", "Under-generalisation", "Malformed encapsulation", "Excessive modularity"], 
+        ans: 1, // Under-generalisation is at index 1
+        exp: "Under-generalisation occurs when a developer fails to extract shared common traits into a superclass. This creates unnecessary code redundancy and duplicates data across parallel structures." 
+    },
+    { 
+        id: 3, 
+        q: "Consider a parent class Animal with a method make_sound(). If subclasses Dog and Cat provide their own unique versions of make_sound() to return 'Bark' and 'Meow', which mechanism is being used?", 
+        options: ["Method Overloading", "Method Overriding", "Data Encapsulation", "Interface Implementation"], 
+        ans: 1, // Method Overriding is at index 1
+        exp: "Method overriding occurs when a specialized child class replaces a general method implementation that it inherited from its base superclass with its own custom code logic." 
+    },
+    { 
+        id: 4, 
+        q: "In Python class design, what syntactic visibility indicator is used to flag an attribute as strictly 'Private', causing name mangling so that external code cannot easily access or change it directly?", 
+        options: ["self.attribute", "self._attribute", "self.__attribute", "self.attribute_private"], 
+        ans: 2, // self.__attribute is at index 2
+        exp: "A double underscore prefix (__) establishes private visibility in Python. This hides the field from direct external modification and changes its internal identifier name to protect the state." 
+    },
+    { 
+        id: 5, 
+        q: "Which option provides the most accurate definition of the difference between an Instance and a Class in memory?", 
+        options: [
+            "A class is a concrete block of memory, whereas an instance is a theoretical blueprint found only in source code templates.", 
+            "A class is the structural blueprint defined in the code, whereas an instance is the concrete object realization allocated inside the system memory at runtime.", 
+            "They are completely identical and share the exact same reference pointers and attribute states inside memory.", 
+            "Classes handle database integrity keys, while instances only handle automated black-box test runs."
+        ], 
+        ans: 1, // The second option is at index 1
+        exp: "A class represents the static template layout and rule system, while an object/instance is the concrete entity generated at execution time that contains its own unique attribute states inside memory." 
+    },
+    { 
+        id: 6, 
+        q: "A system models a University class and a Department class. If the University class is destroyed and the Department instances are immediately destroyed along with it because they cannot exist independently, what relationship style does this represent?", 
+        options: ["Aggregation", "Dependency", "Composition", "Generalisation"], 
+        ans: 2, // Composition is at index 2
+        exp: "Composition represents an absolute relationship of strict ownership. The sub-objects are tightly bound to the parent's lifecycle; they are created and destroyed inline with the container instance." 
+    },
+    { 
+        id: 7, 
+        q: "In Python, if a developer wishes to create a pure abstract class template that cannot be instantiated directly and forces subclasses to fulfill an interface structure contract, which approach must be chosen?", 
+        options: [
+            "Import the unittest framework and declare mock parameter blocks.", 
+            "Inherit from the ABC class from the built-in abc module and use the @abstractmethod decorator.", 
+            "Declare all class attributes using public single underscores.", 
+            "Implement a runtime loop that changes all variables into composite tracking keys."
+        ], 
+        ans: 1, // The second option is at index 1
+        exp: "Python utilizes the 'abc' (Abstract Base Classes) library. Inheriting from ABC and marking functions with @abstractmethod prevents instantiation and guarantees that child structures implement those methods." 
+    },
+    { 
+        id: 8, 
+        q: "What design outcome directly manifests if a software engineer heavily over-generalises a system layout hierarchy?", 
+        options: [
+            "Code becomes completely duplicated across multiple separate modules.", 
+            "Specific traits or non-universal properties are pushed up into a base superclass, polluting unrelated child structures and forcing messy method overrides.", 
+            "Classes lose all access to inheritance paths and default back to step-by-step procedural styles.", 
+            "Data validation safeguards are completely bypassed, compromising data security."
+        ], 
+        ans: 1, // The second option is at index 1
+        exp: "Over-generalisation occurs when a trait that belongs only to a few select children is wrongly placed in the superclass. This pollutes other subclasses with irrelevant features they don't use or need." 
+    },
+    { 
+        id: 9, 
+        q: "What is the primary architectural purpose of utilizing class method accessor patterns (Getters and Setters) instead of allowing direct public attribute access?", 
+        options: [
+            "To accelerate compilation speed and optimize processor runtime pathways.", 
+            "To hide the class definitions from automated black-box software testing frameworks.", 
+            "To enforce data security and state integrity by protecting fields behind private indicators and running structural validation checks inside setters.", 
+            "To automatically convert 1..* cardinality associations into solid composition lines."
+        ], 
+        ans: 2, // The third option is at index 2
+        exp: "Accessor methods enforce encapsulation. Setters act as gatekeepers, running conditional checks (e.g., checking if a value is positive or within range bounds) before modifying internal data." 
+    },
+    { 
+        id: 10, 
+        q: "Review the following Python snippet:\n\nclass Payment:\n    def process(self):\n        return 0\n\nclass CardPayment(Payment):\n    def process(self):\n        return 1\n\nWhich statement best describes the compile/runtime processing implications shown?", 
+        options: [
+            "The snippet shows method overloading which relies on static binding resolved at compile-time.", 
+            "The snippet shows method overriding which relies on dynamic binding resolved at runtime based on the actual object type instance.", 
+            "The snippet will trigger a syntax error because two methods share the same identifier name.", 
+            "The snippet shows a structural aggregation relationship using an open arrow line indicator."
+        ], 
+        ans: 1, // The second option is at index 1
+        exp: "The subclass overrides the process() method. This relies on dynamic binding (late binding), where the execution environment evaluates the object type instance at runtime to execute the correct method." 
+    },
+    { 
+        id: 11, 
+        q: "On a standard Unified Modelling Language (UML) class diagram, how is a weak aggregation relationship (where component parts can exist independently of the container framework) visually indicated?", 
+        options: [
+            "A solid line with a solid, filled black triangle arrowhead pointing to the child.", 
+            "A dashed line with an open arrow pointing toward a temporary parameter class.", 
+            "A solid line with an open, hollow diamond shape connector at the container class end.", 
+            "A solid line with a filled black diamond shape connector at the container class end."
+        ], 
+        ans: 2, // A solid line with an open, hollow diamond shape is at index 2
+        exp: "An open/hollow diamond represents aggregation (weak ownership), whereas a filled/solid diamond represents composition (absolute lifecycle ownership)." 
+    },
+    { 
+        id: 12, 
+        q: "What key characteristic distinguishes a pure Interface contract from a balanced Abstract Class framework layout?", 
+        options: [
+            "Interfaces completely exclude standard implementation logic blocks and code bodies, serving as a pure structural agreement.", 
+            "Interfaces automatically force all attributes to match private visibility name patterns.", 
+            "Abstract classes cannot contain any attributes or constructor logic.", 
+            "Interfaces utilize solid lines with hollow triangle arrows to show temporary dependencies."
+        ], 
+        ans: 0, // The first option is at index 0
+        exp: "An interface defines what methods a class must have without providing any working code bodies or implementation logic. It serves as a pure structural contract." 
+    },
+    { 
+        id: 13, 
+        q: "Which level of the software testing hierarchy focuses on verifying isolated component modules, functions, or algorithmic blocks independently to confirm their internal logical calculations operate correctly?", 
+        options: ["Integration Testing", "Unit Testing", "Regression Testing", "System Testing"], 
+        ans: 1, // Unit Testing is at index 1
+        exp: "Unit testing involves isolating specific fragments of code (like an individual class method) and testing them in an independent state to verify accuracy before integration." 
+    },
+    { 
+        id: 14, 
+        q: "In an Entity-Relationship Diagram (ERD), a customer can place multiple orders, but each order belongs to exactly one customer. What type of relationship cardinality is this, and how is it maintained?", 
+        options: [
+            "Many-to-Many; maintained by generating a primary composite key array layout.", 
+            "One-to-Many (1..*); maintained by placing a Foreign Key (FK) in the Order table pointing to the Customer's Primary Key (PK).", 
+            "One-to-One (1..1); maintained by enforcing private class methods inside the database engine.", 
+            "Dependency association; maintained by a dashed line with an open triangle arrowhead."
+        ], 
+        ans: 1, // The second option is at index 1
+        exp: "A relationship where one entity links to multiple instances of another is a One-to-Many cardinality. It is linked in relational database schemas using a Foreign Key (FK) in the child table." 
+    },
+    { 
+        id: 15, 
+        q: "What type of software validation testing checks the code from an 'opaque' perspective, validating functional inputs against expected outputs without having any knowledge or visibility of the internal source code architecture?", 
+        options: ["White Box Testing", "Black Box Testing", "Grey Box Testing", "Unit Integration Testing"], 
+        ans: 1, // Black Box Testing is at index 1
+        exp: "Black box testing treats the software as an opaque container, evaluating only if the inputs generate valid functional outputs according to requirements, without inspecting code logic." 
+    },
+    { 
+        id: 16, 
+        q: "Which testing topology validates execution sequences utilizing high-level behavioral inputs while simultaneously analyzing underlying technical relationships or database structure tracking models?", 
+        options: ["Black Box Testing", "White Box Testing", "Grey Box Testing", "Automated Regression Pipeline Sweeps"], 
+        ans: 2, // Grey Box Testing is at index 2
+        exp: "Grey box testing combines elements of both. It evaluates user-facing functional pathways (black box) while leveraging knowledge of internal structural database relationships or objects (white box)." 
+    },
+    { 
+        id: 17, 
+        q: "When engineers modify an existing class hierarchy structure to add a new feature, they must ensure that the older, pre-existing functional pathways have not been broken or corrupted. What form of testing targets this specific goal?", 
+        options: ["Unit Isolation Testing", "Black Box Boundary Evaluation", "Regression Testing", "Task Definition Validation"], 
+        ans: 2, // Regression Testing is at index 2
+        exp: "Regression testing ensures that modifications, optimizations, or newly introduced features have not inadvertently corrupted or broken existing, verified system features." 
+    },
+    { 
+        id: 18, 
+        q: "Review this Python constructor snippet:\n\nclass SubClass(ParentClass):\n    def __init__(self, name, level):\n        super().__init__(name)\n        self.level = level\n\nWhat is the architectural purpose of the super().__init__(name) statement?", 
+        options: [
+            "It automatically converts the subclass into a pure abstract interface layout.", 
+            "It invokes the parent class constructor to properly initialize inherited attributes before the child appends its unique properties.", 
+            "It instantiates an isolated black-box unit testing routine in memory.", 
+            "It alters the method binding from dynamic runtime pathways over to static compile-time parameters."
+        ], 
+        ans: 1, // The second option is at index 1
+        exp: "The super() function allows a child subclass to invoke methods from its parent class. Within a constructor, it guarantees that inherited fields are correctly initialized first." 
+    },
+    { 
+        id: 19, 
+        q: "A developer needs to write a formal manual test case to evaluate a login form module. Which of the following selections captures the minimum necessary parameters required for a professional, traceable test case record?", 
+        options: [
+            "Class Name, Method Visibility, Total Code Lines, Developer ID.", 
+            "Test Case ID, Description, Preconditions, Test Steps, Test Data, Expected Result, Actual Result, Status.", 
+            "UML Line Style, Arrowhead Vector Coordinates, Cardinality Constraints.", 
+            "Python Module Type, Abstract Base Class Indicator, Target Superclass Link."
+        ], 
+        ans: 1, // The second option is at index 1
+        exp: "A professional manual test case must maintain explicit tracking parameters including ID, description, preconditions, steps, input data, expected vs actual results, and pass/fail status." 
+    },
+    { 
+        id: 20, 
+        q: "Which option correctly matches the visual UML line and arrow styles used to denote an Inheritance relationship versus an Interface Implementation contract?", 
+        options: [
+            "Inheritance uses a dashed line with an open arrow; Implementation uses a solid line with a hollow triangle.", 
+            "Inheritance uses a solid line with a hollow triangle pointing up; Implementation uses a dashed line with a hollow triangle pointing up.", 
+            "Inheritance uses a solid line with an open diamond; Implementation uses a dashed line with a solid black diamond.", 
+            "They share the exact same style: a solid line with a flat horizontal connector arrow."
+        ], 
+        ans: 1, // The second option is at index 1
+        exp: "In UML notation, inheritance (generalisation) is mapped using a solid line with a hollow triangle arrowhead pointing up to the parent. Interface implementation (realization) uses a dashed line with a hollow triangle pointing up." 
+    },
+    { 
+        id: 21, 
+        q: "Which approach focuses on breaking a large, complex system down from the 'Big Picture' view into progressively smaller, detailed sub-parts or modular class groups?", 
+        options: ["Bottom-Up Integration Approach", "Top-Down Decomposition Approach", "Opaque Structural Mutation Approach", "Composite Key Cardinality Alignment"], 
+        ans: 1, // Top-Down Decomposition Approach is at index 1
+        exp: "A top-down approach begins with the highest system architecture level and systematically breaks it down into smaller, granular sub-components (decomposition)." 
+    },
+    { 
+        id: 22, 
+        q: "If a software question asks why Object-Oriented Analysis and Design (OOAD) is preferred over historical Procedural (step-by-step) programming frameworks for enterprise architectures, the core answer is always:", 
+        options: [
+            "Procedural code completely prevents the use of public visibility parameters.", 
+            "OOAD offers superior complexity management, modularity, and system maintainability over time.", 
+            "OOAD completely avoids utilizing random runtime memory allocations.", 
+            "Procedural architectures are unable to process multi-table primary relational keys."
+        ], 
+        ans: 1, // The second option is at index 1
+        exp: "The primary goals of the Object-Oriented paradigm are managing architectural complexity, isolating logic flaws via encapsulation, and increasing maintainability through reusable hierarchies." 
+    },
+    { 
+        id: 23, 
+        q: "Review the following Python implementation:\n\nclass Account:\n    def __init__(self):\n        self._balance = 100.0\n\nWhat visibility indicator condition is applied to the _balance variable, and what message does it send to other developers?", 
+        options: [
+            "It is strictly Private; Python will execute name mangling to completely block subclass reading.", 
+            "It is Protected; it serves as a warning that external modules should not modify this directly unless they are a subclass.", 
+            "It is Public; anyone can freely read and corrupt the property across any external network framework.", 
+            "It is an Interface; it contains no working method bodies or logic statements."
+        ], 
+        ans: 1, // The second option is at index 1
+        exp: "A single underscore prefix denotes a protected attribute in Python syntax rules. It serves as an architectural warning to keep out unless operating inside a child subclass." 
+    },
+    { 
+        id: 24, 
+        q: "What type of software testing relies on an automated continuous environment pipeline (e.g., GitHub Actions) to instantly run an entire test suite whenever a script commit is pushed?", 
+        options: ["Manual Test Case Audit", "Opaque Black Box Input Mapping", "CI/CD Pipeline Automated Testing", "Composite Key Validation Loops"], 
+        ans: 2, // CI/CD Pipeline Automated Testing is at index 2
+        exp: "CI/CD (Continuous Integration / Continuous Deployment) pipelines automate verification loops, executing unit, integration, and regression test suites automatically on every script upload." 
+    },
+    { 
+        id: 25, 
+        q: "A system tracks an absolute relationship where a specific entity record cannot be written into a database table unless its referencing key matches a valid, pre-existing identifier row in an external parent table. This core concept is known as:", 
+        options: [
+            "Data Encapsulation encapsulation checks", 
+            "Foreign Key constraints ensuring data integrity", 
+            "Late Runtime Dynamic Binding loops", 
+            "Under-generalisation redundancy schemas"
+        ], 
+        ans: 1, // The second option is at index 1
+        exp: "Foreign keys act as relational pointers connecting entities across tables. They enforce constraints that ensure data integrity, preventing orphan rows and malformed records." 
+    }
+];
+
+        const matchingTermsCollection = [
+            { id: 1, text: "Bundling state data alongside functional methods while locking explicit accessibility routes.", ans: "Encapsulation" },
+            { id: 2, text: "Deriving properties and functional methods from a common superclass structure context.", ans: "Inheritance" },
+            { id: 3, text: "Hiding deep background procedural complexity behind clean uniform interface structures.", ans: "Abstraction" },
+            { id: 4, text: "Permitting varied custom subclass behaviors to fire across matching structural message parameters.", ans: "Polymorphism" },
+            { id: 5, text: "Extracting recurring code features from individual components into a shared base template class layout.", ans: "Generalisation" },
+            { id: 6, text: "Absolute structural lifecycle containment where component pieces require parent persistence.", ans: "Composition" },
+            { id: 7, text: "Loose associative groupings where individual components maintain independent lifespans.", ans: "Aggregation" },
+            { id: 8, text: "Unique structural identifier field verifying database instances securely without replication anomalies.", ans: "Primary Key" },
+            { id: 9, text: "Programmatic code verification frameworks addressing micro-level logical integrity limits.", ans: "Unit Testing" },
+            { id: 10, text: "Resolving specific polymorphism code routine calls natively at run execution time checkpoints.", ans: "Dynamic Binding" }
+        ];
+
+        const wordPoolOptions = ["Encapsulation", "Inheritance", "Abstraction", "Polymorphism", "Generalisation", "Composition", "Aggregation", "Primary Key", "Unit Testing", "Dynamic Binding"];
+
+        const saqQuestionsCollection = [
+    { 
+        id: 1, 
+        q: "Differentiate clearly between the conceptual intents of Generalisation within the architecture design phase and Inheritance during final system implementation.", 
+        marks: 3, 
+        exp: "Generalisation belongs to the design phase and uses a bottom-up perspective to find shared characteristics across multiple distinct classes, abstracting them into a non-redundant schema. In contrast, Inheritance belongs to the implementation phase and represents a top-down perspective where a subclass physically links to a parent class. It uses technical mechanisms like the super() function to directly reuse, extend, or modify code within memory.",
+        criteria: "1 Mark: Correctly identifying Generalisation as a design phase process focused on abstraction/identifying shared traits from a bottom-up perspective. 1 Mark: Correctly identifying Inheritance as an implementation phase mechanism establishing technical links from a top-down perspective. 1 Mark: Highlighting the distinct purpose/tools of each (e.g., non-redundant schema vs. code reusability using super())."
+    },
+    { 
+        id: 2, 
+        q: "Analyze the architectural software ramifications that emerge if a developer heavily over-generalizes a system class layout structure.", 
+        marks: 3, 
+        exp: "Over-generalisation occurs when a developer incorrectly places a specific trait or behavior into a superclass where it does not logically belong to all child classes. This design flaw breaks the architectural coherence of the hierarchy and pollutes the child structures by forcing them to inherit irrelevant properties. As a consequence, it creates structural bloat and forces developers to write messy method overrides to disable or handle the non-applicable features.",
+        criteria: "1 Mark: Defining over-generalisation as putting a trait in the superclass that does not belong to all children. 1 Mark: Explaining the ramification of structural pollution or bloat in the subclasses. 1 Mark: Explaining the ramification of breaking logical coherence or forcing unnecessary/messy method overrides."
+    },
+    { 
+        id: 3, 
+        q: "Explain why a class method accessor pattern (Getters and Setters) is used over direct public attribute access, focusing on data security and structural validation.", 
+        marks: 3, 
+        exp: "Using direct public attribute access leaves class data completely unprotected, allowing outside code to maliciously or accidentally corrupt variables. The accessor pattern enforces encapsulation by hiding variables behind private visibility indicators, such as double underscores (__name). This forces outside code to use dedicated methods where getters safely read data and setters run validation checks, such as conditional statements or range bounds, ensuring data integrity.",
+        criteria: "1 Mark: Identifying that direct public access lacks validation controls and exposes private state data to external corruption. 1 Mark: Explaining how getters and setters enforce encapsulation using visibility indicators (e.g., private variables) to protect internal data. 1 Mark: Explaining that setters permit structural validation loops (e.g., conditional range checks) to safeguard state integrity."
+    },
+    { 
+        id: 4, 
+        q: "Contrast the behavioral differences and processing implications between Method Overloading (Static Binding) and Method Overriding (Dynamic Binding).", 
+        marks: 3, 
+        exp: "Method Overloading occurs within a single class where multiple methods share the exact same name but maintain unique parameter structures, and this binding decision is resolved by the compiler at compile-time. Method Overriding operates across separate parent and child classes, allowing a specialized subclass to completely replace a general method implementation inherited from its superclass. Overriding relies on dynamic binding, meaning the runtime environment determines which version to run based on the actual object type instance.",
+        criteria: "1 Mark: Contrasting the structural locations (Overloading happens within one class; Overriding happens across parent and child classes). 1 Mark: Contrasting the signature mechanisms (Overloading uses matching names with different parameters; Overriding replaces an identical parent method signature). 1 Mark: Contrasting the compilation processing (Overloading uses static binding resolved at compile-time; Overriding uses dynamic binding resolved at runtime)."
+    },
+    { 
+        id: 5, 
+        q: "Evaluate why maintaining independent lifespans separates Aggregation structures from Composition ownership design patterns inside systems software architecture.", 
+        marks: 3, 
+        exp: "Composition represents an absolute relationship of strict ownership where sub-component parts are tightly bound inside the lifecycle of the parent whole, meaning they are created and destroyed inline with the master object. Aggregation represents a weak ownership structure where the referenced components maintain a completely independent existence. If the primary collection or container framework is destroyed, the aggregated items continue to exist externally outside that database lifetime.",
+        criteria: "1 Mark: Explicitly defining Composition as absolute ownership where the child parts cannot exist outside the lifecycle of the parent. 1 Mark: Explicitly defining Aggregation as a weak ownership structure where the component parts can exist independently of the container. 1 Mark: Directly contrasting the lifecycle outcomes when the master object is destroyed (Composition destroys parts inline; Aggregation leaves external references intact)."
+    }
+];
+
+        const codingPromptsCollection = [
+            {
+                id: 0,
+                title: "Task 1 &mdash; Encapsulation Model: Smart Canteen Transaction Hub",
+                desc: "Design a secure validation script tracking campus dining transactions through a <code>CanteenCard</code> system structure.",
+                reqs: [
+                    "Define a <code>CanteenCard</code> class structure tracking private instance attributes: <code>__card_id</code>, <code>__balance</code>, and <code>__student_name</code>.",
+                    "Implement functional getter tracking routines for all three private attributes.",
+                    "Build a robust validation setter block regulating <code>balance</code> updates: if values drop below zero or scale past £200.00, trigger a descriptive <code>ValueError</code>."
+                ],
+                keywords: ["class CanteenCard", "__card_id", "__balance", "__student_name", "raise ValueError", "def balance"],
+                exemplar: "class CanteenCard:\n    def __init__(self, card_id, balance, student_name):\n        self.__card_id = card_id\n        if balance < 0 or balance > 200:\n            raise ValueError('Invalid balance bounds')\n        self.__balance = balance\n        self.__student_name = student_name\n\n    @property\n    def card_id(self):\n        return self.__card_id\n\n    @property\n    def balance(self):\n        return self.__balance\n\n    @balance.setter\n    def balance(self, value):\n        if value < 0 or value > 200:\n            raise ValueError('Out of allowed bounds')\n        self.__balance = value\n\n    @property\n    def student_name(self):\n        return self.__student_name"
+            },
+            {
+                id: 1,
+                title: "Task 2 &mdash; Subclass Inheritance Hierarchy: Corporate Asset Trackers",
+                desc: "Model a corporate resource fleet framework mapping generalized base elements into specific physical variants.",
+                reqs: [
+                    "Formulate a <code>LogisticsAsset</code> master base class configuring protected variables: <code>_asset_reference</code> and <code>_operational_status</code>.",
+                    "Add a base method named <code>calculate_risk_index()</code> returning a generic string message indicating evaluation states are undefined.",
+                    "Derive a specialized subclass titled <code>HeavyTruck</code>. Pass core variables up using the <code>super()</code> mechanism block, add a unique <code>cargo_weight_limit</code> attribute, and override <code>calculate_risk_index()</code> to return a custom risk message configuration."
+                ],
+                keywords: ["class LogisticsAsset", "_asset_reference", "_operational_status", "calculate_risk_index", "class HeavyTruck", "super().__init__"],
+                exemplar: "class LogisticsAsset:\n    def __init__(self, asset_reference, operational_status):\n        self._asset_reference = asset_reference\n        self._operational_status = operational_status\n\n    def calculate_risk_index(self):\n        return 'Undefined risk architecture'\n\nclass HeavyTruck(LogisticsAsset):\n    def __init__(self, asset_reference, operational_status, cargo_weight_limit):\n        super().__init__(asset_reference, operational_status)\n        self.cargo_weight_limit = cargo_weight_limit\n\n    def calculate_risk_index(self):\n        return f'Evaluated risk based on {self.cargo_weight_limit} tons limit'"
+            },
+            {
+                id: 2,
+                title: "Task 3 &mdash; System Blueprint Abstraction: Industrial Fluid Processors",
+                desc: "Establish a standardized mechanical interface blueprint utilizing abstract base class structures.",
+                reqs: [
+                    "Create an abstract class structure named <code>FluidProcessor</code> that inherits from <code>ABC</code>, initializing a private <code>__model_series</code> attribute.",
+                    "Construct an abstract tracking blueprint method definition called <code>compute_flow_rate()</code> using the <code>@abstractmethod</code> decorator tool.",
+                    "Engineer a working implementation subclass called <code>CryoValve</code>. Validate inputs inside the subclass constructor: if a custom tracking property <code>pipe_diameter</code> reads less than or equal to zero, instantly raise a distinct <code>ValueError</code>. Override the abstract method to execute concrete calculation steps."
+                ],
+                keywords: ["from abc import ABC, abstractmethod", "class FluidProcessor(ABC)", "@abstractmethod", "class CryoValve", "pipe_diameter", "raise ValueError"],
+                exemplar: "from abc import ABC, abstractmethod\n\nclass FluidProcessor(ABC):\n    def __init__(self, model_series):\n        self.__model_series = model_series\n\n    @abstractmethod\n    def compute_flow_rate(self):\n        pass\n\nclass CryoValve(FluidProcessor):\n    def __init__(self, model_series, pipe_diameter):\n        super().__init__(model_series)\n        if pipe_diameter <= 0:\n            raise ValueError('Diameter must be positive')\n        self.pipe_diameter = pipe_diameter\n\n    def compute_flow_rate(self):\n        return 3.14 * self.pipe_diameter * 1.5"
+            },
+            {
+                id: 3,
+                title: "Task 4 &mdash; Architectural Generalisation Phase: Network Directory Hub",
+                desc: "Unify separate data structures into an organized superclass hierarchy model context.",
+                reqs: [
+                    "Abstract common structural components from disparate entities into a general <code>NetworkNode</code> superclass using attributes: <code>ip_address</code> and <code>mac_address</code>.",
+                    "Include a structural display method block titled <code>fetch_telemetry()</code> to render basic system metrics cleanly.",
+                    "Derive individual clean subclass nodes tracking <code>ServerNode</code>, <code>WorkstationNode</code>, and <code>RouterNode</code> profiles, adding role-specific attributes. Instantiate one item per variant to prove structure reusability works flawlessly."
+                ],
+                keywords: ["class NetworkNode", "ip_address", "mac_address", "fetch_telemetry", "class ServerNode", "class WorkstationNode", "class RouterNode"],
+                exemplar: "class NetworkNode:\n    def __init__(self, ip_address, mac_address):\n        self.ip_address = ip_address\n        self.mac_address = mac_address\n\n    def fetch_telemetry(self):\n        return f'Node: {self.ip_address}'\n\nclass ServerNode(NetworkNode):\n    def __init__(self, ip_address, mac_address, rack_id):\n        super().__init__(ip_address, mac_address)\n        self.rack_id = rack_id\n\nclass WorkstationNode(NetworkNode):\n    def __init__(self, ip_address, mac_address, user_login):\n        super().__init__(ip_address, mac_address)\n        self.user_login = user_login\n\nclass RouterNode(NetworkNode):\n    def __init__(self, ip_address, mac_address, port_count):\n        super().__init__(ip_address, mac_address)\n        self.port_count = port_count\n\nsrv = ServerNode('10.0.0.1', 'AA:BB', 'Rack-A')\nwks = WorkstationNode('10.0.0.5', 'CC:DD', 'Admin')\nrtr = RouterNode('10.0.0.254', 'EE:FF', 24)"
+            },
+            {
+                id: 4,
+                title: "Task 5 &mdash; Polymorphic Processing Pipelines: Eco-Tariff Energy Grids",
+                desc: "Deploy a flexible pricing calculation pipeline executing polymorphic data shifts.",
+                reqs: [
+                    "Formulate a primary <code>TariffScheme</code> base class implementing a <code>calculate_cost(kilowatt_hours)</code> method framework.",
+                    "Derive three unique pricing execution subclasses: <code>SolarEcoTariff</code> (applies a 15% billing credit reduction), <code>IndustrialPeakTariff</code> (applies a 25% premium cost addition), and <code>StandardFixedTariff</code> (applies no base structural cost modifier updates).",
+                    "Demonstrate runtime polymorphism: pass a consistent baseline workload metric across instantiated objects to confirm calculations resolve correctly based on the active structural context."
+                ],
+                keywords: ["class TariffScheme", "calculate_cost", "class SolarEcoTariff", "class IndustrialPeakTariff", "class StandardFixedTariff", "0.85", "1.25"],
+                exemplar: "class TariffScheme:\n    def calculate_cost(self, kilowatt_hours):\n        return kilowatt_hours * 0.20\n\nclass SolarEcoTariff(TariffScheme):\n    def calculate_cost(self, kilowatt_hours):\n        return (kilowatt_hours * 0.20) * 0.85\n\nclass IndustrialPeakTariff(TariffScheme):\n    def calculate_cost(self, kilowatt_hours):\n        return (kilowatt_hours * 0.20) * 1.25\n\nclass StandardFixedTariff(TariffScheme):\n    def calculate_cost(self, kilowatt_hours):\n        return kilowatt_hours * 0.20\n\ntariffs = [SolarEcoTariff(), IndustrialPeakTariff(), StandardFixedTariff()]\nresults = [t.calculate_cost(100) for t in tariffs]"
+            }
+        ];
+
+        // BOOTSTRAP ASSESSMENT PLATFORM INTERACTIVE COMPONENT VIEWS
+        window.onload = function() {
+            renderMultipleChoiceSection();
+            renderTerminologyMatchingMatrix();
+            renderShortAnswerSection();
+            renderCodingWorkspaces();
+        };
+
+        // RENDER LOGIC CONSTRUCTORS
+        function renderMultipleChoiceSection() {
+            const wrapper = document.getElementById('mcq-container');
+            let content = "";
+            mcqDataCollection.forEach((item, index) => {
+                content += `
+                    <div class="question-block" id="mcq-block-${index}">
+                        <div class="question-text">Question ${index + 1}. ${item.q}</div>
+                        <div class="options-container">
+                            ${item.options.map((opt, oIdx) => `
+                                <label class="option-label">
+                                    <input type="radio" name="mcq-radio-${index}" value="${oIdx}">
+                                    ${opt}
+                                </label>
+                            `).join('')}
+                        </div>
+                        <button class="btn-action" style="margin-top:15px;" onclick="evaluateSingleMCQ(${index})">Submit Answer Verification</button>
+                        <div class="feedback-panel neutral" id="mcq-feedback-${index}"></div>
+                    </div>
+                `;
+            });
+            wrapper.innerHTML = content;
+        }
+
+        function renderTerminologyMatchingMatrix() {
+            const wrapper = document.getElementById('matching-container');
+            let content = "";
+            matchingTermsCollection.forEach((item, index) => {
+                content += `
+                    <div class="matrix-row" data-id="${index}">
+                        <div><strong>Definition Parameter Block ${index + 1}:</strong><br><span style="color:var(--text-muted); font-size:0.95rem;">${item.text}</span></div>
+                        <div class="matrix-divider"></div>
+                        <div>
+                            <select class="matrix-select" id="matching-select-${index}">
+                                <option value="">-- Associate Identified Concept Term --</option>
+                                ${wordPoolOptions.map(word => `<option value="${word}">${word}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+                `;
+            });
+            wrapper.innerHTML = content;
+        }
+
+        function renderShortAnswerSection() {
+            const wrapper = document.getElementById('saq-container');
+            let content = "";
+            saqQuestionsCollection.forEach((item, index) => {
+                content += `
+                    <div style="margin-bottom: 30px; padding: 20px; background: rgba(255,255,255,0.01); border: 1px solid var(--border-color); border-radius: 8px;">
+                        <div style="display:flex; justify-content:space-between; font-weight:600; margin-bottom:10px;">
+                            <span>Question ${index + 1} &mdash; System Architecture Evaluation</span>
+                            <span style="color:var(--accent-orange);">[Value: ${item.marks} Marks]</span>
+                        </div>
+                        <p style="margin-top:0; margin-bottom:15px;">${item.q}</p>
+                        <textarea class="saq-textarea" id="saq-input-${index}" placeholder="Type analytical response arguments here..."></textarea>
+                        <button class="btn-action" onclick="submitShortAnswerResponse(${index})">Commit Response Structure</button>
+                        
+                        <div class="feedback-panel neutral" id="saq-feedback-${index}">
+                            <div class="feedback-title">Verification Paradigm Released</div>
+                            <p style="font-size:0.95rem; margin-bottom:10px;">Review the engineering model context guide to calibrate your tracking score values:</p>
+                            <div class="exemplar-box">${item.exp}</div>
+                            <div class="score-adjuster">
+                                <label>Assign Deserved Mark Score:</label>
+                                <input type="number" id="saq-score-override-${index}" min="0" max="${item.marks}" value="0" onchange="overrideShortAnswerMarkAllocation(${index}, ${item.marks})">
+                                <span> / ${item.marks}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            wrapper.innerHTML = content;
+        }
+
+        function renderCodingWorkspaces() {
+            const wrapper = document.getElementById('coding-tasks-container');
+            let content = "";
+            codingPromptsCollection.forEach((item, index) => {
+                content += `
+                    <div class="coding-container" id="code-block-${index}">
+                        <div class="instructions-panel">
+                            <h4>${item.title}</h4>
+                            <p>${item.desc}</p>
+                            <p style="font-size:0.95rem; margin-bottom:5px;"><strong>Structural Requirements Guidelines:</strong></p>
+                            <ul style="padding-left:20px; font-size:0.95rem; color:var(--text-muted); margin-top:5px;">
+                                ${item.reqs.map(r => `<li>${r}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="editor-workspace">
+                            <div class="editor-top-bar">
+                                <span>production_script_${index + 1}.py</span>
+                                <span>Python Environment Simulator</span>
+                            </div>
+                            <div class="editor-inner">
+                                <pre class="editor-highlight" id="highlighter-${index}"></pre>
+                                <textarea class="editor-textarea" id="editor-${index}" spellcheck="false" autocomplete="off" oninput="processEditorState(${index})" onkeydown="interceptKeyboardEvents(event, ${index})"></textarea>
+                            </div>
+                        </div>
+                        <button class="btn-action" onclick="evaluateCodingTask(${index})">Evaluate Production Deployment Script</button>
+                        <div class="feedback-panel neutral" id="code-feedback-${index}"></div>
+                    </div>
+                `;
+            });
+            wrapper.innerHTML = content;
+        }
+
+        // SMOOTH LEXICAL SYNTAX HIGHLIGHTER INTERNAL ENGINE
+        function processEditorState(idx) {
+            const editor = document.getElementById(`editor-${idx}`);
+            const highlighter = document.getElementById(`highlighter-${idx}`);
+            let textValue = editor.value;
+
+            // Lexical pattern substitution routines matching VS Code dark configurations
+            let codeHtml = textValue
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+
+            // Match string literals
+            codeHtml = codeHtml.replace(/(['"])(.*?)\1/g, `<span style="color:var(--vscode-string)">$1$2$1</span>`);
+
+            // Match functional definitions and structural keywords
+            const keywordsList = ["class", "def", "return", "if", "else", "elif", "raise", "from", "import", "pass", "and", "or", "not"];
+            keywordsList.forEach(word => {
+                const reg = new RegExp(`\\b${word}\\b`, 'g');
+                codeHtml = codeHtml.replace(reg, `<span style="color:var(--vscode-keyword)">${word}</span>`);
+            });
+
+            // Match structural system initializers
+            codeHtml = codeHtml.replace(/\b(self)\b/g, `<span style="color:var(--vscode-number)">self</span>`);
+            codeHtml = codeHtml.replace(/\b(ValueError|ABC|abstractmethod)\b/g, `<span style="color:var(--vscode-class)">$1</span>`);
+
+            // Match structural comments
+            codeHtml = codeHtml.replace(/(#.*)/g, `<span style="color:var(--vscode-comment)">$1</span>`);
+
+            highlighter.innerHTML = codeHtml + "\n";
+            // Keep scroll maps aligned perfectly across active layers
+            highlighter.scrollTop = editor.scrollTop;
+            highlighter.scrollLeft = editor.scrollLeft;
+        }
+
+        function interceptKeyboardEvents(e, idx) {
+            const textarea = e.target;
+            
+            // Sync scrolling offsets on structural inputs
+            setTimeout(() => {
+                const highlighter = document.getElementById(`highlighter-${idx}`);
+                highlighter.scrollTop = textarea.scrollTop;
+                highlighter.scrollLeft = textarea.scrollLeft;
+            }, 5);
+
+            // Auto-indent functionality linked to colon terminal statements
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const startPos = textarea.selectionStart;
+                const endPos = textarea.selectionEnd;
+                const text = textarea.value;
+                
+                const currentLineIndex = text.lastIndexOf('\n', startPos - 1);
+                const currentLine = text.substring(currentLineIndex + 1, startPos);
+                
+                // Track standard indents
+                let baseSpaces = "";
+                const matchSpaces = currentLine.match(/^ +/);
+                if (matchSpaces) baseSpaces = matchSpaces[0];
+                
+                // Append nested blocks if colons are read
+                if (currentLine.trim().endsWith(':')) {
+                    baseSpaces += "    ";
+                }
+                
+                const insertedText = "\n" + baseSpaces;
+                textarea.value = text.substring(0, startPos) + insertedText + text.substring(endPos);
+                textarea.selectionStart = textarea.selectionEnd = startPos + insertedText.length;
+                
+                processEditorState(idx);
+            }
+
+            // Standard Tab key indentation integration
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const startPos = textarea.selectionStart;
+                const endPos = textarea.selectionEnd;
+                const text = textarea.value;
+                
+                textarea.value = text.substring(0, startPos) + "    " + text.substring(endPos);
+                textarea.selectionStart = textarea.selectionEnd = startPos + 4;
+                
+                processEditorState(idx);
+            }
+        }
+
+        // EVALUATION PIPELINE CONTROLLERS
+        function evaluateSingleMCQ(index) {
+            const radios = document.getElementsByName(`mcq-radio-${index}`);
+            let selection = -1;
+            for(let i=0; i<radios.length; i++) {
+                if(radios[i].checked) { selection = i; break; }
+            }
+
+            const feedback = document.getElementById(`mcq-feedback-${index}`);
+            feedback.style.display = "block";
+
+            if(selection === -1) {
+                feedback.className = "feedback-panel incorrect";
+                feedback.innerHTML = `<div class="feedback-title">Unanswered Request</div>Please supply a response choice before firing evaluation logic.`;
+                return;
+            }
+
+            const targetObj = mcqDataCollection[index];
+            if((selection + 1) === targetObj.ans) {
+                feedback.className = "feedback-panel correct";
+                feedback.innerHTML = `<div class="feedback-title">Mark Tally Confirmed (+1 Mark)</div><p style="font-size:0.95rem; margin: 0 0 10px 0;">Correct choice processed securely.</p><div class="exemplar-box"><strong>Explanation:</strong> ${targetObj.exp}</div>`;
+                examGradesRegistry.mcq[index] = 1;
+            } else {
+                feedback.className = "feedback-panel incorrect";
+                feedback.innerHTML = `<div class="feedback-title">Validation Error Detected (0 Marks)</div><p style="font-size:0.95rem; margin: 0 0 10px 0;">System expected alternative configuration setups.</p><div class="exemplar-box"><strong>Architectural Guideline:</strong> ${targetObj.exp}</div>`;
+                examGradesRegistry.mcq[index] = 0;
+            }
+            recalculateGlobalScoreTally();
+        }
+
+        function evaluateTerminologyMatrix() {
+            let matchesCount = 0;
+            for(let i=0; i<10; i++) {
+                const selection = document.getElementById(`matching-select-${i}`).value;
+                if(selection === matchingTermsCollection[i].ans) {
+                    matchesCount++;
+                }
+            }
+
+            const feedback = document.getElementById('matching-feedback');
+            feedback.style.display = "block";
+            feedback.className = "feedback-panel correct";
+            feedback.innerHTML = `<div class="feedback-title">Matrix Evaluation Computed</div>Validated ${matchesCount} out of 10 terms accurately. Matrix processing scores assigned.`;
+            
+            examGradesRegistry.matching = matchesCount;
+            recalculateGlobalScoreTally();
+        }
+
+        function evaluateBlackBoxTable() {
+            let tableScore = 0;
+            const row1 = document.querySelector('#table-blackbox tbody tr:nth-child(1) .table-select').value;
+            const row2_text = document.querySelector('#table-blackbox tbody tr:nth-child(2) .table-input').value.toLowerCase();
+            const row2_sel = document.querySelector('#table-blackbox tbody tr:nth-child(2) .table-select').value;
+
+            if (row1 === "Pass") tableScore += 2;
+            
+            // Flexible pattern verification sequence accepting descriptive architectural tokens
+            if (row2_text.includes("error") || row2_text.includes("valueerror") || row2_text.includes("exception") || row2_text.includes("fail")) {
+                tableScore += 2;
+            }
+            if (row2_sel === "Fail") tableScore += 1;
+
+            const feedback = document.getElementById('blackbox-feedback');
+            feedback.style.display = "block";
+            feedback.className = "feedback-panel correct";
+            feedback.innerHTML = `<div class="feedback-title">Black Box Calculations Marked</div>Functional metrics assigned: ${tableScore} / 5 Marks allocated to registry dashboard.`;
+            
+            examGradesRegistry.blackbox = tableScore;
+            recalculateGlobalScoreTally();
+        }
+
+        function evaluateWhiteBoxTable() {
+            let tableScore = 0;
+            const r1_text = document.querySelector('#table-whitebox tbody tr:nth-child(1) .table-input').value.toLowerCase();
+            const r2_sel = document.querySelector('#table-whitebox tbody tr:nth-child(2) .table-select').value;
+
+            if (r1_text.includes("granted") || r1_text.includes("true")) tableScore += 3;
+            if (r2_sel === "Access Restricted") tableScore += 2;
+
+            const feedback = document.getElementById('whitebox-feedback');
+            feedback.style.display = "block";
+            feedback.className = "feedback-panel correct";
+            feedback.innerHTML = `<div class="feedback-title">White Box Routes Graded</div>Functional path scoring finalized: ${tableScore} / 5 Marks logged.`;
+
+            examGradesRegistry.whitebox = tableScore;
+            recalculateGlobalScoreTally();
+        }
+
+        function evaluateGreyBoxTable() {
+            let tableScore = 0;
+            const r1_sel = document.querySelector('#table-greybox tbody tr:nth-child(1) .table-select').value;
+            const r2_text = document.querySelector('#table-greybox tbody tr:nth-child(2) .table-input').value.toLowerCase();
+
+            if (r1_sel === "Reject Request") tableScore += 2;
+            if (r2_text.includes("return") || r2_text.includes("value") || r2_text.includes("balance") || r2_text.includes("data")) {
+                tableScore += 3;
+            }
+
+            const feedback = document.getElementById('greybox-feedback');
+            feedback.style.display = "block";
+            feedback.className = "feedback-panel correct";
+            feedback.innerHTML = `<div class="feedback-title">Grey Box Integrations Evaluated</div>Integrated visibility interface verification: ${tableScore} / 5 Marks added.`;
+
+            examGradesRegistry.greybox = tableScore;
+            recalculateGlobalScoreTally();
+        }
+
+        function submitShortAnswerResponse(idx) {
+            const feedback = document.getElementById(`saq-feedback-${idx}`);
+            feedback.style.display = "block";
+        }
+
+        function overrideShortAnswerMarkAllocation(idx, maxMarks) {
+            let val = parseInt(document.getElementById(`saq-score-override-${idx}`).value) || 0;
+            if(val < 0) val = 0;
+            if(val > maxMarks) val = maxMarks;
+            document.getElementById(`saq-score-override-${idx}`).value = val;
+            
+            examGradesRegistry.saq[idx] = val;
+            recalculateGlobalScoreTally();
+        }
+
+        function evaluateCodingTask(idx) {
+            let sourceCode = "";
+            let keywords = [];
+            let exemplarCode = "";
+            let targetFeedbackBlock = null;
+
+            if (idx === 5) {
+                sourceCode = document.getElementById('editor-5').value;
+                keywords = ["StorageAsset", "CloudVault", "_asset_code", "_base_capacity", "encryption_factor", "calculate_load", "ABC", "abstractmethod", "super().__init__"];
+                exemplarCode = "from abc import ABC, abstractmethod\n\nclass StorageAsset(ABC):\n    def __init__(self, asset_code, base_capacity):\n        self._asset_code = asset_code\n        self._base_capacity = base_capacity\n\n    @abstractmethod\n    def calculate_load(self):\n        pass\n\nclass CloudVault(StorageAsset):\n    def __init__(self, asset_code, base_capacity, encryption_factor):\n        super().__init__(asset_code, base_capacity)\n        self.encryption_factor = encryption_factor\n\n    def calculate_load(self):\n        return self._base_capacity * self.encryption_factor";
+                targetFeedbackBlock = document.getElementById('code-feedback-5');
+            } else {
+                sourceCode = document.getElementById(`editor-${idx}`).value;
+                keywords = codingPromptsCollection[idx].keywords;
+                exemplarCode = codingPromptsCollection[idx].exemplar;
+                targetFeedbackBlock = document.getElementById(`code-feedback-${idx}`);
+            }
+
+            // Intelligent pattern scanning matching specific commands and keys flexibly
+            let matchesCount = 0;
+            keywords.forEach(keyword => {
+                if (sourceCode.includes(keyword)) matchesCount++;
+            });
+
+            let calculatedScore = 0;
+            if (matchesCount === keywords.length) calculatedScore = 5;
+            else if (matchesCount >= Math.floor(keywords.length / 2)) calculatedScore = 3;
+            else if (matchesCount > 0) calculatedScore = 1;
+
+            examGradesRegistry.code[idx] = calculatedScore;
+            recalculateGlobalScoreTally();
+
+            targetFeedbackBlock.style.display = "block";
+            targetFeedbackBlock.innerHTML = `
+                <div class="feedback-title">Automated Lexical Parser Analytics Completed</div>
+                <p style="font-size:0.95rem; margin-top:0;">Evaluated structural keywords parsed: <strong>${matchesCount} / ${keywords.length} matches detected</strong>.</p>
+                <div class="exemplar-box"><strong>Exemplar Architecture Reference Template:</strong>\n\n${exemplarCode}</div>
+                <div class="score-adjuster">
+                    <label>Calibrate Verified Evaluation Mark:</label>
+                    <input type="number" id="code-override-val-${idx}" min="0" max="5" value="${calculatedScore}" onchange="overrideCalculatedCodingGrade(${idx})">
+                    <span> / 5 Marks</span>
+                </div>
+            `;
+        }
+
+        function overrideCalculatedCodingGrade(idx) {
+            let val = parseInt(document.getElementById(`code-override-val-${idx}`).value) || 0;
+            if(val < 0) val = 0;
+            if(val > 5) val = 5;
+            document.getElementById(`code-override-val-${idx}`).value = val;
+            
+            examGradesRegistry.code[idx] = val;
+            recalculateGlobalScoreTally();
+        }
+    </script>
+</body>
+</html>
