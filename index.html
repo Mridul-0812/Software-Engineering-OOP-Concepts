@@ -5,16 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OOP Learning Portal | Home</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="sidebar.js"></script>
     <style>
         :root {
-            --bg-main: #0d0e15;
-            --bg-card: rgba(20, 20, 35, 0.6);
-            --border-color: rgba(255, 255, 255, 0.1);
+            --bg-main: #060713;
+            --bg-glass: rgba(15, 18, 36, 0.45);
+            --bg-glass-hover: rgba(25, 30, 60, 0.65);
+            --border-glow: rgba(0, 240, 255, 0.15);
+            --border-glow-hover: rgba(0, 240, 255, 0.6);
             --text-primary: #ffffff;
-            --text-secondary: #b4b7c5;
+            --text-secondary: #b9bed3;
             --neon-blue: #00f0ff;
             --neon-purple: #9d4edd;
-            --sidebar-width: 260px;
+            --neon-pink: #ff007f;
+            --sidebar-width: 280px;
         }
 
         * {
@@ -30,191 +34,204 @@
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
+            position: relative;
         }
 
-        /* --- SIDEBAR NAVIGATION --- */
-        .sidebar {
-            width: var(--sidebar-width);
-            background-color: #12131c;
-            border-right: 1px solid var(--border-color);
+        /* --- ORNAMENTAL AMBIENT BACKGROUND BLOBS --- */
+        body::before, body::after {
+            content: '';
             position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            display: flex;
-            flex-direction: column;
-            z-index: 100;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            z-index: -1;
+            filter: blur(120px);
+            opacity: 0.25;
+            pointer-events: none;
+            animation: floatGlow 12s infinite alternate ease-in-out;
         }
 
-        .sidebar-brand {
-            padding: 24px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            letter-spacing: 1px;
-            color: var(--neon-blue);
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        body::before {
+            background: var(--neon-blue);
+            top: -100px;
+            right: -50px;
         }
 
-        .sidebar-menu {
-            list-style: none;
-            padding: 15px 0;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
+        body::after {
+            background: var(--neon-purple);
+            bottom: -100px;
+            left: var(--sidebar-width);
+            animation-delay: 4s;
         }
 
-        .sidebar-menu li a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 24px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            border-left: 4px solid transparent;
-        }
-
-        .sidebar-menu li a:hover {
-            color: var(--neon-blue);
-            background: rgba(0, 240, 255, 0.05);
-        }
-
-        .sidebar-menu li a.active {
-            color: var(--neon-blue);
-            background: rgba(0, 240, 255, 0.1);
-            border-left-color: var(--neon-blue);
-            font-weight: 600;
+        @keyframes floatGlow {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(50px) scale(1.15); }
         }
 
         /* --- MAIN CONTENT AREA --- */
         .main-content {
             margin-left: var(--sidebar-width);
             flex-grow: 1;
-            padding: 40px;
-            max-width: 1200px;
+            padding: 50px;
+            max-width: 1300px;
+            z-index: 5;
         }
 
         .header-banner {
-            margin-bottom: 40px;
+            margin-bottom: 50px;
             position: relative;
         }
 
         .header-banner h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 10px rgba(0,240,255,0.15));
         }
 
         .header-banner p {
             color: var(--text-secondary);
-            font-size: 1.1rem;
+            font-size: 1.15rem;
+            max-width: 800px;
+            line-height: 1.6;
         }
 
         /* --- DASHBOARD TILES / GRID --- */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
             margin-top: 20px;
         }
 
+        /* --- CARD ARCHITECTURE --- */
         .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 24px;
-            transition: transform 0.3s ease, border-color 0.3s ease;
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px) saturate(120%);
+            -webkit-backdrop-filter: blur(16px) saturate(120%);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            padding: 28px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent);
+            transform: skewX(-25deg);
+            transition: 0.75s;
+        }
+
+        .card:hover::before {
+            left: 125%;
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            border-color: var(--neon-blue);
+            transform: translateY(-8px);
+            border-color: var(--border-glow-hover);
+            background: var(--bg-glass-hover);
+            box-shadow: 0 15px 35px rgba(0, 240, 255, 0.15), inset 0 0 15px rgba(0, 240, 255, 0.05);
         }
 
         .card-title {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
+            font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 10px;
+            margin-bottom: 14px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            letter-spacing: 0.5px;
         }
 
         .card-title i {
             color: var(--neon-purple);
+            filter: drop-shadow(0 0 5px rgba(157, 78, 221, 0.6));
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .card-title i {
+            transform: rotate(10deg) scale(1.1);
+        }
+
+        .card.practice-card .card-title i {
+            color: var(--neon-pink);
+            filter: drop-shadow(0 0 5px rgba(255, 0, 127, 0.6));
+        }
+        
+        .card.practice-card:hover {
+            border-color: var(--neon-pink);
+            box-shadow: 0 15px 35px rgba(255, 0, 127, 0.15);
+        }
+        
+        .card.practice-card .card-btn {
+            border-color: var(--neon-pink);
+            color: var(--neon-pink);
+        }
+        
+        .card.practice-card .card-btn:hover {
+            background: var(--neon-pink);
+            color: var(--bg-main);
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.5);
         }
 
         .card-desc {
             color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin-bottom: 20px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 24px;
             flex-grow: 1;
         }
 
         .card-btn {
             align-self: flex-start;
-            padding: 8px 16px;
+            padding: 10px 20px;
             background: transparent;
             border: 1px solid var(--neon-blue);
             color: var(--neon-blue);
-            border-radius: 6px;
+            border-radius: 8px;
             text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
+            font-size: 0.88rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
             transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
         }
 
         .card-btn:hover {
             background: var(--neon-blue);
             color: var(--bg-main);
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+            transform: scale(1.03);
         }
 
-        /* Responsive Design Rules */
-        @media (max-width: 768px) {
-            body {
-                flex-direction: column;
-            }
-            .sidebar {
-                width: 100%;
-                position: relative;
-                border-right: none;
-                border-bottom: 1px solid var(--border-color);
-            }
+        /* Responsive Layout Overrides */
+        @media (max-width: 992px) {
             .main-content {
                 margin-left: 0;
-                padding: 20px;
+                padding: 30px 20px;
             }
         }
     </style>
 </head>
 <body>
 
-    <nav class="sidebar">
-        <div class="sidebar-brand">
-            <i class="fa-solid fa-code"></i> SWE Portal
-        </div>
-        <ul class="sidebar-menu">
-            <li><a href="index.html" class="active"><i class="fa-solid fa-house"></i> Home Overview</a></li>
-            <li><a href="week1.html"><i class="fa-solid fa-cube"></i> Week 1: Core Blueprint</a></li>
-            <li><a href="week2.html"><i class="fa-solid fa-sitemap"></i> Week 2: Inheritance</a></li>
-            <li><a href="week3.html"><i class="fa-solid fa-arrows-split-up-and-left"></i> Week 3: Generalisation</a></li>
-            <li><a href="week4.html"><i class="fa-solid fa-crosshairs"></i> Week 4: Target Systems</a></li>
-            <li><a href="week5.html"><i class="fa-solid fa-database"></i> Week 5: Database & ERDs</a></li>
-            <li><a href="week6.html"><i class="fa-solid fa-vector-square"></i> OOP Code: The Four Pillars</a></li>
-            <li><a href="week8.html"><i class="fa-solid fa-vial-circle-check"></i> Week 8: Testing Frameworks</a></li>
-        </ul>
-    </nav>
+    <site-sidebar></site-sidebar>
 
     <main class="main-content">
         <header class="header-banner">
@@ -266,7 +283,7 @@
 
             <div class="card">
                 <div>
-                    <div class="card-title"><i class="fa-solid fa-vector-square"></i>OOP Code: The Four Pillars</div>
+                    <div class="card-title"><i class="fa-solid fa-gopuram"></i> OOP Code: The Four Pillars</div>
                     <p class="card-desc">Learn about the four typical pillars of Object-Oriented Programming (Encapsulation, Inheritance, Abstraction and Polymorphism) and how to use them to code using Python.</p>
                 </div>
                 <a href="week6.html" class="card-btn">Explore Module</a>
@@ -278,6 +295,14 @@
                     <p class="card-desc">Apply robust QA testing pipelines. Design systematic manual test profiles alongside automated test modules leveraging the Python unittest framework structure.</p>
                 </div>
                 <a href="week8.html" class="card-btn">Explore Module</a>
+            </div>
+
+            <div class="card practice-card">
+                <div>
+                    <div class="card-title"><i class="fa-solid fa-brain"></i> Further Practice Playground</div>
+                    <p class="card-desc">Put your engineering expertise to the test. Jump straight into sandbox environments and interactive challenge problems engineered to rapidly solidify your functional OOP syntax knowledge.</p>
+                </div>
+                <a href="https://mridul-0812.github.io/Practise-OOP/" class="card-btn">Launch Practice</a>
             </div>
 
         </section>
